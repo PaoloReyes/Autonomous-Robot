@@ -1,7 +1,8 @@
 import json
 import os
+import shutil
 
-def convert_coco_to_yolo_segmentation(json_file, folder_name = "labels"):
+def convert_coco_to_yolo_segmentation(json_file):
     # Load the JSON file
     with open(json_file, 'r') as file:
         coco_data = json.load(file)
@@ -10,13 +11,14 @@ def convert_coco_to_yolo_segmentation(json_file, folder_name = "labels"):
     path_name = os.path.dirname(json_file).split('/')[1:]
     path_name[0] += '_yolo'
     path_name = '/'.join(path_name)
-    output_folder = os.path.join(path_name, folder_name)
-    print(output_folder)
-    os.makedirs(output_folder, exist_ok=True)
+    labels_folder = os.path.join(path_name, 'labels')
+    image_folder = os.path.join(path_name, 'images')
+    os.makedirs(labels_folder, exist_ok=True)
+    os.makedirs(image_folder, exist_ok=True)
 
     # Extract annotations from the COCO JSON data
     annotations = coco_data['annotations']
-    for annotation in annotations:
+    for i, annotation in enumerate(annotations):
         image_id = annotation['image_id']
         category_id = annotation['category_id']
         segmentation = annotation['segmentation']
@@ -46,9 +48,17 @@ def convert_coco_to_yolo_segmentation(json_file, folder_name = "labels"):
         yolo_annotation = f"{category_id} {yolo_segmentation}"
 
         # Save the YOLO segmentation annotation in a file
-        output_filename = os.path.join(output_folder, f"{image_filename}.txt")
+        output_filename = os.path.join(labels_folder, f"{image_filename}.txt")
         with open(output_filename, 'a+') as file:
             file.write(yolo_annotation + '\n')
+
+        # Copy the image to the "images" folder
+        try:
+            image_filename = os.path.basename(coco_data['images'][i]['file_name'])
+            shutil.copyfile(os.path.join(os.path.dirname(json_file), image_filename), os.path.join(image_folder, image_filename))
+            print(f"Image {image_filename} copied to {image_folder}.")
+        except:
+            continue
 
 # Convert COCO to YOLO segmentation format
 directories = filter(None, [element if '.' not in element else None for element in os.listdir('./')])
