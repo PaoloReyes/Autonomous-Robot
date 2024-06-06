@@ -37,7 +37,9 @@ This project aims to develop an autonomous robot utilizing ROS2, a differential 
 
 ## Project Structure
 ```
-your-repo-name/
+Autonomous-Robot/
+├── assets/
+│   ├── puzzlebot.jpeg
 ├── config/
 │   ├── 
 │   └── 
