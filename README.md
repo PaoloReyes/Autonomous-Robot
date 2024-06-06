@@ -1,6 +1,6 @@
 # Autonomous Robot with ROS2, Differential Drive, and YOLO Instance Segmentation
 
-![Project Logo or Banner](puzzlebot.jpeg)
+![Project Logo or Banner](assets/puzzlebot.jpeg)
 
 ## Table of Contents
 - [Introduction](#introduction)
