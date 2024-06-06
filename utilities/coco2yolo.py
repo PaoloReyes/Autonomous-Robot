@@ -1,20 +1,17 @@
-"""
-Author: RikuNav
-Date: June 5, 2024
-
-"""
-
 import json
 import os
 
 def convert_coco_to_yolo_segmentation(json_file, folder_name = "labels"):
-    folder_name = folder_name
     # Load the JSON file
     with open(json_file, 'r') as file:
         coco_data = json.load(file)
 
     # Create a "labels" folder to store YOLO segmentation annotations
-    output_folder = os.path.join(os.path.dirname(json_file), folder_name)
+    path_name = os.path.dirname(json_file).split('/')[1:]
+    path_name[0] += '_yolo'
+    path_name = '/'.join(path_name)
+    output_folder = os.path.join(path_name, folder_name)
+    print(output_folder)
     os.makedirs(output_folder, exist_ok=True)
 
     # Extract annotations from the COCO JSON data
@@ -53,12 +50,15 @@ def convert_coco_to_yolo_segmentation(json_file, folder_name = "labels"):
         with open(output_filename, 'a+') as file:
             file.write(yolo_annotation + '\n')
 
-    print("Conversion completed. YOLO segmentation annotations saved in 'labels' folder.")
+# Convert COCO to YOLO segmentation format
+directories = filter(None, [element if '.' not in element else None for element in os.listdir('./')])
 
+FOLDER_NAME = 'semanticsegmentation-3'
 
-
-
-# Example usage
-json_file = "train/_annotations.coco.json" #JSON file
-split = "train/labels" #Folder
-convert_coco_to_yolo_segmentation(json_file, split)
+if FOLDER_NAME in directories:
+    dataset = filter(None, [element if '.' not in element else None for element in os.listdir(FOLDER_NAME)])
+    for data in dataset:
+        json_file = f"./{FOLDER_NAME}/{data}/_annotations.coco.json" #JSON file
+        split = f"./{FOLDER_NAME}/{data}/labels" #Folder
+        convert_coco_to_yolo_segmentation(json_file)
+        print(f"Converted {json_file} to YOLO segmentation format.")

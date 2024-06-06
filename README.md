@@ -39,9 +39,14 @@ This project aims to develop an autonomous robot utilizing ROS2, a differential 
 ```
 Autonomous-Robot/
 ├── assets/
-│   ├── puzzlebot.jpeg
+│   └── puzzlebot.jpeg
 ├── utilities/
+│   ├── semantic_segmentation/
 │   ├── coco2yolo.py
+│   └── yolov8n-seg_train.py
+├── yolov8train/
+│   ├── semanticsegmentation-3/
+│   └──download_dataset.bat
 ├── config/
 │   ├── 
 │   └── 
@@ -55,6 +60,7 @@ Autonomous-Robot/
 │   │   ├──
 │   │   └──
 └── README.md
+└── requirements.txt
 ```
 
 ## Contributing
