@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import re
 
 def convert_coco_to_yolo_segmentation(json_file):
     # Load the JSON file
@@ -61,20 +62,25 @@ def convert_coco_to_yolo_segmentation(json_file):
             continue
 
 # Convert COCO to YOLO segmentation format
-directories = filter(None, [element if '.' not in element else None for element in os.listdir('./')])
+directories = sorted(filter(None, [element if '.' not in element else None for element in os.listdir('./')]), reverse=True)
 
-FOLDER_NAME = 'semanticsegmentation-3'
+folder_name = re.compile(r'semanticsegmentation-\d+')
+for folder in directories:
+    folder_found = re.search(folder_name, folder)
+    if folder_found:
+        folder_found = folder_found.group()
+        break
 
-if FOLDER_NAME in directories:
-    dataset = filter(None, [element if '.' not in element else None for element in os.listdir(FOLDER_NAME)])
+if folder_found:
+    dataset = filter(None, [element if '.' not in element else None for element in os.listdir(folder_found)])
     for data in dataset:
-        json_file = f"./{FOLDER_NAME}/{data}/_annotations.coco.json" #JSON file
-        split = f"./{FOLDER_NAME}/{data}/labels" #Folder
+        json_file = f"./{folder_found}/{data}/_annotations.coco.json" #JSON file
+        split = f"./{folder_found}/{data}/labels" #Folder
         convert_coco_to_yolo_segmentation(json_file)
         print(f"Converted {json_file} to YOLO segmentation format.")
     with open(json_file, 'r') as file:
         coco_data = json.load(file)
-    with open(os.path.join(f'{FOLDER_NAME}_yolo', 'data.yaml'), 'w') as file:
+    with open(os.path.join(f'{folder_found}_yolo', 'data.yaml'), 'w') as file:
         file.write(f'train: ../train/images/\n')
         file.write(f'val: ../valid/images/\n')
         file.write(f'names:\n')

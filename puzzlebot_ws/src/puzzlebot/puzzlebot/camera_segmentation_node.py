@@ -23,8 +23,9 @@ class CameraNode(Node):
     def timer_callback(self):
         if self.source.isOpened():
             _, img = self.source.read()
+            img = self.bridge.cv2_to_imgmsg(img, 'bgr8')
             self.get_logger().info(type(img))
-            self.pub.publish(self.bridge.cv2_to_imgmsg(img, 'bgr8'))
+            self.pub.publish(img)
         else:
             print('Unable to open camera')
     
@@ -38,7 +39,7 @@ class CameraNode(Node):
             "video/x-raw, format=(string)BGR ! appsink"
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
-                
+
 def main(args=None):
     rclpy.init(args=args)
     camera_node = CameraNode()
