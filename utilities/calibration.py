@@ -10,7 +10,7 @@ def main():
     CHECKERBOARD = (6, 8)
 
     # Define the camera for capturing images
-    cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+    cap = cv2.VideoCapture(0)
 
     # Define the number of photos to take
     N_PHOTO = 140
@@ -28,12 +28,12 @@ def main():
 
     for i in range(N_PHOTO):
         _, frame = cap.read()
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Find the chessboard corners
         ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD, None)
         print('Capturing image', i, '...')
-        cv2.imshow('Capturing image', frame)
+        #cv2.imshow('Capturing image', frame)
 
         if ret:
             objpoints.append(objp)
@@ -41,9 +41,9 @@ def main():
             imgpoints.append(corners2)
 
             # Draw and display the corners
-            img = cv2.drawChessboardCorners(img, CHECKERBOARD, corners2, ret)
-            cv2.imshow('Checkerboard', img)
-            cv2.waitKey(500)
+            img = cv2.drawChessboardCorners(frame, CHECKERBOARD, corners2, ret)
+            #cv2.imshow('Checkerboard', img)
+        #cv2.waitKey(50)
 
     cv2.destroyAllWindows()
     cap.release()
