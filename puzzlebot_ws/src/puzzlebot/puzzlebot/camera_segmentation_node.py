@@ -8,21 +8,26 @@ from cv_bridge import CvBridge
 
 class CameraSubscriber(Node):
     def __init__(self):
-        super().__init__('camera_node')
+        super().__init__('camera_segmentation_node')
         self.bridge = CvBridge()
         self.image_width = 640
         self.image_height = 480
         self.img = np.ndarray((self.image_height, self.image_width, 3))
         
-        self.pub = self.create_publisher(Image, 'Camera', 10)
+        # Publisher
+        self.pub = self.create_publisher(Image, '/raw_camera', 10)
+
+        # Open the camera feed
+        self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+        
         # Timers
-        timer_period = 1/3 # Frames
+        timer_period = 0.0333
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
     def timer_callback(self):
-        self.img = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-        if self.img.isOpened():
-            self.pub.publish(self.bridge.cv2_to_imgmsg(self.img, 'bgr8'))   
+        if self.source.isOpened():
+            ret, img = self.source.read()
+            self.pub.publish(self.bridge.cv2_to_imgmsg(img, 'bgr8'))
         else:
             print('Unable to open camera')
         
@@ -39,7 +44,7 @@ class CameraSubscriber(Node):
             "video/x-raw, format=(string)BGR ! appsink"
             % (capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
-              
+            
 def main(args=None):
     rclpy.init(args=args)
     camera_node = CameraSubscriber()
