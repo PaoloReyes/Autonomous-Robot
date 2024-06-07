@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+
+import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -37,6 +39,13 @@ class CameraSubscriber(Node):
             "video/x-raw, format=(string)BGR ! appsink"
             % (capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
-        
               
-        
+def main(args=None):
+    rclpy.init(args=args)
+    camera_node = CameraSubscriber()
+    rclpy.spin(camera_node)
+    camera_node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
