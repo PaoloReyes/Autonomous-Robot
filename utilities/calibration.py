@@ -33,7 +33,7 @@ def main():
         # Find the chessboard corners
         ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD, None)
         print('Capturing image', i, '...')
-        #cv2.imshow('Capturing image', frame)
+        cv2.imshow('Capturing image', frame)
 
         if ret:
             objpoints.append(objp)
@@ -42,8 +42,8 @@ def main():
 
             # Draw and display the corners
             img = cv2.drawChessboardCorners(frame, CHECKERBOARD, corners2, ret)
-            #cv2.imshow('Checkerboard', img)
-        #cv2.waitKey(50)
+            cv2.imshow('Checkerboard', img)
+        cv2.waitKey(500)
 
     cv2.destroyAllWindows()
     cap.release()
