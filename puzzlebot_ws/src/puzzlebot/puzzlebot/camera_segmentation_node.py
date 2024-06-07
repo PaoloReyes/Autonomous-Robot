@@ -5,7 +5,7 @@ from rclpy.node import Node
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
-class CameraSubscriber(Node):
+class CameraNode(Node):
     def __init__(self):
         super().__init__('camera_segmentation_node')
         self.bridge = CvBridge()
@@ -43,7 +43,7 @@ class CameraSubscriber(Node):
             
 def main(args=None):
     rclpy.init(args=args)
-    camera_node = CameraSubscriber()
+    camera_node = CameraNode()
     rclpy.spin(camera_node)
     camera_node.destroy_node()
     rclpy.shutdown()
