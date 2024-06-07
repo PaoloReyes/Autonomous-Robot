@@ -1,0 +1,3 @@
+[console_scripts]
+camera_segmentation_node = puzzlebot.camera_segmentation_node:main
+
