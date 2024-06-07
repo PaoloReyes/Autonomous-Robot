@@ -1,9 +1,10 @@
 import cv2
-
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
+from std_msgs.msg import Bool
 from cv_bridge import CvBridge
+from .submodules import camera_utils
 
 class CameraNode(Node):
     def __init__(self):
@@ -11,7 +12,8 @@ class CameraNode(Node):
         self.bridge = CvBridge()
         
         # Publisher
-        self.pub = self.create_publisher(Image, '/raw_camera', 10)
+        #self.pub = self.create_publisher(Image, '/raw_camera', 10)
+        self.pub = self.create_publisher(Bool, 'ready', 10)
 
         # Open the camera feed
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
@@ -23,8 +25,15 @@ class CameraNode(Node):
     def timer_callback(self):
         if self.source.isOpened():
             _, img = self.source.read()
-            self.get_logger().info(type(img))
-            self.pub.publish(self.bridge.cv2_to_imgmsg(img, 'bgr8'))
+            dst = camera_utils.undistort(img)
+            msg = Bool()
+            msg.data = True
+            self.pub.publish(msg)
+            cv2.imshow('Camera Feed', dst)
+            cv2.waitKey(1)
+            #msg = self.bridge.cv2_to_imgmsg(img, encoding='bgr8')
+            #self.pub.publish(msg)
+
         else:
             print('Unable to open camera')
     
