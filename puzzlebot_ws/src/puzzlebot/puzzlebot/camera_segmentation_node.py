@@ -28,7 +28,7 @@ class CameraNode(Node):
         else:
             print('Unable to open camera')
     
-    def gstreamer_pipeline(self, capture_width=320, capture_height=240, display_width=320, display_height=240, framerate=30, flip_method=0):
+    def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240, framerate=30, flip_method=0):
         return (
             "nvarguscamerasrc ! "
             "video/x-raw(memory:NVMM), "
@@ -38,7 +38,7 @@ class CameraNode(Node):
             "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
             "videoconvert ! "
             "video/x-raw, format=(string)BGR ! appsink"
-            % (capture_width, capture_height, framerate, flip_method, display_width, display_height)
+            % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
             
 def main(args=None):
