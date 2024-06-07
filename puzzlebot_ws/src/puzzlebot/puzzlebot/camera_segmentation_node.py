@@ -23,7 +23,7 @@ class CameraSubscriber(Node):
     
     def timer_callback(self):
         if self.source.isOpened():
-            ret, img = self.source.read()
+            _, img = self.source.read()
             self.pub.publish(self.bridge.cv2_to_imgmsg(img, 'bgr8'))
         else:
             print('Unable to open camera')
