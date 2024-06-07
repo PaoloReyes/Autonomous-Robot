@@ -23,10 +23,11 @@ class CameraSubscriber(Node):
     def timer_callback(self):
         if self.source.isOpened():
             _, img = self.source.read()
+            self.get_logger().info(img.shape)
             self.pub.publish(self.bridge.cv2_to_imgmsg(img, 'bgr8'))
         else:
             print('Unable to open camera')
-        
+    
     def gstreamer_pipeline(self, capture_width=320, capture_height=240, display_width=320, display_height=240, framerate=30, flip_method=0):
         return (
             "nvarguscamerasrc ! "
