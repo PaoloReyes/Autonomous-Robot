@@ -1,7 +1,7 @@
 import cv2
 from camera_demo import gstreamer_pipeline
 
-cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+cap = cv2.VideoCapture(0)
 num = 0
 
 while cap.isOpened():

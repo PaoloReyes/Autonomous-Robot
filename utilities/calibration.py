@@ -2,7 +2,9 @@ import numpy as np
 import cv2 as cv
 import glob
 import pickle
+from camera_demo import gstreamer_pipeline
 
+cap = cv.VideoCapture(gstreamer_pipeline(flip_method=0), cv.CAP_GSTREAMER)
 
 ################ FIND CHESSBOARD CORNERS - OBJECT POINTS AND IMAGE POINTS #############################
 
@@ -24,7 +26,7 @@ objp = objp * size_of_chessboard_squares_mm
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
 
-images = glob.glob('cameraCalibration/images/*.png')
+images = glob.glob('images/*.png')
 
 for image in images:
 
@@ -39,7 +41,7 @@ for image in images:
 
         objpoints.append(objp)
         corners2 = cv.cornerSubPix(gray, corners, (11,11), (-1,-1), criteria)
-        imgpoints.append(corners)
+        imgpoints.append(corners2)
 
         # Draw and display the corners
         cv.drawChessboardCorners(img, chessboardSize, corners2, ret)
@@ -52,7 +54,7 @@ cv.destroyAllWindows()
 
 ############## CALIBRATION #######################################################
 
-ret, cameraMatrix, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, frameSize, None, None)
+ret, cameraMatrix, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
 
 # Save the camera calibration result for later use (we won't worry about rvecs / tvecs)
 pickle.dump((cameraMatrix, dist), open( "calibration.pkl", "wb" ))
@@ -61,33 +63,45 @@ pickle.dump(dist, open( "dist.pkl", "wb" ))
 
 ############## UNDISTORTION #####################################################
 
-img = cv.imread('cali5.png')
-h,  w = img.shape[:2]
-newCameraMatrix, roi = cv.getOptimalNewCameraMatrix(cameraMatrix, dist, (w,h), 1, (w,h))
+while cap.isOpened():
+    _, img = cap.read()
 
-# Undistort
-dst = cv.undistort(img, cameraMatrix, dist, None, newCameraMatrix)
+    h,  w = img.shape[:2]
+    newCameraMatrix, roi = cv.getOptimalNewCameraMatrix(cameraMatrix, dist, (w,h), 1, (w,h))
 
-# crop the image
-x, y, w, h = roi
-dst = dst[y:y+h, x:x+w]
-cv.imwrite('caliResult1.png', dst)
+    # Undistort
+    dst = cv.undistort(img, cameraMatrix, dist, None, newCameraMatrix)
 
-# Undistort with Remapping
-mapx, mapy = cv.initUndistortRectifyMap(cameraMatrix, dist, None, newCameraMatrix, (w,h), 5)
-dst = cv.remap(img, mapx, mapy, cv.INTER_LINEAR)
+    # crop the image
+    x, y, w, h = roi
+    dst = dst[y:y+h, x:x+w]
+    cv.imshow('cali1', dst)
 
-# crop the image
-x, y, w, h = roi
-dst = dst[y:y+h, x:x+w]
-cv.imwrite('caliResult2.png', dst)
+    # Undistort with Remapping
+    mapx, mapy = cv.initUndistortRectifyMap(cameraMatrix, dist, None, newCameraMatrix, (w,h), 5)
+    dst = cv.remap(img, mapx, mapy, cv.INTER_LINEAR)
 
-# Reprojection Error
-mean_error = 0
+    # crop the image
+    x, y, w, h = roi
+    dst = dst[y:y+h, x:x+w]
+    cv.imshow('cali2', dst)
 
-for i in range(len(objpoints)):
-    imgpoints2, _ = cv.projectPoints(objpoints[i], rvecs[i], tvecs[i], cameraMatrix, dist)
-    error = cv.norm(imgpoints[i], imgpoints2, cv.NORM_L2)/len(imgpoints2)
-    mean_error += error
+    # Reprojection Error
+    mean_error = 0
 
-print( "total error: {}".format(mean_error/len(objpoints)) )
+    for i in range(len(objpoints)):
+        imgpoints2, _ = cv.projectPoints(objpoints[i], rvecs[i], tvecs[i], cameraMatrix, dist)
+        error = cv.norm(imgpoints[i], imgpoints2, cv.NORM_L2)/len(imgpoints2)
+        mean_error += error
+
+    print( "total error: {}".format(mean_error/len(objpoints)) )
+    
+    k = cv.waitKey(5)
+    if k == 27:
+        break
+    cv.imshow('Original Img',img)
+
+# Release and destroy all windows before termination
+cap.release()
+
+cv.destroyAllWindows()
