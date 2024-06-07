@@ -10,7 +10,7 @@ def main():
     CHECKERBOARD = (6, 8)
 
     # Define the camera for capturing images
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
     # Define the number of photos to take
     N_PHOTO = 140
