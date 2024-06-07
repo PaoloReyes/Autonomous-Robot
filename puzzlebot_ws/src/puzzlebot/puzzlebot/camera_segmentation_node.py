@@ -21,12 +21,12 @@ class CameraSubscriber(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
     def timer_callback(self):
-        if self.source.isOpened():
+        try:
             _, img = self.source.read()
             self.get_logger().info(str(img.shape))   
             self.pub.publish(self.bridge.cv2_to_imgmsg(img, 'bgr8'))
-        else:
-            print('Unable to open camera')
+        except Exception as e:
+            self.get_logger().info('Camera error: ' + str(e))
     
     def gstreamer_pipeline(self, capture_width=320, capture_height=240, display_width=320, display_height=240, framerate=30, flip_method=0):
         return (
