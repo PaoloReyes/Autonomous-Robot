@@ -72,3 +72,15 @@ if FOLDER_NAME in directories:
         split = f"./{FOLDER_NAME}/{data}/labels" #Folder
         convert_coco_to_yolo_segmentation(json_file)
         print(f"Converted {json_file} to YOLO segmentation format.")
+    with open(json_file, 'r') as file:
+        coco_data = json.load(file)
+    with open(os.path.join(f'{FOLDER_NAME}_yolo', 'data.yaml'), 'w') as file:
+        file.write(f'train: ../train/images/\n')
+        file.write(f'val: ../valid/images/\n')
+        file.write(f'names:\n')
+        for i, category in enumerate(coco_data['categories']):
+            if 'Street' in category['name']:
+                file.write(f'  {i}: background\n')
+            else:
+                file.write(f'  {i}: {category["name"]}\n')
+        file.write(f'nc: {len(coco_data["categories"])}\n')
