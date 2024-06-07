@@ -10,9 +10,6 @@ class CameraSubscriber(Node):
     def __init__(self):
         super().__init__('camera_segmentation_node')
         self.bridge = CvBridge()
-        self.image_width = 640
-        self.image_height = 480
-        self.img = np.ndarray((self.image_height, self.image_width, 3))
         
         # Publisher
         self.pub = self.create_publisher(Image, '/raw_camera', 10)
