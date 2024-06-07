@@ -1,0 +1,2 @@
+call conda activate ai
+yolo task=segment mode=predict model=D:\Tec\Sexto_Semestre\Autonomous-Robot\yolov8train\runs\segment\train7\weights\best.pt source=D:\Tec\Sexto_Semestre\Autonomous-Robot\yolov8train\semanticsegmentation-3_yolo\test\images batch=16 imgsz=320
