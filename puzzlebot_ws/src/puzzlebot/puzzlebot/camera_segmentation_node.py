@@ -51,10 +51,14 @@ class CameraNode(Node):
             msg.data = True
             cv2.imshow('Camera Feed', dst)
 
-            import torch    
+            import torch
+            import torchvision.transforms as T    
             with torch.no_grad():
-                dst = dst.to(device= self.device, dtype=torch.float32)
-                result = self.model(dst)
+                transform = T.ToTensor()
+                tensor = transform(dst).to(self.device)
+                print(tensor.dtype, tensor.shape)
+                print(dst.dtype, dst.shape)
+                result = self.model(tensor)
             image = result[0].plot()
 
             cv2.imshow('YOLOv8 Inference', image)
