@@ -5,11 +5,11 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
 from cv_bridge import CvBridge
 from .submodules import camera_utils
-import torch
 import os
 from ament_index_python import get_package_share_directory
 
 class CameraNode(Node):
+        
     def __init__(self):
         super().__init__('camera_segmentation_node')
         self.bridge = CvBridge()
@@ -23,6 +23,7 @@ class CameraNode(Node):
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
         from ultralytics import YOLO
+        import torch
 
         # Timers
         timer_period = 0.01 
@@ -49,6 +50,8 @@ class CameraNode(Node):
             msg = Bool()
             msg.data = True
             cv2.imshow('Camera Feed', dst)
+
+            import torch    
             with torch.no_grad():
                 dst = dst.to(device= self.device, dtype=torch.float32)
                 result = self.model(dst)
