@@ -1,14 +1,8 @@
 import cv2
 import numpy as np
 import pickle
-from ament_index_python import get_package_share_directory
-import os
 
-path = get_package_share_directory('puzzlebot')
-path = path.split('install')[0]
-path = os.path.join(path, 'src', 'puzzlebot','puzzlebot','submodules', 'calibration_data.pkl')
-
-with open(path, 'rb') as f:
+with open('calibration_data.pkl', 'rb') as f:
     K, D, _, _ = pickle.load(f)
 print('Calibration data loaded from calibration_data.pkl')
 

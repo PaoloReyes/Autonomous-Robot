@@ -11,6 +11,8 @@ setup.py
 ../../build/puzzlebot/puzzlebot.egg-info/zip-safe
 puzzlebot/__init__.py
 puzzlebot/camera_segmentation_node.py
+puzzlebot/submodules/__init__.py
+puzzlebot/submodules/camera_utils.py
 resource/puzzlebot
 test/test_copyright.py
 test/test_flake8.py
