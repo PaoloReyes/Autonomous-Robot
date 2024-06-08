@@ -5,7 +5,6 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
 from cv_bridge import CvBridge
 from .submodules import camera_utils
-
 import os
 from ament_index_python import get_package_share_directory
 
@@ -26,7 +25,7 @@ class CameraNode(Node):
         from ultralytics import YOLO
 
         # Timers
-        timer_period = 0.01 
+        timer_period = 0.08 
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
         # Import YOLO model
