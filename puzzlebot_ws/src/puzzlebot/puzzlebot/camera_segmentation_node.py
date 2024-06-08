@@ -5,11 +5,11 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
 from cv_bridge import CvBridge
 from .submodules import camera_utils
+
 import os
 from ament_index_python import get_package_share_directory
 
 class CameraNode(Node):
-        
     def __init__(self):
         super().__init__('camera_segmentation_node')
         self.bridge = CvBridge()
@@ -22,8 +22,8 @@ class CameraNode(Node):
         print(self.gstreamer_pipeline(flip_method=0))
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
-        from ultralytics import YOLO
         import torch
+        from ultralytics import YOLO
 
         # Timers
         timer_period = 0.01 
@@ -50,18 +50,12 @@ class CameraNode(Node):
             msg = Bool()
             msg.data = True
             cv2.imshow('Camera Feed', dst)
-
+    
             import torch
-            import torchvision.transforms as T    
+    
             with torch.no_grad():
-                transform = T.ToTensor()
-                dst = cv2.resize(dst, (640, 640))
-                tensor = transform(dst).to(self.device)
-                tensor = tensor.unsqueeze(0)
-                print(tensor.dtype, tensor.shape)
-                print(dst.dtype, dst.shape)
-                result = self.model(tensor)
-            image = result[0].plot()
+                result = self.model(dst)
+                image = result[0].plot()
 
             cv2.imshow('YOLOv8 Inference', image)
             cv2.waitKey(1)
