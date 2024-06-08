@@ -34,13 +34,13 @@ class CameraNode(Node):
         path = path.split('install')[0]
         path = os.path.join(path, 'src', 'puzzlebot','package_data','best.pt')
 
-        model = YOLO(path)
+        self.model = YOLO(path)
         if torch.cuda.is_available():
             device = torch.device('cuda')
         else:
             device = torch.device('cpu')
         print('Using device:', device)
-        model.to(device)
+        #model.to(device)
 
     def timer_callback(self):
         if self.source.isOpened():
@@ -48,9 +48,13 @@ class CameraNode(Node):
             dst = camera_utils.undistort(img, (320, 240))
             msg = Bool()
             msg.data = True
-            self.pub.publish(msg)
             cv2.imshow('Camera Feed', dst)
             cv2.waitKey(1)
+            result = self.model(dst)
+            image = result[0].plot()
+
+            cv2.imshow('YOLOv8 Inference', image)
+            self.pub.publish(msg)
             #msg = self.bridge.cv2_to_imgmsg(img, encoding='bgr8')
             #self.pub.publish(msg)
 
