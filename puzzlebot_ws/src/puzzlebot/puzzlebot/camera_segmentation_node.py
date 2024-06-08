@@ -31,7 +31,7 @@ class CameraNode(Node):
         # Import YOLO model
         path = get_package_share_directory('puzzlebot')
         path = path.split('install')[0]
-        path = os.path.join(path, 'src', 'puzzlebot','puzzlebot','best.pt')
+        path = os.path.join(path, 'src', 'puzzlebot','package_data','best.pt')
 
         model = YOLO(path)
         if torch.cuda.is_available():
