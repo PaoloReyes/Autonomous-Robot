@@ -48,7 +48,7 @@ class CameraNode(Node):
             dst = camera_utils.undistort(img, (320, 240))
             msg = Bool()
             msg.data = True
-            #cv2.imshow('Camera Feed', dst)
+            cv2.imshow('Camera Feed', dst)
     
             import torch
     
@@ -56,8 +56,8 @@ class CameraNode(Node):
                 result = self.model(dst)
                 image = result[0].plot()
 
-            #cv2.imshow('YOLOv8 Inference', image)
-            #cv2.waitKey(1)
+            cv2.imshow('YOLOv8 Inference', image)
+            cv2.waitKey(1)
             self.pub.publish(msg)
             #msg = self.bridge.cv2_to_imgmsg(img, encoding='bgr8')
             #self.pub.publish(msg)
@@ -65,7 +65,7 @@ class CameraNode(Node):
         else:
             print('Unable to open camera')
     
-    def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240,framerate=1, flip_method=0):
+    def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240,framerate=5, flip_method=0):
         return (
             "nvarguscamerasrc sensor-id=%d ! "
             "video/x-raw(memory:NVMM), width=(int)%d, height=(int)%d, framerate=(fraction)%d/1 ! "
