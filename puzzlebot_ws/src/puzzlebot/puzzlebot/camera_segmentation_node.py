@@ -54,7 +54,7 @@ class CameraNode(Node):
                 image = result.plot()
 
             msg = String()
-            msg.data = result
+            msg.data = str(result)
 
             cv2.imshow('YOLOv8 Inference', image)
             cv2.waitKey(1)
