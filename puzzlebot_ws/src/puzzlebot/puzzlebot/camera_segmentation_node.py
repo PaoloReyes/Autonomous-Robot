@@ -40,7 +40,7 @@ class CameraNode(Node):
         else:
             device = torch.device('cpu')
         print('Using device:', device)
-        #model.to(device)
+        model.to(device)
 
     def timer_callback(self):
         if self.source.isOpened():
