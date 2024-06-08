@@ -6,7 +6,7 @@ from std_msgs.msg import Bool
 from cv_bridge import CvBridge
 from .submodules import camera_utils
 from ultralytics import YOLO
-import torch
+
 import os
 from ament_index_python import get_package_share_directory
 
@@ -21,7 +21,9 @@ class CameraNode(Node):
 
         # Open the camera feed
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-        
+
+        import torch
+
         # Timers
         timer_period = 0.0333
         self.timer = self.create_timer(timer_period, self.timer_callback)
