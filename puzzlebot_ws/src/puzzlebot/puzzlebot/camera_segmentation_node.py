@@ -49,7 +49,6 @@ class CameraNode(Node):
             msg = Bool()
             msg.data = True
             cv2.imshow('Camera Feed', dst)
-            cv2.waitKey(1)
             result = self.model(dst)
             image = result[0].plot()
 
