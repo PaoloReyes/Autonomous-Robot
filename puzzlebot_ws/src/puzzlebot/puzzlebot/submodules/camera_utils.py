@@ -6,7 +6,7 @@ import os
 
 path = get_package_share_directory('puzzlebot')
 path = path.split('install')[0]
-path = os.path.join(path, 'src', 'puzzlebot','puzzlebot','submodules', 'calibration_data.pkl')
+path = os.path.join(path, 'src', 'puzzlebot','package_data', 'calibration_data.pkl')
 
 with open(path, 'rb') as f:
     K, D, _, _ = pickle.load(f)
