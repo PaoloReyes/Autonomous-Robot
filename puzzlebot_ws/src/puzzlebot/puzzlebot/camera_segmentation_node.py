@@ -1,10 +1,16 @@
 import cv2
+import numpy as np
+import os
+
 import rclpy
 from rclpy.node import Node
+
 from std_msgs.msg import String
+
 from cv_bridge import CvBridge
+
 from .submodules import camera_utils
-import os
+
 from ament_index_python import get_package_share_directory
 
 class CameraNode(Node):
@@ -45,21 +51,28 @@ class CameraNode(Node):
         if self.source.isOpened():
             _, img = self.source.read()
             dst = camera_utils.undistort(img, (320, 240))
-            cv2.imshow('Camera Feed', dst)
+            cv2.imshow('Original Image', dst)
     
             import torch
     
             with torch.no_grad():
                 result = self.model(dst)[0]
                 image = result.plot()
+                img_copy = np.copy(result.orig_img)
+
+            for c in result:
+                label = c.names[c.boxes.cls.tolist().pop()]
+                b_mask = np.zeros(img.shape[:2], np.uint8)
+                contour = c.masks.xy.pop()
+                contour = contour.astype(np.int32)
+                contour = contour.reshape(-1, 1, 2)
+                _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
+                mask3ch = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
+                isolated_mask = cv2.bitwise_and(mask3ch, img_copy)
+                cv2.imshow(label, isolated_mask)
 
             msg = String()
             msg.data = result.verbose()
-            if result is not None:
-                if result.masks is not None:
-                    mask_raw = result.masks[0].cpu().data.numpy().transpose(1, 2, 0)
-                    mask_3channel = cv2.merge((mask_raw, mask_raw, mask_raw))
-                    cv2.imshow('YOLOv', mask_3channel)
 
             cv2.imshow('YOLOv8 Inference', image)
             cv2.waitKey(1)
