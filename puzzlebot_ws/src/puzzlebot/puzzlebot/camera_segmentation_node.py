@@ -54,6 +54,7 @@ class CameraNode(Node):
                 image = result.plot()
 
             msg = String()
+            msg.data = result.verbose()
             if result is not None:
                 if result.masks is not None:
                     mask_raw = result.masks[0].cpu().data.numpy().transpose(1, 2, 0)
