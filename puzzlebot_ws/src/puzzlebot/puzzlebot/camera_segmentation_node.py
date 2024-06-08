@@ -19,11 +19,9 @@ class CameraNode(Node):
         self.bridge = CvBridge()
         
         # Publisher
-        #self.pub = self.create_publisher(Image, '/raw_camera', 10)
         self.pub = self.create_publisher(String, 'debug', 10)
 
         # Open the camera feed
-        print(self.gstreamer_pipeline(flip_method=0))
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
         import torch
@@ -39,10 +37,7 @@ class CameraNode(Node):
         path = os.path.join(path, 'src', 'puzzlebot','package_data','best.pt')
 
         self.model = YOLO(path)
-        if torch.cuda.is_available():
-            self.device = torch.device('cuda')
-        else:
-            self.device = torch.device('cpu')
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print('Using device:', self.device)
         self.model.model.eval()
         self.model.to(self.device)
@@ -58,18 +53,16 @@ class CameraNode(Node):
             with torch.no_grad():
                 result = self.model(dst)[0]
                 image = result.plot()
-                img_copy = np.copy(result.orig_img)
 
+            b_mask = np.zeros(img.shape[:2], np.uint8)
             for c in result:
                 label = c.names[c.boxes.cls.tolist().pop()]
-                b_mask = np.zeros(img.shape[:2], np.uint8)
-                contour = c.masks.xy.pop()
-                contour = contour.astype(np.int32)
-                contour = contour.reshape(-1, 1, 2)
-                _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
-                mask3ch = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
-                isolated_mask = cv2.bitwise_and(mask3ch, img_copy)
-                cv2.imshow(label, isolated_mask)
+                if label == 'street':
+                    contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
+                    _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
+            mask_3_channels = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
+            isolated_merged_mask = cv2.bitwise_and(mask_3_channels, img)
+            cv2.imshow('street', isolated_merged_mask)
 
             msg = String()
             msg.data = result.verbose()
