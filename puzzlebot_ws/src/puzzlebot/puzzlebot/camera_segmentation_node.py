@@ -25,7 +25,7 @@ class CameraNode(Node):
     def timer_callback(self):
         if self.source.isOpened():
             _, img = self.source.read()
-            dst = camera_utils.undistort(img)
+            dst = camera_utils.undistort(img, (320, 240))
             msg = Bool()
             msg.data = True
             self.pub.publish(msg)
