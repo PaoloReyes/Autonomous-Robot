@@ -54,6 +54,7 @@ class CameraNode(Node):
                 image = result.plot()
 
             msg = String()
+            msg.data = result.verbose()
             
             if len(result.masks) > 0:
                 for i in range(len(result.masks)):
