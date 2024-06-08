@@ -7,6 +7,8 @@ from cv_bridge import CvBridge
 from .submodules import camera_utils
 from ultralytics import YOLO
 import torch
+import os
+from ament_index_python import get_package_share_directory
 
 class CameraNode(Node):
     def __init__(self):
@@ -25,7 +27,11 @@ class CameraNode(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
         # Import YOLO model
-        model = YOLO('best.pt')
+        path = get_package_share_directory('puzzlebot')
+        path = path.split('install')[0]
+        path = os.path.join(path, 'src', 'puzzlebot','puzzlebot','best.pt')
+
+        model = YOLO(path)
         if torch.cuda.is_available():
             device = torch.device('cuda')
         else:
