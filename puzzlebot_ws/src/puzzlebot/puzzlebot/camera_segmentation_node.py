@@ -5,7 +5,7 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
 from cv_bridge import CvBridge
 from .submodules import camera_utils
-
+import torch
 import os
 from ament_index_python import get_package_share_directory
 
@@ -22,7 +22,6 @@ class CameraNode(Node):
         print(self.gstreamer_pipeline(flip_method=0))
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
-        import torch
         from ultralytics import YOLO
 
         # Timers
@@ -36,11 +35,12 @@ class CameraNode(Node):
 
         self.model = YOLO(path)
         if torch.cuda.is_available():
-            device = torch.device('cuda')
+            self.device = torch.device('cuda')
         else:
-            device = torch.device('cpu')
-        print('Using device:', device)
-        self.model.to(device)
+            self.device = torch.device('cpu')
+        print('Using device:', self.device)
+        self.model.model.eval()
+        self.model.to(self.device)
 
     def timer_callback(self):
         if self.source.isOpened():
@@ -49,7 +49,9 @@ class CameraNode(Node):
             msg = Bool()
             msg.data = True
             cv2.imshow('Camera Feed', dst)
-            result = self.model(dst)
+            with torch.no_grad():
+                dst = dst.to(device= self.device, dtype=torch.float32)
+                result = self.model(dst)
             image = result[0].plot()
 
             cv2.imshow('YOLOv8 Inference', image)
