@@ -54,7 +54,9 @@ class CameraNode(Node):
                 image = result.plot()
 
             msg = String()
-            msg.data = str(result.masks.segments)
+            mask_raw = result.masks[0].cpu().data.numpy().transpose(1, 2, 0)
+            mask_3channel = cv2.merge((mask_raw, mask_raw, mask_raw))
+            cv2.imshow('YOLOv8 Inference', mask_3channel)
 
             cv2.imshow('YOLOv8 Inference', image)
             cv2.waitKey(1)
