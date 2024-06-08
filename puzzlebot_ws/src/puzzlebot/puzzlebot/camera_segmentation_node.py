@@ -60,9 +60,13 @@ class CameraNode(Node):
                 if label == 'street':
                     contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
                     _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
-            mask_3_channels = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
-            isolated_merged_mask = cv2.bitwise_and(mask_3_channels, img)
-            cv2.imshow('street', isolated_merged_mask)
+            merged_mask = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
+            blurred_mask = cv2.GaussianBlur(merged_mask, (15, 15), 0)
+            edges = cv2.Canny(blurred_mask, 100, 200)
+            cv2.imshow('edges', edges)
+            
+            img_masked = cv2.bitwise_and(merged_mask, img)
+            cv2.imshow('street', img_masked)
 
             msg = String()
             msg.data = result.verbose()
