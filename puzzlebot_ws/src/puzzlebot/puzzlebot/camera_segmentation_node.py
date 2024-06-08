@@ -53,8 +53,10 @@ class CameraNode(Node):
             import torch
     
             with torch.no_grad():
-                result = self.model(dst)
-                image = result[0].plot()
+                result = self.model(dst)[0]
+                image = result.plot()
+
+            self.get_logger().info(result.verbose())
 
             cv2.imshow('YOLOv8 Inference', image)
             cv2.waitKey(1)
