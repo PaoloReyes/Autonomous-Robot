@@ -1,8 +1,7 @@
 import cv2
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Image
-from std_msgs.msg import Bool
+from std_msgs.msg import String
 from cv_bridge import CvBridge
 from .submodules import camera_utils
 import os
@@ -15,7 +14,7 @@ class CameraNode(Node):
         
         # Publisher
         #self.pub = self.create_publisher(Image, '/raw_camera', 10)
-        self.pub = self.create_publisher(Bool, 'ready', 10)
+        self.pub = self.create_publisher(String, 'debug', 10)
 
         # Open the camera feed
         print(self.gstreamer_pipeline(flip_method=0))
@@ -46,8 +45,6 @@ class CameraNode(Node):
         if self.source.isOpened():
             _, img = self.source.read()
             dst = camera_utils.undistort(img, (320, 240))
-            msg = Bool()
-            msg.data = True
             cv2.imshow('Camera Feed', dst)
     
             import torch
@@ -56,7 +53,8 @@ class CameraNode(Node):
                 result = self.model(dst)[0]
                 image = result.plot()
 
-            self.get_logger().info(result.verbose())
+            msg = String()
+            msg.data = self.get_logger().info(result.verbose())
 
             cv2.imshow('YOLOv8 Inference', image)
             cv2.waitKey(1)
