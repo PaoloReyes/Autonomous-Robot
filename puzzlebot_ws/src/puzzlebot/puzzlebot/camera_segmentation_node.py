@@ -33,13 +33,13 @@ class CameraNode(Node):
         path = path.split('install')[0]
         path = os.path.join(path, 'src', 'puzzlebot','package_data','best.pt')
 
-        model = YOLO(path)
-        if torch.cuda.is_available():
-            device = torch.device('cuda')
-        else:
-            device = torch.device('cpu')
-        print('Using device:', device)
-        model.to(device)
+        # model = YOLO(path)
+        # if torch.cuda.is_available():
+        #     device = torch.device('cuda')
+        # else:
+        #     device = torch.device('cpu')
+        # print('Using device:', device)
+        # model.to(device)
 
     def timer_callback(self):
         if self.source.isOpened():
