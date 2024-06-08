@@ -1,3 +1,4 @@
-**/build/
-**/log/
-**/install/
+puzzlebot_ws/build/
+puzzlebot_ws/log/
+puzzlebot_ws/install/
+yolov8train/semanticsegmentation-*/
