@@ -26,7 +26,7 @@ class CameraNode(Node):
         from ultralytics import YOLO
 
         # Timers
-        timer_period = 0.1 
+        timer_period = 0.01 
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
         # Import YOLO model
@@ -53,6 +53,7 @@ class CameraNode(Node):
             image = result[0].plot()
 
             cv2.imshow('YOLOv8 Inference', image)
+            cv2.waitKey(1)
             self.pub.publish(msg)
             #msg = self.bridge.cv2_to_imgmsg(img, encoding='bgr8')
             #self.pub.publish(msg)
