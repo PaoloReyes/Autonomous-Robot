@@ -19,6 +19,7 @@ class CameraNode(Node):
         self.pub = self.create_publisher(Bool, 'ready', 10)
 
         # Open the camera feed
+        print(self.gstreamer_pipeline(flip_method=0))
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
         import torch
@@ -33,12 +34,12 @@ class CameraNode(Node):
         path = path.split('install')[0]
         path = os.path.join(path, 'src', 'puzzlebot','package_data','best.pt')
 
-        # model = YOLO(path)
-        # if torch.cuda.is_available():
-        #     device = torch.device('cuda')
-        # else:
-        #     device = torch.device('cpu')
-        # print('Using device:', device)
+        model = YOLO(path)
+        if torch.cuda.is_available():
+            device = torch.device('cuda')
+        else:
+            device = torch.device('cpu')
+        print('Using device:', device)
         # model.to(device)
 
     def timer_callback(self):
