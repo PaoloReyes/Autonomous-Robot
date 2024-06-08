@@ -5,6 +5,8 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Bool
 from cv_bridge import CvBridge
 from .submodules import camera_utils
+from ultralytics import YOLO
+import torch
 
 class CameraNode(Node):
     def __init__(self):
@@ -22,6 +24,15 @@ class CameraNode(Node):
         timer_period = 0.0333
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
+        # Import YOLO model
+        model = YOLO('best.pt')
+        if torch.cuda.is_available():
+            device = torch.device('cuda')
+        else:
+            device = torch.device('cpu')
+        print('Using device:', device)
+        model.to(device)
+
     def timer_callback(self):
         if self.source.isOpened():
             _, img = self.source.read()
