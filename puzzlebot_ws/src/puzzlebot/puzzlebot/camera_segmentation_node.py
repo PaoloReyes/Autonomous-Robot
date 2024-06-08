@@ -48,7 +48,7 @@ class CameraNode(Node):
             dst = camera_utils.undistort(img, (320, 240))
             msg = Bool()
             msg.data = True
-            cv2.imshow('Camera Feed', dst)
+            #cv2.imshow('Camera Feed', dst)
     
             import torch
     
@@ -56,8 +56,8 @@ class CameraNode(Node):
                 result = self.model(dst)
                 image = result[0].plot()
 
-            cv2.imshow('YOLOv8 Inference', image)
-            cv2.waitKey(1)
+            #cv2.imshow('YOLOv8 Inference', image)
+            #cv2.waitKey(1)
             self.pub.publish(msg)
             #msg = self.bridge.cv2_to_imgmsg(img, encoding='bgr8')
             #self.pub.publish(msg)
