@@ -55,7 +55,9 @@ class CameraNode(Node):
             import torchvision.transforms as T    
             with torch.no_grad():
                 transform = T.ToTensor()
+                dst = cv2.resize(dst, (640, 640))
                 tensor = transform(dst).to(self.device)
+                tensor = tensor.unsqueeze(0)
                 print(tensor.dtype, tensor.shape)
                 print(dst.dtype, dst.shape)
                 result = self.model(tensor)
