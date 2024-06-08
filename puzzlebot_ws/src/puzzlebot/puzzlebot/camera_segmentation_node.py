@@ -54,11 +54,7 @@ class CameraNode(Node):
                 image = result.plot()
 
             msg = String()
-            msg.data = result.verbose()
-            
-            if len(result.masks) > 0:
-                for i in range(len(result.masks)):
-                    cv2.imshow(i, result.masks[i])
+            msg.data = str(result.masks.segments)
 
             cv2.imshow('YOLOv8 Inference', image)
             cv2.waitKey(1)
