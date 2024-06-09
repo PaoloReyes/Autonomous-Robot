@@ -75,15 +75,7 @@ class CameraNode(Node):
                 self.points = []
                 self.run_line(edges, actual_coord=start_point_1, i=0)
                 lines[0] = np.array(self.points)
-                
-                rkn254 = np.zeros(img.shape[:2], np.uint8)
-                for line in lines:
-                    if len(line) > 0:
-                        contour = line
-                        print(contour)
-                        _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
             
-
                 rkn254 = np.zeros(img.shape[:2], np.uint8)
                 # Drawing the lines
                 for i, line in enumerate(lines):
