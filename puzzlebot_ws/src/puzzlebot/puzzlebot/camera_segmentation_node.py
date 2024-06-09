@@ -86,7 +86,7 @@ class CameraNode(Node):
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            cv2.
+            cv2.imshow('mid_edge', mid_edge)
             cv2.waitKey(1)
 
             msg = String()
