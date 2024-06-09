@@ -80,13 +80,17 @@ class CameraNode(Node):
 
             merged_lines = []
             for group in groups:
-                merged_line = group[0]
-                if len(group) > 1:
-                    for line in group[1:]:
-                        merged_line = self.merge_two_lines(merged_line, line)
-                    merged_lines.append(merged_line)
+                if len(group) > 0:
+                    merged_line = group[0]
+                    if len(group) > 1:
+                        for line in group[1:]:
+                            merged_line = self.merge_two_lines(merged_line, line)
+                        merged_lines.append(merged_line)
+                    else:
+                        merged_lines.append(group[0])
             
             for i, line in enumerate(merged_lines):
+                if line is None: continue
                 x1, y1, x2, y2 = line
                 if i == 0:
                     cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
