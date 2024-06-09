@@ -73,7 +73,7 @@ class CameraNode(Node):
                 lines[1].append(start_point_2)
                 
                 self.points = []
-                self.run_line(edges, actual_coord=start_point_1, i=0)
+                self.run_line(edges, start_point_1, 0)
                 lines[0] = np.array(self.points)
             
                 rkn254 = np.zeros(img.shape[:2], np.uint8)
@@ -183,15 +183,14 @@ class CameraNode(Node):
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
 
-    def run_line(self, edges, past_coord=None, actual_coord=None, i=0):
+    def run_line(self, edges, actual_coord=None, i=0):
         if i == 240:
             return past_coord
         if past_coord is None:
             past_coord = (None, None)
         if actual_coord is None:
             actual_coord = (None, None)
-        
-        x_past, y_past = past_coord
+
         x_act, y_act = actual_coord
         
         for dx in range(-1, 2):
@@ -201,7 +200,7 @@ class CameraNode(Node):
                     if (x2, y2) not in self.points:
                         print(f'i: {i}, x2: {x2}, y2: {y2}')
                         self.points.append((x2, y2))
-                        return self.run_line(edges, actual_coord, (x2, y2), i + 1)
+                        return self.run_line(edges, (x2, y2), i + 1)
         
         return past_coord
                 
