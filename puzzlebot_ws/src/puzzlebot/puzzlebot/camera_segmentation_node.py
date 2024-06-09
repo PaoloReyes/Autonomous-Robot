@@ -72,13 +72,11 @@ class CameraNode(Node):
                     x1, y1, x2, y2 = line
                     m = self.get_m(x1, y1, x2, y2)
                     if m > 0.8:
-                        groups[0].append((x1, y1, x2, y2))
+                        groups[0].append(line.copy())
                     elif m > 0.3 and m < 0.8:
-                        groups[1].append((x1, y1, x2, y2))
+                        groups[1].append(line.copy())
                     else:
-                        groups[2].append((x1, y1, x2, y2))
-
-            print(groups)
+                        groups[2].append(line.copy())
 
             merged_lines = []
             for group in groups:
@@ -90,6 +88,11 @@ class CameraNode(Node):
                         merged_lines.append(merged_line)
                     else:
                         merged_lines.append(group[0])
+            
+            print()
+            print(groups)
+            print(merged_lines)
+            print()
             
             for i, line in enumerate(merged_lines):
                 if line is None: continue
