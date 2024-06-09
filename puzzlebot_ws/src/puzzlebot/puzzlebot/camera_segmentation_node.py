@@ -92,8 +92,11 @@ class CameraNode(Node):
                         for k in range(len(group[i])):
                             coord_group[i] = self.merge_two_lines(group[i][k], coord_group[i])
                     else:
-                        coord_group[i] = group[i][0]
-                        cv2.line(dst, (x1, y1), (x2, y2), (15, 219, 133), 2)
+                        coord_group[i] = group[i]
+
+                for i in range(len(coord_group)):
+                    x1, y1, x2, y2 = coord_group[i]
+                    cv2.line(dst, (x1, y1), (x2, y2), (15, 219, 133), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
