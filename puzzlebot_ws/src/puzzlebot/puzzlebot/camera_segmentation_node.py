@@ -166,13 +166,17 @@ class CameraNode(Node):
         out = []
         for i in range(len(lines[0])):
             out.append([])
-        for line in lines:
-            for i, line_data_type in enumerate(line):
-                avrg_start_x = sum([point[0] for point in points[i]]) / len(points)
-                avrg_start_y = sum([point[1] for point in points[i]]) / len(points)
-                avrg_end_x = sum([point[2] for point in points[i]]) / len(points)
-                avrg_end_y = sum([point[3] for point in points[i]]) / len(points)
-                out[i].append((int(avrg_start_x), int(avrg_start_y), int(avrg_end_x), int(avrg_end_y)))
+        for i, points_type in enumerate(points):
+            for point_data in points_type:
+                avrg_start_x += point_data[0]
+                avrg_start_y += point_data[1]
+                avrg_end_x += point_data[2]
+                avrg_end_y += point_data[3]
+            avrg_start_x /= len(points_type)
+            avrg_start_y /= len(points_type)
+            avrg_end_x /= len(points_type)
+            avrg_end_y /= len(points_type)
+            out[i].append((int(avrg_start_x), int(avrg_start_y), int(avrg_end_x), int(avrg_end_y)))
 
         return out
 
