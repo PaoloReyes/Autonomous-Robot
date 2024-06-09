@@ -132,14 +132,15 @@ class CameraNode(Node):
             print()
             
             for i, line in enumerate(final_merged_lines):
-                if line[i] is None: continue
-                x1, y1, x2, y2 = line[i]
-                if i == 0:
-                    cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
-                elif i == 1:
-                    cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                elif i == 2:
-                    cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                for j, line_type_data in enumerate(line):
+                    if line_type_data is None: continue
+                    x1, y1, x2, y2 = line_type_data
+                    if j == 0:
+                        cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
+                    elif j == 1:
+                        cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    elif j == 2:
+                        cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
