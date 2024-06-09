@@ -65,21 +65,21 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-
-            mid_edge = edges.copy()
-            cv2.line(mid_edge, (0, mid_edge.shape[0]//2), (mid_edge.shape[1], mid_edge.shape[0]//2), (255, 255, 255), 1)
-            mid_image = mid_edge[mid_edge.shape[0]//2:,:]
-            M = cv2.moments(edges)
+            mid_images = edges.copy()
+            cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
+            image = mid_images[mid_images.shape[0]//2:,:]
+            
+            M = cv2.moments(image)
             if M['m00'] != 0:
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
-                cv2.circle(mid, (cx, cy), 5, (0, 0, 255), -1)
+                cv2.circle(mid_images, (cx, cy), 5, (0, 0, 255), -1)
 
-            cv2.imshow('Original Image', dst)
+            #cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            cv2.imshow('pussy controller', mid_edge)
+            cv2.imshow('pussy controller', mid_images)
             cv2.waitKey(1)
 
             msg = String()
