@@ -63,58 +63,39 @@ class CameraNode(Node):
             blurred_mask = cv2.GaussianBlur(merged_mask, (15, 15), 0)
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
-            lines = cv2.HoughLinesP(edges, 1, np.pi/180, 35, maxLineGap=100)
-            if lines is not None:
-                lines = lines.reshape(-1, 4)
-                for i, line in enumerate(lines):
-                    x1, y1, x2, y2 = line
-                    if y1 > y2: 
-                        x1, y1, x2, y2 = x2, y2, x1, y1
-                        lines[i] = [x1, y1, x2, y2]
-                lines = self.merge_lines(lines, threshold_distance=50, threshold_angle=15)
 
-            groups = [[], [], []]
-            if lines is not None:
-                for line in lines:
-                    x1, y1, x2, y2 = line
-                    m = self.get_m(x1, y1, x2, y2)
-                    if m > 0.8:
-                        groups[0].append((x1, y1, x2, y2))
-                        cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
-                    elif m > 0.3 and m < 0.8:
-                        groups[1].append((x1, y1, x2, y2))
-                        cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                    else:
-                        groups[2].append((x1, y1, x2, y2))
-                        cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            # contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
-            merged_lines = []
-            for i, group in enumerate(groups):
-                if len(group) > 0:
-                    merged_line = group[0]
-                    if len(group) > 1:
-                        for line in group[1:]:
-                            merged_line = self.merge_two_lines(merged_line, line)
-                        merged_lines.append(merged_line)
-                    else:
-                        merged_lines.append(group[0])
-                else:
-                    merged_lines.append(None)
-            
-            print()
-            print(groups)
-            print(merged_lines)
-            print()
-            
-            for i, line in enumerate(merged_lines):
-                if line is None: continue
-                x1, y1, x2, y2 = line
-                if i == 0:
-                    cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
-                elif i == 1:
-                    cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                elif i == 2:
-                    cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            # # Create an array to hold the pixels of each line
+            # lines_pixels = []
+
+            # # Collect the pixels of each contour
+            # for contour in contours:
+            #     line_pixels = []
+            #     for point in contour:
+            #         x, y = point[0]
+            #         line_pixels.append((x, y))
+            #     lines_pixels.append(line_pixels)
+
+            # # Assuming the image has exactly two lines, we can separate them
+            # if len(lines_pixels) > 2:
+            #     # If more than 2 lines are found, we need to combine or filter them.
+            #     # This part depends on the specific structure of your lines and may need manual adjustment.
+            #     # For simplicity, we assume the two largest contours are the lines we're interested in.
+            #     lines_pixels = sorted(lines_pixels, key=len, reverse=True)[:2]
+
+            # # To visualize the lines
+            # output_image = np.zeros_like(image)
+            # for line in lines_pixels:
+            #     for (x, y) in line:
+            #         output_image[y, x] = (255, 255, 255)  # Drawing in white
+
+            # # Display the result using OpenCV
+            # cv2.imshow('Detected Lines', output_image)
+            # cv2.waitKey(0)  # Wait for a key press to close the image window
+            # cv2.destroyAllWindows()    
+                    
+
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
