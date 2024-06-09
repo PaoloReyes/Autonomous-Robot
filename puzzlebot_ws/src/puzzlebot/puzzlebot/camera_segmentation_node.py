@@ -70,7 +70,7 @@ class CameraNode(Node):
 
             mid_images = edges.copy()
             cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
-            mid = mid_images[mid_images.shape[0]//2:,:]
+            mid = img_masked[mid_images.shape[0]//2:,:]
             
             [contours, _] = cv2.findContours(mid, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
