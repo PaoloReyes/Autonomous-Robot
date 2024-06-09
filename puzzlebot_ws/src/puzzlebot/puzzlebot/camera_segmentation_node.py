@@ -88,9 +88,10 @@ class CameraNode(Node):
                         i += 1
                         cv2.circle(mid_images, (cx, cy), 5, (255, 255, 255), -1)
                 
-                cx_t = cx_t // i
-                cy_t = cy_t // i
-                # cv2.circle(mid_images, (cx_t, cy_t), 5, (255, 255, 255), -1)
+                    if i != 0:
+                        cx_t = cx_t // i
+                        cy_t = cy_t // i
+                        cv2.circle(mid_images, (cx_t, cy_t), 5, (255, 255, 255), -1)
         
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
