@@ -76,8 +76,8 @@ class CameraNode(Node):
             if len(contours) > 0:
                 cx_t = 0
                 cy_t = 0
+                i = 0
                 for cnt in contours:
-                    i = 0
                     M = cv2.moments(cnt)
                     if M['m00'] != 0:
                         cx = int(M['m10']/M['m00'])
@@ -87,12 +87,11 @@ class CameraNode(Node):
                         cy_t += cy
                         i += 1
                         cv2.circle(mid_images, (cx, cy), 5, (255, 255, 255), -1)
-                
-                    if i != 0:
-                        cx_t = cx_t // i
-                        cy_t = cy_t // i
-                        cv2.circle(mid_images, (cx_t, cy_t), 5, (255, 255, 255), -1)
-        
+                if i != 0:
+                    cx_t = cx_t // i
+                    cy_t = cy_t // i
+                    cv2.circle(mid_images, (cx_t, cy_t), 5, (255, 255, 255), -1)
+    
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
