@@ -46,12 +46,12 @@ class CameraNode(Node):
         if self.source.isOpened():
             _, img = self.source.read()
             img = cv2.flip(img, 0)
-            dst = camera_utils.undistort(img, (320, 240))
+            #dst = camera_utils.undistort(img, (320, 240))
     
             import torch
     
             with torch.no_grad():
-                result = self.model(dst)[0]
+                result = self.model(img)[0]
                 image = result.plot()
 
             b_mask = np.zeros(img.shape[:2], np.uint8)
@@ -73,13 +73,13 @@ class CameraNode(Node):
             if M['m00'] != 0:
                 cx = int(M['m10']/M['m00'])
                 cy = int(M['m01']/M['m00'])
-                cv2.circle(mid_image, (cx, cy), 5, (0, 0, 255), -1)
+                cv2.circle(mid, (cx, cy), 5, (0, 0, 255), -1)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            cv2.imshow('pussy controller', mid_image)
+            cv2.imshow('pussy controller', mid_edge)
             cv2.waitKey(1)
 
             msg = String()
