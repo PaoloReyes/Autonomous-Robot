@@ -17,9 +17,6 @@ class CameraNode(Node):
     def __init__(self):
         super().__init__('camera_segmentation_node')
         self.bridge = CvBridge()
-
-        # Variables
-        self.history_lines = []
         
         # Publisher
         self.pub = self.create_publisher(String, 'debug', 10)
@@ -104,17 +101,14 @@ class CameraNode(Node):
                 else:
                     merged_lines.append(None)
             
-            if len(self.history_lines) < 5:
-                self.history_lines.append(merged_lines)
-            else:
-                self.history_lines.pop(0)
-                self.history_lines.append(merged_lines)
+            print()
+            print(groups)
+            print(merged_lines)
+            print()
             
-            avg_lines = self.merge_multiple_lines(self.history_lines)
-            
-            for i, line in enumerate(avg_lines):
-                if len(line) == 0: continue
-                x1, y1, x2, y2 = line[0]
+            for i, line in enumerate(merged_lines):
+                if line is None: continue
+                x1, y1, x2, y2 = line
                 if i == 0:
                     cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
                 elif i == 1:
@@ -148,38 +142,6 @@ class CameraNode(Node):
         avg_end_y = (y2 + y4) / 2
 
         return (int(avg_start_x), int(avg_start_y), int(avg_end_x), int(avg_end_y))
-    
-    def merge_multiple_lines(self, lines):
-        points = []
-        for i in range(len(lines[0])):
-            points.append([])
-        for line in lines:
-            for i, line_data_type in enumerate(line):
-                if line_data_type is None: continue
-                x1, y1, x2, y2 = line_data_type
-                points[i].append((x1, y1, x2, y2))
-
-        out = []
-        for i in range(len(lines[0])):
-            out.append([])
-        for i, points_type in enumerate(points):
-            if len(points_type) == 0: continue
-            avrg_start_x = 0
-            avrg_start_y = 0
-            avrg_end_x = 0
-            avrg_end_y = 0
-            for point_data in points_type:
-                avrg_start_x += point_data[0]
-                avrg_start_y += point_data[1]
-                avrg_end_x += point_data[2]
-                avrg_end_y += point_data[3]
-            avrg_start_x /= len(points_type)
-            avrg_start_y /= len(points_type)
-            avrg_end_x /= len(points_type)
-            avrg_end_y /= len(points_type)
-            out[i].append((int(avrg_start_x), int(avrg_start_y), int(avrg_end_x), int(avrg_end_y)))
-
-        return out
 
     def merge_lines(self, lines, threshold_distance=10, threshold_angle=10):
         def calculate_angle(line):
