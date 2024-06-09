@@ -66,14 +66,15 @@ class CameraNode(Node):
 
             # search the start point of each line of street
             for y in range(edges.shape[0], 0, -1):
+                print(y)
                 start_point_1 = None
                 start_point_2 = None
                 for x in range(edges.shape[1]):
                     if edges[x, y] == 255:
                         if start_point_1 is None:
-                            start_point_1 = (x, edges.shape[0] - 1)
+                            start_point_1 = (x, y)
                         else:
-                            start_point_2 = (x, edges.shape[0] - 1)
+                            start_point_2 = (x, y)
                             break
                 if start_point_1 is not None and start_point_2 is not None:
                     break
