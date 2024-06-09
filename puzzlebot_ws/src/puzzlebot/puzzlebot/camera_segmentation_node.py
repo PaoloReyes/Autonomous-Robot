@@ -182,7 +182,7 @@ class CameraNode(Node):
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
 
-    def run_line(self, edges, past_coord: tuple = (None, None), actual_coord: tuple, i: int) -> tuple:
+    def run_line(self, edges, past_coord: tuple = (None, None), actual_coord: tuple = (None, None), i: int = 0) -> tuple:
         if i == 240:
             return past_coord
         
@@ -193,7 +193,7 @@ class CameraNode(Node):
             for j in range(3):
                 x2 = x_act + i - 1
                 y2 = y_act + j - 1
-                if x2 > edges.shape[1] or y2 > edges.shape[0]:
+                if x2 >= edges.shape[1] or y2 >= edges.shape[0] or x2 < 0 or y2 < 0:
                     continue
                 if edges[y2, x2] == 255:
                     if x_past != None or y_past != None:
