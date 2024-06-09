@@ -68,7 +68,7 @@ class CameraNode(Node):
 
             if lines is not None:
                 for line in lines:
-                    x1, y1, x2, y2 = line[0]
+                    x1, y1, x2, y2 = line
                     cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
 
             cv2.imshow('Original Image', dst)
