@@ -92,8 +92,8 @@ class CameraNode(Node):
                     if line[1] > current_max:
                         group_max[i] = line[1]
 
-            for i, group in enumerate(groups):
-                for line in group:
+            for group in groups:
+                for i, line in enumerate(group):
                     group[i] = (line[0], group_max[i], line[2], line[3])
 
             merged_lines = []
