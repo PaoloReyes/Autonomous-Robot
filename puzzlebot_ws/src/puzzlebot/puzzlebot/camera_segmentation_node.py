@@ -66,6 +66,7 @@ class CameraNode(Node):
             lines = cv2.HoughLinesP(edges, 1, np.pi/180, 35, maxLineGap=100)
             if lines is not None: lines = self.merge_lines(lines.reshape(-1, 4), threshold_distance=20, threshold_angle=10)
 
+            groups = [[], [], []]
             if lines is not None:
                 group = [[], [], []]
                 coord_group = [[], [], []]
@@ -119,22 +120,22 @@ class CameraNode(Node):
         else:
             print('Unable to open camera')
 
+    def merge_two_lines(self, line1, line2):
+        x1, y1, x2, y2 = line1
+        x3, y3, x4, y4 = line2
+
+        avg_start_x = (x1 + x3) / 2
+        avg_start_y = (y1 + y3) / 2
+        avg_end_x = (x2 + x4) / 2
+        avg_end_y = (y2 + y4) / 2
+
+        return (int(avg_start_x), int(avg_start_y), int(avg_end_x), int(avg_end_y))
+
     def merge_lines(self, lines, threshold_distance=10, threshold_angle=10):
         def calculate_angle(line):
             x1, y1, x2, y2 = line
             angle = np.degrees(np.arctan2(y2 - y1, x2 - x1))
             return angle
-
-        def merge_two_lines(line1, line2):
-            x1, y1, x2, y2 = line1
-            x3, y3, x4, y4 = line2
-
-            avg_start_x = (x1 + x3) / 2
-            avg_start_y = (y1 + y3) / 2
-            avg_end_x = (x2 + x4) / 2
-            avg_end_y = (y2 + y4) / 2
-
-            return (int(avg_start_x), int(avg_start_y), int(avg_end_x), int(avg_end_y))
 
         # Group lines
         groups = []
@@ -160,7 +161,7 @@ class CameraNode(Node):
         for group in groups:
             merged_line = group[0]
             for line in group[1:]:
-                merged_line = merge_two_lines(merged_line, line)
+                merged_line = self.merge_two_lines(merged_line, line)
             merged_lines.append(merged_line)
 
         return merged_lines
