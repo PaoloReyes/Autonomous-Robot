@@ -75,7 +75,7 @@ class CameraNode(Node):
                         start_point_2 = (x, 240)
                         break
             
-            lines = []
+            lines = [[], []]
             lines[0].append(start_point_1)
             lines[1].append(start_point_2)
             
