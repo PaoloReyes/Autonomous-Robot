@@ -187,7 +187,9 @@ class CameraNode(Node):
             for j in range(3):
                 x2 = x_past + i - 1
                 y2 = y_past + j - 1
-                if edges[y2][x2] == 255:
+                if x2 > edges.shape[1] or y2 > edges.shape[0]:
+                    continue
+                if edges[y2, x2] == 255:
                     if x2 == x_past and y2 == y_past:
                         continue
                     else:
