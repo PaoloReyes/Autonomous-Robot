@@ -185,9 +185,7 @@ class CameraNode(Node):
 
     def run_line(self, edges, actual_coord=None, i=0):
         if i == 240:
-            return past_coord
-        if past_coord is None:
-            past_coord = (None, None)
+            return
         if actual_coord is None:
             actual_coord = (None, None)
 
@@ -202,7 +200,7 @@ class CameraNode(Node):
                         self.points.append((x2, y2))
                         return self.run_line(edges, (x2, y2), i + 1)
         
-        return past_coord
+        return
                 
 def main(args=None):
     rclpy.init(args=args)
