@@ -120,10 +120,10 @@ class CameraNode(Node):
             
             print()
             print(groups)
-            print(merged_lines)
+            print(final_merged_lines)
             print()
             
-            for i, line in enumerate(merged_lines):
+            for i, line in enumerate(final_merged_lines):
                 if line is None: continue
                 x1, y1, x2, y2 = line
                 if i == 0:
