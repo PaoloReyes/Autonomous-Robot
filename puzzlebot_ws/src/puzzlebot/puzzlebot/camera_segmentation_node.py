@@ -110,22 +110,22 @@ class CameraNode(Node):
                 self.history_lines.pop(0)
                 self.history_lines.append(merged_lines)
             
-            avg_lines = self.merge_lines(self.history_lines)
+            avg_lines = self.merge_multiple_lines(self.history_lines)
 
             print()
             print(self.history_lines)
             print(avg_lines)
             print()
             
-            # for i, line in enumerate(avg_lines):
-            #     if line is None: continue
-            #     x1, y1, x2, y2 = line
-            #     if i == 0:
-            #         cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
-            #     elif i == 1:
-            #         cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            #     elif i == 2:
-            #         cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            for i, line in enumerate(avg_lines):
+                if line is None: continue
+                x1, y1, x2, y2 = line
+                if i == 0:
+                    cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
+                elif i == 1:
+                    cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                elif i == 2:
+                    cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
