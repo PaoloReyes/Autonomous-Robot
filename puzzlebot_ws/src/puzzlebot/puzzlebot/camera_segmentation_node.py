@@ -64,37 +64,44 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+            # search the start point of each line of street
+            start_point_1 = None
+            start_point_2 = None
+            for x in range(edges.shape[1]):
+                if edges[x, 240] == 255:
+                    if start_point_1 is None:
+                        start_point_1 = (x, 240)
+                    else:
+                        start_point_2 = (x, 240)
+                        break
+            
+            lines = []
+            lines.append[0](start_point_1)
+            lines.append[1](start_point_2)
+            
+            self.points = []
+            self.run_line(edges, start_point_1, 0)
+            lines.append[0](self.points)
+            self.run_line(edges, start_point_2, 0)  
+            lines.append[1](self.points)
 
-            # Create an array to hold the pixels of each line
-            lines_pixels = []
 
-            # Collect the pixels of each contour
-            for contour in contours:
-                line_pixels = []
-                for point in contour:
-                    x, y = point[0]
-                    line_pixels.append((x, y))
-                lines_pixels.append(line_pixels)
-
-            # Assuming the image has exactly two lines, we can separate them
-            if len(lines_pixels) > 2:
-                # If more than 2 lines are found, we need to combine or filter them.
-                # This part depends on the specific structure of your lines and may need manual adjustment.
-                # For simplicity, we assume the two largest contours are the lines we're interested in.
-                lines_pixels = sorted(lines_pixels, key=len, reverse=True)[:2]
-
-            # To visualize the lines
-            output_image = np.zeros_like(image)
-            for line in lines_pixels:
-                for (x, y) in line:
-                    output_image[y, x] = (255, 255, 255)  # Drawing in white
+            rkn254 = np.zeros(img.shape[:2], np.uint8)
+            # Drawing the lines
+            for line in lines:
+                i = 0
+                contour = line.astype(np.int32).reshape(-1, 1, 2)
+                if i == 0:
+                    i += 1
+                    _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
+                else:
+                    _ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            cv2.imshow('Detected Lines', output_image)
+            cv2.imshow('rkn254', rkn254)
             cv2.waitKey(1)
 
             msg = String()
@@ -168,6 +175,24 @@ class CameraNode(Node):
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
 
+    def run_line(self, edges, past_coord: tuple, i: int) -> tuple:
+        if i == 240:
+            return past_coord
+        
+        x_past, y_past = past_coord
+        for i in range(3):
+            for j in range(3):
+                x2 = x_past + i - 1
+                y2 = y_past + j - 1
+                if edges[y2, x2] == 255:
+                    if x2 == x_past and y2 == y_past:
+                        continue
+                    else:
+                        return self.points.append(self.run_line(edges, (x2, y2), i + 1))
+        
+        return past_coord
+                
+                
 def main(args=None):
     rclpy.init(args=args)
     camera_node = CameraNode()
