@@ -77,7 +77,6 @@ class CameraNode(Node):
                         cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
                     else:
                         cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
-                    cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
