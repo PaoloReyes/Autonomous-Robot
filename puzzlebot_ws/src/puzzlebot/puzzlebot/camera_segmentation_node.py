@@ -82,6 +82,7 @@ class CameraNode(Node):
                 if M['m00'] != 0:
                     cx = int(M['m10']/M['m00'])
                     cy = int(M['m01']/M['m00'])
+                    print(f'distance in y: {cy}')
                     cv2.circle(mid_images, (cx, cy), 5, (255, 255, 255), -1)
     
             cv2.imshow('Original Image', img)
