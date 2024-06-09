@@ -71,11 +71,11 @@ class CameraNode(Node):
             mid_images = edges.copy()
             cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
 
-            # mid = b_mask[b_mask.shape[0]//2:,:]
+            mid = b_mask[b_mask.shape[0]//2:,:]
 
-            # print(mid.shape)
+            print(mid.shape)
             
-            contours, _ = cv2.findContours(b_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            contours, _ = cv2.findContours(mid.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
                 cx_t = 0
                 cy_t = 0
