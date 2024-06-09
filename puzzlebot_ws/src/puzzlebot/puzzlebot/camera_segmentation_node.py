@@ -79,10 +79,14 @@ class CameraNode(Node):
                     print(f'distance in y: {cy}')
                     cv2.circle(edges, (cx, cy), 5, (255, 255, 255), -1)
     
+            mid_edge = edges[edges.shape[1]//2]
+            mid_edge = cv2.resize(mid_edge, (320, 240))
+
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
+            cv2.
             cv2.waitKey(1)
 
             msg = String()
