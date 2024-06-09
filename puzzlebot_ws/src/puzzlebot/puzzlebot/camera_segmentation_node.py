@@ -71,29 +71,18 @@ class CameraNode(Node):
             mid_images = edges.copy()
             cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
 
-            mid = b_mask[b_mask.shape[0]//2:,:]
-
-            print(mid.shape)
+            # mid = b_mask[b_mask.shape[0]//2:,:]
             
-            [contours, _] = cv2.findContours(mid.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            contours, _ = cv2.findContours(blurred_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
-                cx_t = 0
-                cy_t = 0
                 i = 0
-                for cnt in contours:
-                    M = cv2.moments(cnt)
-                    if M['m00'] != 0:
-                        cx = int(M['m10']/M['m00'])
-                        cy = int(M['m01']/M['m00'])
-                        cy += mid_images.shape[0]//2
-                        cx_t += cx
-                        cy_t += cy
-                        i += 1
-                        cv2.circle(mid_images, (cx, cy), 5, (255, 255, 255), -1)
-                if i != 0:
-                    cx_t = cx_t // i
-                    cy_t = cy_t // i
-                    cv2.circle(mid_images, (cx_t, cy_t), 5, (255, 255, 255), -1)
+                max_c = max(contours, key=cv2.contourArea)
+                M = cv2.moments(max_c)    
+                if M['m00'] != 0:
+                    cx = int(M['m10']/M['m00'])
+                    cy = int(M['m01']/M['m00'])
+                    i += 1
+                    cv2.circle(mid_images, (cx, cy), 5, (255, 255, 255), -1)
     
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
