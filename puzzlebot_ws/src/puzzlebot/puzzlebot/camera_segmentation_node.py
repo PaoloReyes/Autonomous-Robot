@@ -92,11 +92,11 @@ class CameraNode(Node):
                     if len(group) > 1:
                         for line in group[1:]:
                             merged_line = self.merge_two_lines(merged_line, line)
-                        merged_lines[i].append(merged_line)
+                        merged_lines.append(merged_line)
                     else:
-                        merged_lines[i].append(group[0])
+                        merged_lines.append(group[0])
                 else:
-                    merged_lines[i].append(None)
+                    merged_lines.append(None)
             
             print()
             print(groups)
