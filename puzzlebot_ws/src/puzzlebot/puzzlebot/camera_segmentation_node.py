@@ -46,12 +46,13 @@ class CameraNode(Node):
         if self.source.isOpened():
             _, img = self.source.read()
             img = cv2.flip(img, 0)
+            img = cv2.flip(img, 1)
             #dst = camera_utils.undistort(img, (320, 240))
     
             import torch
     
             with torch.no_grad():
-                result = self.model(img)[0]
+                result = self.model(img.copy())[0]
                 image = result.plot()
 
             b_mask = np.zeros(img.shape[:2], np.uint8)
