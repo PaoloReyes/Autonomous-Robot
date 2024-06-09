@@ -69,17 +69,17 @@ class CameraNode(Node):
             edges = cv2.Canny(blurred_mask, 100, 200)
 
             mid_images = edges.copy()
-            cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (0, 0, 255), 1)
+            cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
             mid = mid_images[mid_images.shape[0]//2:,:]
             
-            contours, _ = cv2.findContours(mid, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            [contours, _] = cv2.findContours(mid, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
                 for cnt in contours:
                     M = cv2.moments(cnt)
                     if M['m00'] != 0:
                         cx = int(M['m10']/M['m00'])
                         cy = int(M['m01']/M['m00'])
-                        cv2.circle(mid_images, (cx, cy), 5, (0, 0, 255), -1)
+                        cv2.circle(mid_images, (cx, cy), 5, (255, 255, 255), -1)
 
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
