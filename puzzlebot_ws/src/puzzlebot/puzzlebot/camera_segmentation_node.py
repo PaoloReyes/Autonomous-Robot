@@ -75,27 +75,18 @@ class CameraNode(Node):
 
             groups = [[], [], []]
             if lines is not None:
-                for i, line in enumerate(lines):
+                for line in lines:
                     x1, y1, x2, y2 = line
                     m = self.get_m(x1, y1, x2, y2)
                     if m > 0.8:
                         groups[0].append((x1, y1, x2, y2))
+                        cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
                     elif m > 0.3 and m < 0.8:
                         groups[1].append((x1, y1, x2, y2))
+                        cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
                     else:
                         groups[2].append((x1, y1, x2, y2))
-            
-            group_max = [0, 0, 0]
-            for i, group in enumerate(groups):
-                current_max = 0
-                for line in group:
-                    if line[1] > current_max:
-                        current_max = line[1]
-                group_max[i] = current_max
-
-            for group in groups:
-                for i, line in enumerate(group):
-                    group[i] = (line[0], group_max[i], line[2], line[3])
+                        cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
             merged_lines = []
             for i, group in enumerate(groups):
@@ -114,11 +105,6 @@ class CameraNode(Node):
             print(groups)
             print(merged_lines)
             print()
-
-            for group in groups:
-                for line in group:
-                    x1, y1, x2, y2 = line
-                    cv2.line(dst, (x1, y1), (x2, y2), (0, 0, 255), 2)
             
             for i, line in enumerate(merged_lines):
                 if line is None: continue
