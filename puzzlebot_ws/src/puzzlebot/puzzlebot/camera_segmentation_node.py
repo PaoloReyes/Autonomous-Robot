@@ -64,43 +64,37 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-            # contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
-            # # Create an array to hold the pixels of each line
-            # lines_pixels = []
+            # Create an array to hold the pixels of each line
+            lines_pixels = []
 
-            # # Collect the pixels of each contour
-            # for contour in contours:
-            #     line_pixels = []
-            #     for point in contour:
-            #         x, y = point[0]
-            #         line_pixels.append((x, y))
-            #     lines_pixels.append(line_pixels)
+            # Collect the pixels of each contour
+            for contour in contours:
+                line_pixels = []
+                for point in contour:
+                    x, y = point[0]
+                    line_pixels.append((x, y))
+                lines_pixels.append(line_pixels)
 
-            # # Assuming the image has exactly two lines, we can separate them
-            # if len(lines_pixels) > 2:
-            #     # If more than 2 lines are found, we need to combine or filter them.
-            #     # This part depends on the specific structure of your lines and may need manual adjustment.
-            #     # For simplicity, we assume the two largest contours are the lines we're interested in.
-            #     lines_pixels = sorted(lines_pixels, key=len, reverse=True)[:2]
+            # Assuming the image has exactly two lines, we can separate them
+            if len(lines_pixels) > 2:
+                # If more than 2 lines are found, we need to combine or filter them.
+                # This part depends on the specific structure of your lines and may need manual adjustment.
+                # For simplicity, we assume the two largest contours are the lines we're interested in.
+                lines_pixels = sorted(lines_pixels, key=len, reverse=True)[:2]
 
-            # # To visualize the lines
-            # output_image = np.zeros_like(image)
-            # for line in lines_pixels:
-            #     for (x, y) in line:
-            #         output_image[y, x] = (255, 255, 255)  # Drawing in white
-
-            # # Display the result using OpenCV
-            # cv2.imshow('Detected Lines', output_image)
-            # cv2.waitKey(0)  # Wait for a key press to close the image window
-            # cv2.destroyAllWindows()    
-                    
-
+            # To visualize the lines
+            output_image = np.zeros_like(image)
+            for line in lines_pixels:
+                for (x, y) in line:
+                    output_image[y, x] = (255, 255, 255)  # Drawing in white
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
+            cv2.imshow('Detected Lines', output_image)
             cv2.waitKey(1)
 
             msg = String()
