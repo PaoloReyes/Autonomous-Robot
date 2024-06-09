@@ -95,8 +95,9 @@ class CameraNode(Node):
                         coord_group[i] = group[i]
 
                 for i in range(len(coord_group)):
-                    x1, y1, x2, y2 = coord_group[i]
-                    cv2.line(dst, (x1, y1), (x2, y2), (15, 219, 133), 2)
+                    if len(coord_group[i]) > 0:
+                        x1, y1, x2, y2 = coord_group[i]
+                        cv2.line(dst, (x1, y1), (x2, y2), (15, 219, 133), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
