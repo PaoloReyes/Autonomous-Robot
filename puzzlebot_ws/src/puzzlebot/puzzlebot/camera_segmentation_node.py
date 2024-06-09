@@ -65,24 +65,7 @@ class CameraNode(Node):
             edges = cv2.Canny(blurred_mask, 100, 200)
 
             # search the start point of each line of street
-            start_point_1 = None
-            start_point_2 = None
-            for y in range(edges.shape[0]-1, -1, -1):
-                for x in range(edges.shape[1]):
-                    if edges[y, x] == 255:
-                        start_point_1 = (x, y)
-                        break
-                if start_point_1 is not None:
-                    for x in range(edges.shape[1]-1, -1, -1):
-                        if edges[y, x] == 255:
-                            start_point_2 = (x, y)
-                            break
-                if start_point_1 is not None and start_point_2 is not None:
-                    if start_point_1[0] != start_point_2[0]:
-                        break
-                    else:
-                        start_point_1 = None
-                        start_point_2 = None
+            start_point_1, start_point_2 = self.find_start_points(edges)
             
             if start_point_1 is not None and start_point_2 is not None:
                 lines = [[], []]
@@ -92,10 +75,13 @@ class CameraNode(Node):
                 self.points = []
                 self.run_line(edges, actual_coord=start_point_1, i=0)
                 lines[0].append(np.array(self.points))
-                # self.points = []
-                # self.run_line(edges, actual_coord=start_point_2, 0)  
-                # lines[1].append(self.points)
-
+                
+                rkn254 = np.zeros(img.shape[:2], np.uint8)
+                for line in lines:
+                    if line:
+                        contour = line
+                        _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.F)
+            
 
                 rkn254 = np.zeros(img.shape[:2], np.uint8)
                 # Drawing the lines
@@ -124,6 +110,27 @@ class CameraNode(Node):
 
         else:
             print('Unable to open camera')
+
+    def find_start_points(self, edges):
+        start_point_1 = None
+        start_point_2 = None
+        for y in range(edges.shape[0] - 1, -1, -1):
+            for x in range(edges.shape[1]):
+                if edges[y, x] == 255:
+                    start_point_1 = (x, y)
+                    break
+            if start_point_1:
+                for x in range(edges.shape[1] - 1, -1, -1):
+                    if edges[y, x] == 255:
+                        start_point_2 = (x, y)
+                        break
+            if start_point_1 and start_point_2:
+                if start_point_1[0] != start_point_2[0]:
+                    break
+                else:
+                    start_point_1 = None
+                    start_point_2 = None
+        return start_point_1, start_point_2
 
     def merge_two_lines(self, line1, line2):
         x1, y1, x2, y2 = line1
@@ -182,27 +189,24 @@ class CameraNode(Node):
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
 
-    def run_line(self, edges, past_coord: tuple = (None, None), actual_coord: tuple = (None, None), i: int = 0) -> tuple:
+    def run_line(self, edges, past_coord=None, actual_coord=None, i=0):
         if i == 240:
             return past_coord
+        if past_coord is None:
+            past_coord = (None, None)
+        if actual_coord is None:
+            actual_coord = (None, None)
         
-        print(i)
         x_past, y_past = past_coord
         x_act, y_act = actual_coord
-        for i in range(3):
-            for j in range(3):
-                x2 = x_act + i - 1
-                y2 = y_act + j - 1
-                if x2 >= edges.shape[1] or y2 >= edges.shape[0] or x2 < 0 or y2 < 0:
-                    continue
-                if edges[y2, x2] == 255:
-                    if x_past != None or y_past != None:
-                        if x2 == x_past and y2 == y_past:
-                            continue
-                    if x2 == x_act and y2 == y_act:
-                        continue
-                    else:
-                        return self.points.append(self.run_line(edges, actual_coord, (x2, y2), i + 1))
+        
+        for dx in range(-1, 2):
+            for dy in range(-1, 2):
+                x2, y2 = x_act + dx, y_act + dy
+                if 0 <= x2 < edges.shape[1] and 0 <= y2 < edges.shape[0] and edges[y2, x2] == 255:
+                    if (x2, y2) != (x_past, y_past) and (x2, y2) != (x_act, y_act):
+                        self.points.append((x2, y2))
+                        return self.run_line(edges, actual_coord, (x2, y2), i + 1)
         
         return past_coord
                 
