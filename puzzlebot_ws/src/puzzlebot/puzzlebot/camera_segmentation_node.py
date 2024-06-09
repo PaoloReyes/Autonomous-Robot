@@ -64,6 +64,16 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
+
+            mid_edge = edges.copy()
+            cv2.line(mid_edge, (0, mid_edge.shape[0]//2), (mid_edge.shape[1], mid_edge.shape[0]//2), (255, 255, 255), 1)
+            mid_image = mid_image[mid_edge.shape[0]//2:,:]
+            M = cv2.moments(edges)
+            if M['m00'] != 0:
+                cx = int(M['m10']/M['m00'])
+                cy = int(M['m01']/M['m00'])
+                cv2.circle(edges, (cx, cy), 5, (0, 0, 255), -1)
+
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
@@ -79,73 +89,6 @@ class CameraNode(Node):
 
         else:
             print('Unable to open camera')
-
-    def find_start_points(self, edges):
-        start_point_1 = None
-        start_point_2 = None
-        for y in range(edges.shape[0] - 1, -1, -1):
-            for x in range(edges.shape[1]):
-                if edges[y, x] == 255:
-                    start_point_1 = (x, y)
-                    break
-            if start_point_1:
-                for x in range(edges.shape[1] - 1, -1, -1):
-                    if edges[y, x] == 255:
-                        start_point_2 = (x, y)
-                        break
-            if start_point_1 and start_point_2:
-                if start_point_1[0] != start_point_2[0]:
-                    break
-                else:
-                    start_point_1 = None
-                    start_point_2 = None
-        return start_point_1, start_point_2
-
-    def merge_two_lines(self, line1, line2):
-        x1, y1, x2, y2 = line1
-        x3, y3, x4, y4 = line2
-
-        avg_start_x = (x1 + x3) / 2
-        avg_start_y = (y1 + y3) / 2
-        avg_end_x = (x2 + x4) / 2
-        avg_end_y = (y2 + y4) / 2
-
-        return (int(avg_start_x), int(avg_start_y), int(avg_end_x), int(avg_end_y))
-
-    def merge_lines(self, lines, threshold_distance=10, threshold_angle=10):
-        def calculate_angle(line):
-            x1, y1, x2, y2 = line
-            angle = np.degrees(np.arctan2(y2 - y1, x2 - x1))
-            return angle
-
-        # Group lines
-        groups = []
-        for line in lines:
-            added_to_group = False
-            for group in groups:
-                for member in group:
-                    angle1 = calculate_angle(line)
-                    angle2 = calculate_angle(member)
-                    if abs(angle1 - angle2) < threshold_angle:
-                        distance = np.linalg.norm(np.array(line[:2]) - np.array(member[:2]))
-                        if distance < threshold_distance:
-                            group.append(line)
-                            added_to_group = True
-                            break
-                if added_to_group:
-                    break
-            if not added_to_group:
-                groups.append([line])
-
-        # Merge lines in each group
-        merged_lines = []
-        for group in groups:
-            merged_line = group[0]
-            for line in group[1:]:
-                merged_line = self.merge_two_lines(merged_line, line)
-            merged_lines.append(merged_line)
-
-        return merged_lines
     
     def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240,framerate=5, flip_method=0):
         return (
