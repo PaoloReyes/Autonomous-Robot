@@ -64,7 +64,7 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
             lines = cv2.HoughLinesP(edges, 1, np.pi/180, 35, maxLineGap=100)
-            lines = self.merge_lines(lines.reshape(-1, 4), threshold_distance=20, threshold_angle=10)
+            if lines is not None: lines = self.merge_lines(lines.reshape(-1, 4), threshold_distance=20, threshold_angle=10)
 
             if lines is not None:
                 for line in lines:
