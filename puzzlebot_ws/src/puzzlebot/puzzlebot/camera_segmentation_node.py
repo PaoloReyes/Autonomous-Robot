@@ -65,7 +65,7 @@ class CameraNode(Node):
             edges = cv2.Canny(blurred_mask, 100, 200)
 
             # search the start point of each line of street
-            start_point_1, start_point_2 = self.find_start_points(edges)
+            # start_point_1, start_point_2 = self.find_start_points(edges)
             
             # if start_point_1 is not None and start_point_2 is not None:
             #     lines = [[], []]
