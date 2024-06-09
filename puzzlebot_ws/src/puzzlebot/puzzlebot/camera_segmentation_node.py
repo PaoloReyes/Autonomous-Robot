@@ -118,6 +118,7 @@ class CameraNode(Node):
                         final_merged_lines[i][j] = merged_line
                     else:
                         if merged_line is not None:
+                            print(merged_line)
                             final_merged_lines[i][j] = self.merge_two_lines(final_merged_lines[i-1][j], merged_line)
                         else:
                             final_merged_lines[i][j] = final_merged_lines[i-1][j]
