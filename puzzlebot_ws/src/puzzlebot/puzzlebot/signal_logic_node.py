@@ -20,7 +20,7 @@ Author: Tony Miranda
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from std_msgs.msg import twist
+from geometry_msgs.msg import Twist
 import time
 
 class SignalLogicNode(Node):
@@ -31,7 +31,7 @@ class SignalLogicNode(Node):
         # Variable to store the signal
         self.signal = None
         # Variable to store the velocity
-        self.velocity = twist()
+        self.velocity = Twist()
         
         # Subscription
         self.signal_sub = self.create_subscription(
@@ -41,14 +41,14 @@ class SignalLogicNode(Node):
             10
         )
         self.vel_sub = self.create_subscription(
-            twist,
+            Twist,
             'ctr_vel',
             self.vel_callback,
             10
         )
         # Publisher
         self.vel_pub = self.create_publisher(
-            twist,
+            Twist,
             'cmd_vel',
             10
         )
