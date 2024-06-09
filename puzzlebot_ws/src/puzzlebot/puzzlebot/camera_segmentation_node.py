@@ -67,26 +67,26 @@ class CameraNode(Node):
             # search the start point of each line of street
             start_point_1, start_point_2 = self.find_start_points(edges)
             
-            if start_point_1 is not None and start_point_2 is not None:
-                lines = [[], []]
-                lines[0].append(start_point_1)
-                lines[1].append(start_point_2)
+            # if start_point_1 is not None and start_point_2 is not None:
+            #     lines = [[], []]
+            #     lines[0].append(start_point_1)
+            #     lines[1].append(start_point_2)
                 
-                self.points = []
-                self.run_line(edges, start_point_1, 0)
-                lines[0] = np.array(self.points)
+            #     self.points = []
+            #     self.run_line(edges, start_point_1, 0)
+            #     lines[0] = np.array(self.points)
             
-                rkn254 = np.zeros(img.shape[:2], np.uint8)
-                # Drawing the lines
-                for i, line in enumerate(lines):
-                    contour = line
-                    if i == 0:
-                        _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
-                    else:
-                        pass
-                        #_ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
+            #     rkn254 = np.zeros(img.shape[:2], np.uint8)
+            #     # Drawing the lines
+            #     for i, line in enumerate(lines):
+            #         contour = line
+            #         if i == 0:
+            #             _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
+            #         else:
+            #             pass
+            #             #_ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
                 
-                cv2.imshow('rkn254', rkn254)
+            #     cv2.imshow('rkn254', rkn254)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
