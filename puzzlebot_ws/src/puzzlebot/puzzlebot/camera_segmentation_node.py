@@ -66,9 +66,17 @@ class CameraNode(Node):
             lines = cv2.HoughLinesP(edges, 1, np.pi/180, 35, maxLineGap=100)
             lines = self.merge_lines(lines.reshape(-1, 4), threshold_distance=30, threshold_angle=10)
 
+            print('Number of lines:', len(lines))
             if lines is not None:
                 for line in lines:
                     x1, y1, x2, y2 = line
+                    m = self.get_m(x1, y1, x2, y2)
+                    if m > 0.8:
+                        cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
+                    elif m > 0.3 and m < 0.8:
+                        cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    else:
+                        cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
                     cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
 
             cv2.imshow('Original Image', dst)
@@ -132,6 +140,10 @@ class CameraNode(Node):
             merged_lines.append(merged_line)
 
         return merged_lines
+    
+    def get_m(self, x1, y1, x2, y2):
+        m = (y2 - y1) / (x2 - x1)
+        return np.abs(m)
     
     def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240,framerate=5, flip_method=0):
         return (
