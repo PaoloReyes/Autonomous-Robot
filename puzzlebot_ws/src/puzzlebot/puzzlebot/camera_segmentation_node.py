@@ -75,11 +75,13 @@ class CameraNode(Node):
 
             groups = [[], [], []]
             if lines is not None:
-                for line in lines:
+                for i, line in enumerate(lines):
                     x1, y1, x2, y2 = line
                     m = self.get_m(x1, y1, x2, y2)
                     if m > 0.8:
                         groups[0].append((x1, y1, x2, y2))
+                        y = y1 if y1 < y2 else y2
+                        lines[i] = [x1, y, x2, y]
                         cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
                     elif m > 0.3 and m < 0.8:
                         groups[1].append((x1, y1, x2, y2))
