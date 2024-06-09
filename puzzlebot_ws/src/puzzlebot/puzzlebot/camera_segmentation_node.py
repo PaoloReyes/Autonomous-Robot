@@ -68,7 +68,6 @@ class CameraNode(Node):
             start_point_1 = None
             start_point_2 = None
             for y in range(edges.shape[0]-1, -1, -1):
-                print(y)
                 for x in range(edges.shape[1]):
                     if edges[y, x] == 255:
                         start_point_1 = (x, y)
@@ -86,43 +85,28 @@ class CameraNode(Node):
                         start_point_2 = None
             
             if start_point_1 is not None and start_point_2 is not None:
-                print(start_point_1, start_point_2)
-                # start_point_1 = None
-                # start_point_2 = None
-                # for x in range(edges.shape[1]):
-                #     if edges[x, y] == 255:
-                #         if start_point_1 is None:
-                #             start_point_1 = (x, y)
-                #         else:
-                #             start_point_2 = (x, y)
-                #             break
-                # if start_point_1 is not None and start_point_2 is not None:
-                #     break
-            
-            # print(start_point_1, start_point_2)
-            
-            # lines = [[], []]
-            # lines[0].append(start_point_1)
-            # lines[1].append(start_point_2)
-            
-            # self.points = []
-            # self.run_line(edges, start_point_1, 0)
-            # lines[0].append(self.points)
-            # self.points = []
-            # self.run_line(edges, start_point_2, 0)  
-            # lines[1].append(self.points)
+                lines = [[], []]
+                lines[0].append(start_point_1)
+                lines[1].append(start_point_2)
+                
+                self.points = []
+                self.run_line(edges, start_point_1, 0)
+                lines[0].append(self.points)
+                self.points = []
+                self.run_line(edges, start_point_2, 0)  
+                lines[1].append(self.points)
 
 
-            # rkn254 = np.zeros(img.shape[:2], np.uint8)
-            # # Drawing the lines
-            # for line in lines:
-            #     i = 0
-            #     contour = line.astype(np.int32).reshape(-1, 1, 2)
-            #     if i == 0:
-            #         i += 1
-            #         _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
-            #     else:
-            #         _ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
+                rkn254 = np.zeros(img.shape[:2], np.uint8)
+                # Drawing the lines
+                for line in lines:
+                    i = 0
+                    contour = line.astype(np.int32).reshape(-1, 1, 2)
+                    if i == 0:
+                        i += 1
+                        _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
+                    else:
+                        _ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
@@ -186,10 +170,6 @@ class CameraNode(Node):
             merged_lines.append(merged_line)
 
         return merged_lines
-    
-    def get_m(self, x1, y1, x2, y2):
-        m = (y2 - y1) / (x2 - x1)
-        return np.abs(m)
     
     def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240,framerate=5, flip_method=0):
         return (
