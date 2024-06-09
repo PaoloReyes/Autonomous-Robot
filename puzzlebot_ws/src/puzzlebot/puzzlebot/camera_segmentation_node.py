@@ -90,7 +90,7 @@ class CameraNode(Node):
     def merge_lines(self, lines, threshold_distance=10, threshold_angle=10):
         def calculate_angle(line):
             x1, y1, x2, y2 = line
-            angle = np.degrees(np.atan2(y2 - y1, x2 - x1))
+            angle = np.degrees(np.arctan2(y2 - y1, x2 - x1))
             return angle
 
         def merge_two_lines(line1, line2):
