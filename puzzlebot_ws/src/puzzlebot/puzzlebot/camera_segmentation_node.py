@@ -195,7 +195,6 @@ class CameraNode(Node):
                 x2, y2 = x_act + dx, y_act + dy
                 if 0 <= x2 < edges.shape[1] and 0 <= y2 < edges.shape[0] and edges[y2, x2] == 255:
                     if (x2, y2) not in self.points:
-                        print(f'i: {i}, x2: {x2}, y2: {y2}')
                         self.points.append((x2, y2))
                         return self.run_line(edges, (x2, y2), i + 1)
         
