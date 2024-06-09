@@ -71,7 +71,7 @@ class CameraNode(Node):
                     if y1 > y2: 
                         x1, y1, x2, y2 = x2, y2, x1, y1
                         lines[i] = [x1, y1, x2, y2]
-            if lines is not None: lines = self.merge_lines(lines, threshold_distance=20, threshold_angle=10)
+            if lines is not None: lines = self.merge_lines(lines, threshold_distance=30, threshold_angle=10)
 
             groups = [[], [], []]
             if lines is not None:
