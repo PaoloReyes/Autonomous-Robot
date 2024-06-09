@@ -38,7 +38,7 @@ class CameraNode(Node):
 
         self.model = YOLO(path)
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print('Using device:', self.device)
+        print('\nUsing device:', self.device)
         self.model.model.eval()
         self.model.to(self.device)
 
@@ -46,7 +46,6 @@ class CameraNode(Node):
         if self.source.isOpened():
             _, img = self.source.read()
             dst = camera_utils.undistort(img, (320, 240))
-            cv2.imshow('Original Image', dst)
     
             import torch
     
@@ -62,24 +61,24 @@ class CameraNode(Node):
                     _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
             merged_mask = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
             blurred_mask = cv2.GaussianBlur(merged_mask, (15, 15), 0)
+            img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
             lines = cv2.HoughLinesP(edges, 1, np.pi/180, 40, maxLineGap=100)
-
-            cv2.imshow('edges', edges)
 
             if lines is not None:
                 for line in lines:
                     x1, y1, x2, y2 = line[0]
                     cv2.line(dst, (x1, y1), (x2, y2), (188, 111, 241), 2)
-            
-            img_masked = cv2.bitwise_and(blurred_mask, img)
+
+            cv2.imshow('Original Image', dst)
+            cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
+            cv2.imshow('YOLOv8 Inference', image)
+            cv2.waitKey(1)
 
             msg = String()
             msg.data = result.verbose()
 
-            cv2.imshow('YOLOv8 Inference', image)
-            cv2.waitKey(1)
             self.pub.publish(msg)
             #msg = self.bridge.cv2_to_imgmsg(img, encoding='bgr8')
             #self.pub.publish(msg)
