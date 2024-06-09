@@ -70,8 +70,13 @@ class CameraNode(Node):
 
             mid_images = edges.copy()
             cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
-            b_mask = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
+
+            b_mask = cv2.cvtColor(b_mask, cv2.COLOR_BGR2GRAY)
             mid = b_mask[b_mask.shape[0]//2:,:]
+
+            # Convert the image to grayscale if it is not already
+            if len(mid.shape) == 3 and mid.shape[2] == 3:
+                mid = cv2.cvtColor(mid, cv2.COLOR_BGR2GRAY)
             
             [contours, _] = cv2.findContours(mid.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
