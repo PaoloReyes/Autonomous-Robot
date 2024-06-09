@@ -67,7 +67,7 @@ class CameraNode(Node):
 
             mid_edge = edges.copy()
             cv2.line(mid_edge, (0, mid_edge.shape[0]//2), (mid_edge.shape[1], mid_edge.shape[0]//2), (255, 255, 255), 1)
-            mid_image = mid_image[mid_edge.shape[0]//2:,:]
+            mid_image = mid_edge[mid_edge.shape[0]//2:,:]
             M = cv2.moments(edges)
             if M['m00'] != 0:
                 cx = int(M['m10']/M['m00'])
