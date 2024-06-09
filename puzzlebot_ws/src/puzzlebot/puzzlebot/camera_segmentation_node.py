@@ -75,7 +75,7 @@ class CameraNode(Node):
                 cy = int(M['m01']/M['m00'])
                 cv2.circle(mid_images, (cx, cy), 5, (0, 0, 255), -1)
 
-            #cv2.imshow('Original Image', dst)
+            cv2.imshow('Original Image', image)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
