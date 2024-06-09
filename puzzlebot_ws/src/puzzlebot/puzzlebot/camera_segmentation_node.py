@@ -104,18 +104,13 @@ class CameraNode(Node):
                 else:
                     merged_lines.append(None)
             
-            if len(self.history_lines) < 10:
+            if len(self.history_lines) < 5:
                 self.history_lines.append(merged_lines)
             else:
                 self.history_lines.pop(0)
                 self.history_lines.append(merged_lines)
             
             avg_lines = self.merge_multiple_lines(self.history_lines)
-
-            print()
-            print(self.history_lines)
-            print(avg_lines)
-            print()
             
             for i, line in enumerate(avg_lines):
                 if len(line) == 0: continue
