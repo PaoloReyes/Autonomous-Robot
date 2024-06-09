@@ -78,6 +78,8 @@ class CameraNode(Node):
                     else:
                         groups[2].append(line)
 
+            print(groups)
+
             merged_lines = []
             for group in groups:
                 if len(group) > 0:
