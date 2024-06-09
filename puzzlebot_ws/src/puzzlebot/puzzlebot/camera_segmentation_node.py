@@ -91,7 +91,7 @@ class CameraNode(Node):
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            #cv2.imshow('rkn254', rkn254)
+            cv2.imshow('rkn254', rkn254)
             cv2.waitKey(1)
 
             msg = String()
