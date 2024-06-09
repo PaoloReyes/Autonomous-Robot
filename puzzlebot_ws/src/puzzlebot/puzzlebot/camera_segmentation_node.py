@@ -202,7 +202,7 @@ class CameraNode(Node):
                     if x2 == x_act and y2 == y_act:
                         continue
                     else:
-                        return self.points.append(self.run_line(edges, (x2, y2), i + 1))
+                        return self.points.append(self.run_line(edges, actual_coord, (x2, y2), i + 1))
         
         return past_coord
                 
