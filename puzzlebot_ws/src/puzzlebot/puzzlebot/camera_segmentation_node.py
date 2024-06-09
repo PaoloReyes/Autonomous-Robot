@@ -65,28 +65,28 @@ class CameraNode(Node):
             edges = cv2.Canny(blurred_mask, 100, 200)
 
             # search the start point of each line of street
-            start_point = None
-            end_point = None
+            start_point_1 = None
+            start_point_2 = None
             for y in range(edges.shape[0]-1, -1, -1):
                 print(y)
                 for x in range(edges.shape[1]):
                     if edges[y, x] == 255:
-                        start_point = (x, y)
+                        start_point_1 = (x, y)
                         break
-                if start_point is not None:
+                if start_point_1 is not None:
                     for x in range(edges.shape[1]-1, -1, -1):
                         if edges[y, x] == 255:
-                            end_point = (x, y)
+                            start_point_2 = (x, y)
                             break
-                if start_point is not None and end_point is not None:
-                    if np.abs(start_point[0] - end_point[0]) > 50:
+                if start_point_1 is not None and start_point_2 is not None:
+                    if start_point_1[0] != start_point_2[0]:
                         break
                     else:
-                        start_point = None
-                        end_point = None
+                        start_point_1 = None
+                        start_point_2 = None
             
-            if start_point is not None and end_point is not None:
-                print(start_point, end_point)
+            if start_point_1 is not None and start_point_2 is not None:
+                print(start_point_1, start_point_2)
                 # start_point_1 = None
                 # start_point_2 = None
                 # for x in range(edges.shape[1]):
