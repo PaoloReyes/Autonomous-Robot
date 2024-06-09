@@ -118,7 +118,7 @@ class CameraNode(Node):
             print()
             
             for i, line in enumerate(avg_lines):
-                if len(line[0]) == 0: continue
+                if len(line) == 0: continue
                 x1, y1, x2, y2 = line[0]
                 if i == 0:
                     cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
