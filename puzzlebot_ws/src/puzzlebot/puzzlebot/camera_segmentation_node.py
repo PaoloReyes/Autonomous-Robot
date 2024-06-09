@@ -160,6 +160,7 @@ class CameraNode(Node):
             points.append([])
         for line in lines:
             for i, line_data_type in enumerate(line):
+                if line_data_type is None: continue
                 x1, y1, x2, y2 = line_data_type
                 points[i].append((x1, y1, x2, y2))
 
@@ -167,6 +168,7 @@ class CameraNode(Node):
         for i in range(len(lines[0])):
             out.append([])
         for i, points_type in enumerate(points):
+            if points_type is None: continue
             for point_data in points_type:
                 avrg_start_x += point_data[0]
                 avrg_start_y += point_data[1]
