@@ -79,8 +79,7 @@ class CameraNode(Node):
                     x1, y1, x2, y2 = line
                     m = self.get_m(x1, y1, x2, y2)
                     if m > 0.8:
-                        y = y1 if y1 < y2 else y2
-                        groups[0].append((x1, y, x2, y))
+                        groups[0].append((x1, y1, x2, y2))
                         cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
                     elif m > 0.3 and m < 0.8:
                         groups[1].append((x1, y1, x2, y2))
@@ -88,6 +87,17 @@ class CameraNode(Node):
                     else:
                         groups[2].append((x1, y1, x2, y2))
                         cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            
+            group_min = [240*2, 240*2, 240*2]
+            for i, group in enumerate(groups):
+                group_min = 240*2
+                for line in group:
+                    if line[1] < group_min:
+                        group_min[i] = line[1]
+
+            for i, group in enumerate(groups):
+                for line in group:
+                    line[1] = group_min[i]
 
             merged_lines = []
             for i, group in enumerate(groups):
