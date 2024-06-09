@@ -97,7 +97,7 @@ class CameraNode(Node):
 
             for i, group in enumerate(groups):
                 for line in group:
-                    line[1] = group_max[i]
+                    line = (line[0], group_max[i], line[2], line[3])
 
             merged_lines = []
             for i, group in enumerate(groups):
