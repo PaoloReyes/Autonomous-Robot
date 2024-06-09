@@ -170,6 +170,12 @@ class CameraNode(Node):
         return np.abs(m)
 
     def merge_two_lines(self, line1, line2):
+            if line1 is None:
+                return line2
+            
+            if line2 is None:
+                return line1
+            
             x1, y1, x2, y2 = line1
             x3, y3, x4, y4 = line2
 
