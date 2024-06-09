@@ -86,14 +86,13 @@ class CameraNode(Node):
 
                 rkn254 = np.zeros(img.shape[:2], np.uint8)
                 # Drawing the lines
-                for line in lines:
-                    i = 0
+                for i, line in enumerate(lines):
                     contour = line
                     if i == 0:
-                        i += 1
                         _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
                     else:
-                        _ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
+                        pass
+                        #_ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
