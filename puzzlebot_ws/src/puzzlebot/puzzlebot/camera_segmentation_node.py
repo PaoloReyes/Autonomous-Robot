@@ -45,6 +45,7 @@ class CameraNode(Node):
     def timer_callback(self):
         if self.source.isOpened():
             _, img = self.source.read()
+            img = cv2.flip(img, 0)
             dst = camera_utils.undistort(img, (320, 240))
     
             import torch
