@@ -180,6 +180,8 @@ class CameraNode(Node):
         if i == 240:
             return past_coord
         
+        print(i)
+
         x_past, y_past = past_coord
         for i in range(3):
             for j in range(3):
