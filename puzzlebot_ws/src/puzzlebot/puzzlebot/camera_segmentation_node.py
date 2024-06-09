@@ -13,6 +13,8 @@ from .submodules import camera_utils
 
 from ament_index_python import get_package_share_directory
 
+from copy import deepcopy
+
 class CameraNode(Node):
     def __init__(self):
         super().__init__('camera_segmentation_node')
@@ -49,10 +51,12 @@ class CameraNode(Node):
             img = cv2.flip(img, 1)
             #dst = camera_utils.undistort(img, (320, 240))
     
+            frame = deepcopy()
+
             import torch
     
             with torch.no_grad():
-                result = self.model(img.copy())[0]
+                result = self.model(frame)[0]
                 image = result.plot()
 
             b_mask = np.zeros(img.shape[:2], np.uint8)
@@ -66,9 +70,9 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-            mid_images = edges.copy()
-            cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
-            # image = mid_images[mid_images.shape[0]//2:,:]
+            mid_images = deepcopy(edges)
+            cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (0, 0, 255), 1)
+            mid = mid_images[mid_images.shape[0]//2:,:]
             
             # contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             # if len(contours) > 0:
@@ -79,7 +83,7 @@ class CameraNode(Node):
             #             cy = int(M['m01']/M['m00'])
             #             cv2.circle(mid_images, (cx, cy), 5, (0, 0, 255), -1)
 
-            cv2.imshow('Original Image', image)
+            cv2.imshow('Original Image', frame)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
