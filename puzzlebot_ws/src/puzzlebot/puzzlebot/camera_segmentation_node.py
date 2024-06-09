@@ -70,7 +70,8 @@ class CameraNode(Node):
 
             mid_images = edges.copy()
             cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
-            mid = blurred_mask[blurred_mask.shape[0]//2:,:]
+            _, b_image = cv2.threshold(blurred_mask, 127, 255, cv2.THRESH_BINARY)
+            mid = b_image[b_image.shape[0]//2:,:]
             
             [contours, _] = cv2.findContours(mid, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
