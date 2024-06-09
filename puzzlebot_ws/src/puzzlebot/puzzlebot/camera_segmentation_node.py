@@ -64,8 +64,7 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
             lines = cv2.HoughLinesP(edges, 1, np.pi/180, 35, maxLineGap=100)
-            print(lines)
-            print(lines.reshape(-1, 4))
+            lines = self.merge_lines(lines.reshape(-1, 4), threshold_distance=30, threshold_angle=10)
 
             if lines is not None:
                 for line in lines:
@@ -98,13 +97,12 @@ class CameraNode(Node):
             x1, y1, x2, y2 = line1
             x3, y3, x4, y4 = line2
 
-            # Calculate the start and end points of the merged line
-            points = [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
-            points = sorted(points, key=lambda point: (point[0], point[1]))
-            x1, y1 = points[0]
-            x4, y4 = points[3]
+            avg_start_x = (x1 + x3) / 2
+            avg_start_y = (y1 + y3) / 2
+            avg_end_x = (x2 + x4) / 2
+            avg_end_y = (y2 + y4) / 2
 
-            return (x1, y1, x4, y4)
+            return (int(avg_start_x), int(avg_start_y), int(avg_end_x), int(avg_end_y))
 
         # Group lines
         groups = []
