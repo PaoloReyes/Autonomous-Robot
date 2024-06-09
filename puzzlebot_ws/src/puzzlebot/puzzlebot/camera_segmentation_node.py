@@ -87,14 +87,16 @@ class CameraNode(Node):
                         cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
                         group[2].append((x1,y1, x2, y2))
 
-                print(group)
 
                 for i in range(len(group)):
                     if len(group[i]) > 1:
                         for k in range(len(group[i])):
                             coord_group[i] = self.merge_two_lines(group[i][k], coord_group[i])
                     else:
-                        coord_group[i] = group[i]
+                        coord_group[i] = group[i][0]
+
+                print(coord_group)
+
 
                 for i in range(len(coord_group)):
                     if len(coord_group[i]) > 0:
