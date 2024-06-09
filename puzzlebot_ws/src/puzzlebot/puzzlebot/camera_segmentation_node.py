@@ -88,16 +88,16 @@ class CameraNode(Node):
                         groups[2].append((x1, y1, x2, y2))
                         cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
             
-            group_min = [240*2, 240*2, 240*2]
+            group_max = [0, 0, 0]
             for i, group in enumerate(groups):
-                group_min = 240*2
+                current_max = 0
                 for line in group:
-                    if line[1] < group_min:
-                        group_min[i] = line[1]
+                    if line[1] > current_max:
+                        group_max[i] = line[1]
 
             for i, group in enumerate(groups):
                 for line in group:
-                    line[1] = group_min[i]
+                    line[1] = group_max[i]
 
             merged_lines = []
             for i, group in enumerate(groups):
