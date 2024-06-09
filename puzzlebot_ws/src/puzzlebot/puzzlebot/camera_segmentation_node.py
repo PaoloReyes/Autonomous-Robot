@@ -67,9 +67,10 @@ class CameraNode(Node):
 
             cv2.imshow('edges', edges)
 
-            for line in lines:
-                x1, y1, x2, y2 = line[0]
-                cv2.line(img, (x1, y1), (x2, y2), (87, 35, 100), 2)
+            if lines is not None:
+                for line in lines:
+                    x1, y1, x2, y2 = line[0]
+                    cv2.line(img, (x1, y1), (x2, y2), (87, 35, 100), 2)
             
             img_masked = cv2.bitwise_and(blurred_mask, img)
             cv2.imshow('street', img_masked)
