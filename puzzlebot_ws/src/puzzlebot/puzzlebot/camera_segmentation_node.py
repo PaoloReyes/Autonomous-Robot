@@ -72,6 +72,7 @@ class CameraNode(Node):
                     x1, y1, x2, y2 = line
                     m = self.get_m(x1, y1, x2, y2)
                     if m > 0.8:
+                        if y1 > y2: x1, y1, x2, y2 = x2, y2, x1, y1
                         groups[0].append((x1, y1, x2, y2))
                     elif m > 0.3 and m < 0.8:
                         groups[1].append((x1, y1, x2, y2))
