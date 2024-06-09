@@ -114,14 +114,17 @@ class CameraNode(Node):
             for i, history_line in enumerate(self.history_lines):
                 final_merged_lines.append([None, None, None])
                 for j, line_type_data in enumerate(history_line):
-                    x1, y1, x2, y2 = line_type_data
-                    if i == 0:
-                        final_merged_lines[i][j] = (x1, y1, x2, y2)
-                    else:
-                        if line_type_data is not None:
-                            final_merged_lines[i][j] = self.merge_two_lines(final_merged_lines[i-1][j], (x1, y1, x2, y2))
+                    if line_type_data is not None:
+                        x1, y1, x2, y2 = line_type_data
+                        if i == 0:
+                            final_merged_lines[i][j] = (x1, y1, x2, y2)
                         else:
-                            final_merged_lines[i][j] = final_merged_lines[i-1][j]
+                            if final_merged_lines[i-1][j] is not None:
+                                final_merged_lines[i][j] = self.merge_two_lines(final_merged_lines[i-1][j], (x1, y1, x2, y2))
+                            else:
+                                final_merged_lines[i][j] = (x1, y1, x2, y2)
+                    else:
+                            final_merged_lines[i][j] = None
 
             print()
             print(self.history_lines)
