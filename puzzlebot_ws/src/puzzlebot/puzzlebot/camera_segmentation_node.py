@@ -133,7 +133,7 @@ class CameraNode(Node):
             
             for i, line in enumerate(final_merged_lines):
                 if line is None: continue
-                x1, y1, x2, y2 = line
+                x1, y1, x2, y2 = line[i]
                 if i == 0:
                     cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
                 elif i == 1:
