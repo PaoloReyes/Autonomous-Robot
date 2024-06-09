@@ -124,7 +124,7 @@ class CameraNode(Node):
                             else:
                                 final_merged_lines[i][j] = (x1, y1, x2, y2)
                     else:
-                            final_merged_lines[i][j] = None
+                        final_merged_lines[i][j] = None
 
             print()
             print(self.history_lines)
