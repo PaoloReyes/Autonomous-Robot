@@ -64,30 +64,6 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-            # search the start point of each line of street
-            # start_point_1, start_point_2 = self.find_start_points(edges)
-            
-            # if start_point_1 is not None and start_point_2 is not None:
-            #     lines = [[], []]
-            #     lines[0].append(start_point_1)
-            #     lines[1].append(start_point_2)
-                
-            #     self.points = []
-            #     self.run_line(edges, start_point_1, 0)
-            #     lines[0] = np.array(self.points)
-            
-            #     rkn254 = np.zeros(img.shape[:2], np.uint8)
-            #     # Drawing the lines
-            #     for i, line in enumerate(lines):
-            #         contour = line
-            #         if i == 0:
-            #             _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
-            #         else:
-            #             pass
-            #             #_ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
-                
-            #     cv2.imshow('rkn254', rkn254)
-
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
@@ -181,24 +157,6 @@ class CameraNode(Node):
             "video/x-raw, format=(string)BGR ! appsink"
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
-
-    def run_line(self, edges, actual_coord=None, i=0):
-        if i == 240:
-            return
-        if actual_coord is None:
-            actual_coord = (None, None)
-
-        x_act, y_act = actual_coord
-        
-        for dx in range(-1, 2):
-            for dy in range(-1, 2):
-                x2, y2 = x_act + dx, y_act + dy
-                if 0 <= x2 < edges.shape[1] and 0 <= y2 < edges.shape[0] and edges[y2, x2] == 255:
-                    if (x2, y2) not in self.points:
-                        self.points.append((x2, y2))
-                        return self.run_line(edges, (x2, y2), i + 1)
-        
-        return
                 
 def main(args=None):
     rclpy.init(args=args)
