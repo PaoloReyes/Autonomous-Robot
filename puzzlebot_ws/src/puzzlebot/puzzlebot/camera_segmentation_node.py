@@ -110,35 +110,22 @@ class CameraNode(Node):
                 self.history_lines.pop(0)
                 self.history_lines.append(merged_lines)
             
-            final_merged_lines = [None, None, None]
-            for i, history_line in enumerate(self.history_lines):
-                for j, line_type_data in enumerate(history_line):
-                    if line_type_data is not None:
-                        x1, y1, x2, y2 = line_type_data
-                        if i == 0:
-                            final_merged_lines[j] = (x1, y1, x2, y2)
-                        else:
-                            if self.history_lines[i-1][j] is not None:
-                                final_merged_lines[j] = self.merge_two_lines(self.history_lines[i-1][j], (x1, y1, x2, y2))
-                            else:
-                                final_merged_lines[j] = (x1, y1, x2, y2)
-                    else:
-                        final_merged_lines[j] = None
+            avg_lines = self.merge_lines(self.history_lines)
 
             print()
             print(self.history_lines)
-            print(final_merged_lines)
+            print(avg_lines)
             print()
             
-            for i, line in enumerate(final_merged_lines):
-                if line is None: continue
-                x1, y1, x2, y2 = line
-                if i == 0:
-                    cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
-                elif i == 1:
-                    cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                elif i == 2:
-                    cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            # for i, line in enumerate(avg_lines):
+            #     if line is None: continue
+            #     x1, y1, x2, y2 = line
+            #     if i == 0:
+            #         cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
+            #     elif i == 1:
+            #         cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            #     elif i == 2:
+            #         cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
@@ -166,6 +153,28 @@ class CameraNode(Node):
         avg_end_y = (y2 + y4) / 2
 
         return (int(avg_start_x), int(avg_start_y), int(avg_end_x), int(avg_end_y))
+    
+    def merge_multiple_lines(self, lines):
+        points = []
+        for i in range(len(lines[0])):
+            points.append([])
+        for line in lines:
+            for i, line_data_type in enumerate(line):
+                x1, y1, x2, y2 = line_data_type
+                points[i].append((x1, y1, x2, y2))
+
+        out = []
+        for i in range(len(lines[0])):
+            out.append([])
+        for line in lines:
+            for i, line_data_type in enumerate(line):
+                avrg_start_x = sum([point[0] for point in points[i]]) / len(points)
+                avrg_start_y = sum([point[1] for point in points[i]]) / len(points)
+                avrg_end_x = sum([point[2] for point in points[i]]) / len(points)
+                avrg_end_y = sum([point[3] for point in points[i]]) / len(points)
+                out[i].append((int(avrg_start_x), int(avrg_start_y), int(avrg_end_x), int(avrg_end_y)))
+
+        return out
 
     def merge_lines(self, lines, threshold_distance=10, threshold_angle=10):
         def calculate_angle(line):
