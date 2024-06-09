@@ -68,11 +68,11 @@ class CameraNode(Node):
             start_point_1 = None
             start_point_2 = None
             for x in range(edges.shape[1]):
-                if edges[x, 240] == 255:
+                if edges[x, edges.shape[0] - 1] == 255:
                     if start_point_1 is None:
-                        start_point_1 = (x, 240)
+                        start_point_1 = (x, edges.shape[0] - 1)
                     else:
-                        start_point_2 = (x, 240)
+                        start_point_2 = (x, edges.shape[0] - 1)
                         break
             
             lines = [[], []]
@@ -181,7 +181,6 @@ class CameraNode(Node):
             return past_coord
         
         print(i)
-
         x_past, y_past = past_coord
         for i in range(3):
             for j in range(3):
