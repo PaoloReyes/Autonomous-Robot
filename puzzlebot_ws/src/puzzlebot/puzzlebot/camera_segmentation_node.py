@@ -80,6 +80,7 @@ class CameraNode(Node):
                 for line in lines:
                     if len(line) > 0:
                         contour = line
+                        print(contour)
                         _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
             
 
