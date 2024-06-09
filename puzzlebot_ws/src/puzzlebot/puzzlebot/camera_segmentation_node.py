@@ -188,7 +188,7 @@ class CameraNode(Node):
         
         print(i)
         x_past, y_past = past_coord
-        x_act = y_act = actual_coord
+        x_act, y_act = actual_coord
         for i in range(3):
             for j in range(3):
                 x2 = x_act + i - 1
