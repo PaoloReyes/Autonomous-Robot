@@ -85,10 +85,11 @@ class CameraNode(Node):
                         cx_t += cx
                         cy_t += cy
                         cv2.circle(mid_images, (cx, cy), 5, (255, 255, 255), -1)
-                # cx_t = cx_t // len(contours)
-                # cy_t = cy_t // len(contours)
+                
+                cx_t = cx_t // len(cx_t)
+                cy_t = cy_t // len(cy_t)
                 # cv2.circle(mid_images, (cx_t, cy_t), 5, (255, 255, 255), -1)
-            
+        
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
