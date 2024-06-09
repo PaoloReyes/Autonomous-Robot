@@ -67,8 +67,9 @@ class CameraNode(Node):
             if lines is not None: lines = self.merge_lines(lines.reshape(-1, 4), threshold_distance=20, threshold_angle=10)
 
             if lines is not None:
+                group = [[], [], []]
+                coord_group = [[], [], []]
                 for line in lines:
-                    group = [[], [], []]
                     x1, y1, x2, y2 = line
                     m = self.get_m(x1, y1, x2, y2)
                     # The line is 'vertical'
@@ -88,18 +89,17 @@ class CameraNode(Node):
 
                 print(group)
 
-                # for i in range(len(group)):
-                #     coord_group = [[], [], []]
-                #     if len(group[i]) > 1:
-                #         for k in range(len(group[i])):
-                #             coord_group[i] = self.merge_two_lines(group[i][k], coord_group[i])
-                #     else:
-                #         coord_group[i] = group[i]
+                for i in range(len(group)):
+                    if len(group[i]) > 1:
+                        for k in range(len(group[i])):
+                            coord_group[i] = self.merge_two_lines(group[i][k], coord_group[i])
+                    else:
+                        coord_group[i] = group[i]
 
-                # for i in range(len(coord_group)):
-                #     if len(coord_group[i]) > 0:
-                #         x1, y1, x2, y2 = coord_group[i]
-                #         cv2.line(dst, (x1, y1), (x2, y2), (15, 219, 133), 2)
+                for i in range(len(coord_group)):
+                    if len(coord_group[i]) > 0:
+                        x1, y1, x2, y2 = coord_group[i]
+                        cv2.line(dst, (x1, y1), (x2, y2), (15, 219, 133), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
