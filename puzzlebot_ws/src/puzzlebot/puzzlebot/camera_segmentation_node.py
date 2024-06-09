@@ -68,41 +68,32 @@ class CameraNode(Node):
 
             groups = [[], [], []]
             if lines is not None:
-                group = [[], [], []]
-                coord_group = [[], [], []]
                 for line in lines:
                     x1, y1, x2, y2 = line
                     m = self.get_m(x1, y1, x2, y2)
-                    # The line is 'vertical'
                     if m > 0.8:
-                        cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
-                        group[0].append((x1,y1, x2, y2))
-                    
-                    # The line is 'diagonal'
+                        groups[0].append(line)
                     elif m > 0.3 and m < 0.8:
-                        cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                        group[1].append((x1,y1, x2, y2))
-                    
-                    # The line is 'horizontal'
+                        groups[1].append(line)
                     else:
-                        cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
-                        group[2].append((x1,y1, x2, y2))
+                        groups[2].append(line)
 
-
-                for i in range(len(group)):
-                    if len(group[i]) > 1:
-                        for k in range(len(group[i])):
-                            coord_group[i] = self.merge_two_lines(group[i][k], coord_group[i])
-                    if len(group[i]) == 1:
-                        coord_group[i] = group[i][0]
-
-                print(coord_group)
-
-
-                for i in range(len(coord_group)):
-                    if len(coord_group[i]) > 0:
-                        x1, y1, x2, y2 = coord_group[i]
-                        cv2.line(dst, (x1, y1), (x2, y2), (15, 219, 133), 2)
+            merged_lines = []
+            for group in groups:
+                merged_line = group[0]
+                if len(group) > 1:
+                    for line in group[1:]:
+                        merged_line = self.merge_two_lines(merged_line, line)
+                    merged_lines.append(merged_line)
+            
+            for i, line in enumerate(merged_lines):
+                x1, y1, x2, y2 = line
+                if i == 0:
+                    cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
+                elif i == 1:
+                    cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                elif i == 2:
+                    cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
@@ -169,24 +160,7 @@ class CameraNode(Node):
     def get_m(self, x1, y1, x2, y2):
         m = (y2 - y1) / (x2 - x1)
         return np.abs(m)
-
-    def merge_two_lines(self, line1, line2):
-            if len(line1) == 0:
-                return line2
-            
-            if len(line2) == 0:
-                return line1
-            
-            x1, y1, x2, y2 = line1
-            x3, y3, x4, y4 = line2
-
-            avg_start_x = (x1 + x3) / 2
-            avg_start_y = (y1 + y3) / 2
-            avg_end_x = (x2 + x4) / 2
-            avg_end_y = (y2 + y4) / 2
-
-            return (int(avg_start_x), int(avg_start_y), int(avg_end_x), int(avg_end_y))
-
+    
     def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240,framerate=5, flip_method=0):
         return (
             "nvarguscamerasrc sensor-id=%d ! "
