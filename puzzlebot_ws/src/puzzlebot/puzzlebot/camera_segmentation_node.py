@@ -90,7 +90,8 @@ class CameraNode(Node):
                 current_max = 0
                 for line in group:
                     if line[1] > current_max:
-                        group_max[i] = line[1]
+                        current_max = line[1]
+                group_max[i] = current_max
 
             for group in groups:
                 for i, line in enumerate(group):
