@@ -86,12 +86,13 @@ class CameraNode(Node):
                     else:
                         pass
                         #_ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
+                
+                cv2.imshow('rkn254', rkn254)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            cv2.imshow('rkn254', rkn254)
             cv2.waitKey(1)
 
             msg = String()
@@ -197,13 +198,12 @@ class CameraNode(Node):
             for dy in range(-1, 2):
                 x2, y2 = x_act + dx, y_act + dy
                 if 0 <= x2 < edges.shape[1] and 0 <= y2 < edges.shape[0] and edges[y2, x2] == 255:
-                    if (x2, y2) != (x_past, y_past) and (x2, y2) != (x_act, y_act):
+                    if (x2, y2) not in self.points:
                         print(f'i: {i}, x2: {x2}, y2: {y2}')
                         self.points.append((x2, y2))
                         return self.run_line(edges, actual_coord, (x2, y2), i + 1)
         
         return past_coord
-                
                 
 def main(args=None):
     rclpy.init(args=args)
