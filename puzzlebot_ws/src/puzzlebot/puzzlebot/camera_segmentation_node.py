@@ -169,6 +169,10 @@ class CameraNode(Node):
             out.append([])
         for i, points_type in enumerate(points):
             if points_type is None: continue
+            avrg_start_x = 0
+            avrg_start_y = 0
+            avrg_end_x = 0
+            avrg_end_y = 0
             for point_data in points_type:
                 avrg_start_x += point_data[0]
                 avrg_start_y += point_data[1]
