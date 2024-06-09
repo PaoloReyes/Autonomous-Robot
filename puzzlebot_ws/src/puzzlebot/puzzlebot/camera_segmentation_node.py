@@ -91,7 +91,7 @@ class CameraNode(Node):
                 
                 self.points = []
                 self.run_line(edges, actual_coord=start_point_1, i=0)
-                lines[0].append(self.points)
+                lines[0].append(np.array(self.points))
                 # self.points = []
                 # self.run_line(edges, actual_coord=start_point_2, 0)  
                 # lines[1].append(self.points)
