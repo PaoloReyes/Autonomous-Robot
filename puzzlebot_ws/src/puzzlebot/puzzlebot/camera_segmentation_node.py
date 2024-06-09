@@ -87,7 +87,7 @@ class CameraNode(Node):
         else:
             print('Unable to open camera')
 
-    def merge_lines(lines, threshold_distance=10, threshold_angle=10):
+    def merge_lines(self, lines, threshold_distance=10, threshold_angle=10):
         def calculate_angle(line):
             x1, y1, x2, y2 = line
             angle = np.degrees(np.atan2(y2 - y1, x2 - x1))
