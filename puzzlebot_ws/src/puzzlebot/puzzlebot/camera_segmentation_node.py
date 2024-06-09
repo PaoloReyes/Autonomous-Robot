@@ -110,21 +110,20 @@ class CameraNode(Node):
                 self.history_lines.pop(0)
                 self.history_lines.append(merged_lines)
             
-            final_merged_lines = []
+            final_merged_lines = [None, None, None]
             for i, history_line in enumerate(self.history_lines):
-                final_merged_lines.append([None, None, None])
                 for j, line_type_data in enumerate(history_line):
                     if line_type_data is not None:
                         x1, y1, x2, y2 = line_type_data
                         if i == 0:
-                            final_merged_lines[i][j] = (x1, y1, x2, y2)
+                            final_merged_lines[j] = (x1, y1, x2, y2)
                         else:
-                            if final_merged_lines[i-1][j] is not None:
-                                final_merged_lines[i][j] = self.merge_two_lines(final_merged_lines[i-1][j], (x1, y1, x2, y2))
+                            if self.history_lines[i-1][j] is not None:
+                                final_merged_lines[j] = self.merge_two_lines(self.history_lines[i-1][j], (x1, y1, x2, y2))
                             else:
-                                final_merged_lines[i][j] = (x1, y1, x2, y2)
+                                final_merged_lines[j] = (x1, y1, x2, y2)
                     else:
-                        final_merged_lines[i][j] = None
+                        final_merged_lines[j] = None
 
             print()
             print(self.history_lines)
@@ -132,15 +131,14 @@ class CameraNode(Node):
             print()
             
             for i, line in enumerate(final_merged_lines):
-                for j, line_type_data in enumerate(line):
-                    if line_type_data is None: continue
-                    x1, y1, x2, y2 = line_type_data
-                    if j == 0:
-                        cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
-                    elif j == 1:
-                        cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                    elif j == 2:
-                        cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                if line is None: continue
+                x1, y1, x2, y2 = line
+                if i == 0:
+                    cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
+                elif i == 1:
+                    cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                elif i == 2:
+                    cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
