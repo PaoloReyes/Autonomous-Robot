@@ -112,7 +112,7 @@ class CameraNode(Node):
             
             final_merged_lines = []
             for i, merged_lines in enumerate(self.history_lines):
-                final_merged_lines.append([None, None, None])
+                final_merged_lines.append([None], [None], [None])
                 for j, merged_line in enumerate(merged_lines):
                     print(i, j)
                     print(merged_line)
