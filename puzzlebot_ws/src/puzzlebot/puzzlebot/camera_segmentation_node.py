@@ -63,9 +63,11 @@ class CameraNode(Node):
             merged_mask = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
             blurred_mask = cv2.GaussianBlur(merged_mask, (15, 15), 0)
             edges = cv2.Canny(blurred_mask, 100, 200)
+            lines = cv2.HoughLinesP(edges, 1, np.pi/180, 50, maxLineGap=50)
             cv2.imshow('edges', edges)
+            cv2.imshow('lines', lines)
             
-            img_masked = cv2.bitwise_and(merged_mask, img)
+            img_masked = cv2.bitwise_and(blurred_mask, img)
             cv2.imshow('street', img_masked)
 
             msg = String()
