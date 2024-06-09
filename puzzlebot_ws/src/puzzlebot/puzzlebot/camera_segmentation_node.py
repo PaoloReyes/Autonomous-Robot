@@ -17,6 +17,9 @@ class CameraNode(Node):
     def __init__(self):
         super().__init__('camera_segmentation_node')
         self.bridge = CvBridge()
+
+        # Variables
+        self.history_lines = []
         
         # Publisher
         self.pub = self.create_publisher(String, 'debug', 10)
@@ -101,12 +104,22 @@ class CameraNode(Node):
                 else:
                     merged_lines.append(None)
             
+            if len(self.history_lines) < 10:
+                self.history_lines.append(merged_lines)
+            else:
+                self.history_lines.pop(0)
+                self.history_lines.append(merged_lines)
+            
+            final_merged_lines = self.history_lines[0]
+            for merged_line in self.history_lines[1:]:
+                final_merged_lines = self.merge_two_lines(final_merged_lines, merged_line)
+            
             print()
             print(groups)
-            print(merged_lines)
+            print(final_merged_lines)
             print()
             
-            for i, line in enumerate(merged_lines):
+            for i, line in enumerate(final_merged_lines):
                 if line is None: continue
                 x1, y1, x2, y2 = line
                 if i == 0:
