@@ -64,12 +64,12 @@ class CameraNode(Node):
             blurred_mask = cv2.GaussianBlur(merged_mask, (15, 15), 0)
             edges = cv2.Canny(blurred_mask, 100, 200)
             lines = cv2.HoughLinesP(edges, 1, np.pi/180, 50, maxLineGap=50)
-            cv2.imshow('edges', edges)
 
             edges_copy = edges.copy()
             for line in lines:
                 x1, y1, x2, y2 = line[0]
                 cv2.line(edges_copy, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.imshow('edges', edges)
             
             img_masked = cv2.bitwise_and(blurred_mask, img)
             cv2.imshow('street', img_masked)
