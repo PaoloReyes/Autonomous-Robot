@@ -65,44 +65,49 @@ class CameraNode(Node):
             edges = cv2.Canny(blurred_mask, 100, 200)
 
             # search the start point of each line of street
-            start_point_1 = None
-            start_point_2 = None
-            for x in range(edges.shape[1]):
-                if edges[x, edges.shape[0] - 1] == 255:
-                    if start_point_1 is None:
-                        start_point_1 = (x, edges.shape[0] - 1)
-                    else:
-                        start_point_2 = (x, edges.shape[0] - 1)
-                        break
+            for y in range(edges.shape[0], 0, -1):
+                start_point_1 = None
+                start_point_2 = None
+                for x in range(edges.shape[1]):
+                    if edges[x, y] == 255:
+                        if start_point_1 is None:
+                            start_point_1 = (x, edges.shape[0] - 1)
+                        else:
+                            start_point_2 = (x, edges.shape[0] - 1)
+                            break
+                if start_point_1 is not None and start_point_2 is not None:
+                    break
             
-            lines = [[], []]
-            lines[0].append(start_point_1)
-            lines[1].append(start_point_2)
+            print(start_point_1, start_point_2)
             
-            self.points = []
-            self.run_line(edges, start_point_1, 0)
-            lines[0].append(self.points)
-            self.points = []
-            self.run_line(edges, start_point_2, 0)  
-            lines[1].append(self.points)
+            # lines = [[], []]
+            # lines[0].append(start_point_1)
+            # lines[1].append(start_point_2)
+            
+            # self.points = []
+            # self.run_line(edges, start_point_1, 0)
+            # lines[0].append(self.points)
+            # self.points = []
+            # self.run_line(edges, start_point_2, 0)  
+            # lines[1].append(self.points)
 
 
-            rkn254 = np.zeros(img.shape[:2], np.uint8)
-            # Drawing the lines
-            for line in lines:
-                i = 0
-                contour = line.astype(np.int32).reshape(-1, 1, 2)
-                if i == 0:
-                    i += 1
-                    _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
-                else:
-                    _ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
+            # rkn254 = np.zeros(img.shape[:2], np.uint8)
+            # # Drawing the lines
+            # for line in lines:
+            #     i = 0
+            #     contour = line.astype(np.int32).reshape(-1, 1, 2)
+            #     if i == 0:
+            #         i += 1
+            #         _ = cv2.drawContours(rkn254, [contour], -1, (0, 255, 0), cv2.FILLED)
+            #     else:
+            #         _ = cv2.drawContours(rkn254, [contour], -1, (0, 0, 255), cv2.FILLED)
 
             cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            cv2.imshow('rkn254', rkn254)
+            #cv2.imshow('rkn254', rkn254)
             cv2.waitKey(1)
 
             msg = String()
