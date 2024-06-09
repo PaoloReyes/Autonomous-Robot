@@ -64,14 +64,14 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
             lines = cv2.HoughLinesP(edges, 1, np.pi/180, 35, maxLineGap=100)
-            lines = lines.reshape(-1, 4)
             if lines is not None:
+                lines = lines.reshape(-1, 4)
                 for i, line in enumerate(lines):
                     x1, y1, x2, y2 = line
                     if y1 > y2: 
                         x1, y1, x2, y2 = x2, y2, x1, y1
                         lines[i] = [x1, y1, x2, y2]
-            if lines is not None: lines = self.merge_lines(lines, threshold_distance=30, threshold_angle=15)
+                lines = self.merge_lines(lines, threshold_distance=30, threshold_angle=15)
 
             groups = [[], [], []]
             if lines is not None:
@@ -80,10 +80,13 @@ class CameraNode(Node):
                     m = self.get_m(x1, y1, x2, y2)
                     if m > 0.8:
                         groups[0].append((x1, y1, x2, y2))
+                        cv2.line(dst, (x1, y1), (x2, y2), (241, 111, 188), 2)
                     elif m > 0.3 and m < 0.8:
                         groups[1].append((x1, y1, x2, y2))
+                        cv2.line(dst, (x1, y1), (x2, y2), (0, 255, 0), 2)
                     else:
                         groups[2].append((x1, y1, x2, y2))
+                        cv2.line(dst, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
             merged_lines = []
             for i, group in enumerate(groups):
