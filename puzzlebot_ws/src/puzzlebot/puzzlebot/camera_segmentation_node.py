@@ -92,9 +92,9 @@ class CameraNode(Node):
                     if len(group[i]) > 1:
                         for k in range(len(group[i])):
                             coord_group[i] = self.merge_two_lines(group[i][k], coord_group[i])
-                    else:
+                    if len(group[i]) == 1:
                         coord_group[i] = group[i]
-                        coord_group[i] = coord_group[i][0]
+
                 print(coord_group)
 
 
