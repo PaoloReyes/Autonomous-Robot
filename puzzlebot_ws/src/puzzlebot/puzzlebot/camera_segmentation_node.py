@@ -68,13 +68,7 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-            mid_images = edges.copy()
-            cv2.line(mid_images, (0, mid_images.shape[0]//2), (mid_images.shape[1], mid_images.shape[0]//2), (255, 255, 255), 1)
-
-            mid = b_mask[b_mask.shape[0]//2:,:]
-
-            print(mid.shape)
-            
+            cv2.line(edges, (0, edges.shape[0]//2), (edges.shape[1], edges.shape[0]//2), (255, 255, 255), 1)            
             contours, _ = cv2.findContours(b_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
                 max_c = max(contours, key=cv2.contourArea)
@@ -83,13 +77,12 @@ class CameraNode(Node):
                     cx = int(M['m10']/M['m00'])
                     cy = int(M['m01']/M['m00'])
                     print(f'distance in y: {cy}')
-                    cv2.circle(mid_images, (cx, cy), 5, (255, 255, 255), -1)
+                    cv2.circle(edges, (cx, cy), 5, (255, 255, 255), -1)
     
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            cv2.imshow('pussy controller', mid_images)
             cv2.waitKey(1)
 
             msg = String()
