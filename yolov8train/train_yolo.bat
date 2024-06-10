@@ -1,2 +1,2 @@
 call conda activate ai
-yolo task=segment mode=train model="D:\Tec\Sexto_Semestre\Autonomous-Robot\yolov8train\runs\segment\train20\weights\best.pt" data=semanticsegmentation-5_yolo\data.yaml batch=16 epochs=40 imgsz=320
+yolo task=segment mode=train model=yolov8n-seg.pt data=semanticsegmentation-7_yolo\data.yaml batch=16 epochs=5 imgsz=320
