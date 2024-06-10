@@ -79,7 +79,8 @@ class CameraNode(Node):
                     print(f'distance in y: {cy}')
                     cv2.circle(edges, (cx, cy), 5, (255, 255, 255), -1)
     
-            mid_edge = edges[edges.shape[0]//2, :]
+            print(f'edges shape: {edges.shape}')
+            mid_edge = edges[edges.shape[1]//2, :]
 
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
