@@ -95,12 +95,11 @@ class CameraNode(Node):
 
                 # Mapping the x and y coordinates of the center of the street to the center of the image
                 x = img.shape[1]//2 - cx
+                y = 0
                 if cy > 190 and cy < 240:
                     y = self.map(cy, 190, 240, 50, 0)
                 if cy < 190:
                     y = 50
-                if cy > 240:
-                    y = 0
 
                 print(f'x: {x}, y: {y}')
                 msg.data = [x, y]
