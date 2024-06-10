@@ -68,9 +68,6 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-            mid_edge = deepcopy(edges)
-            mid_edge = mid_edge[mid_edge.shape[0]//2:mid_edge.shape[0],:]
-
             cv2.line(edges, (0, edges.shape[0]//2), (edges.shape[1], edges.shape[0]//2), (255, 255, 255), 1)            
             contours, _ = cv2.findContours(b_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
@@ -81,21 +78,22 @@ class CameraNode(Node):
                     cy = int(M['m01']/M['m00'])
                     print(f'distance in y: {cy}')
                     cv2.circle(edges, (cx, cy), 5, (255, 255, 255), -1)
-    
 
-            mid_edge = cv2.resize(mid_edge, (320, 240))
-            
-            cx2 = cx
-            cy2 = cy - b_mask.shape[0]//4
-            cv2.circle(mid_edge, (cx2, cy2), 5, (255, 255, 255), -1)
-            
-            print(f'y mid: {cy2}')
+                # Mapping the x and y coordinates of the center of the street to the center of the image
+                x = img.shape[1]//2 - cx
+                if cy > 190 and cy < 240:
+                    y = map(cy, 190, 240, 50, 0)
+                if cy < 190:
+                    y = 50
+                if cy > 240:
+                    y = 0
+
+                print(f'x: {x}, y: {y}')
 
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
-            cv2.imshow('mid_edge', mid_edge)
             cv2.waitKey(1)
 
             msg = String()
@@ -118,7 +116,10 @@ class CameraNode(Node):
             "video/x-raw, format=(string)BGR ! appsink"
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
-                
+
+    def map(self, x, in_min, in_max, out_min, out_max):
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+          
 def main(args=None):
     rclpy.init(args=args)
     camera_node = CameraNode()
