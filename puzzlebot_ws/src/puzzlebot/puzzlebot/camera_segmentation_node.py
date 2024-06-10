@@ -81,7 +81,7 @@ class CameraNode(Node):
     
             print(f'edges shape: {edges.shape}')
             mid_edge = deepcopy(edges)
-            mid_edge = mid_edge[mid_edge.shape[0]//2, :]
+            mid_edge = mid_edge[0:mid_edge.shape[0]//2,:]
             print(f'mid_edge shape: {mid_edge.shape}')
 
             cv2.imshow('Original Image', img)
