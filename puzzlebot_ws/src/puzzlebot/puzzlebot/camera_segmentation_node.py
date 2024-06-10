@@ -68,6 +68,9 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, img)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
+            mid_edge = deepcopy(edges)
+            mid_edge = mid_edge[mid_edge.shape[0]//2:mid_edge.shape[0],:]
+
             cv2.line(edges, (0, edges.shape[0]//2), (edges.shape[1], edges.shape[0]//2), (255, 255, 255), 1)            
             contours, _ = cv2.findContours(b_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
@@ -79,12 +82,13 @@ class CameraNode(Node):
                     print(f'distance in y: {cy}')
                     cv2.circle(edges, (cx, cy), 5, (255, 255, 255), -1)
     
-            print(f'edges shape: {edges.shape}')
-            mid_edge = deepcopy(edges)
-            mid_edge = mid_edge[mid_edge.shape[0]//2:mid_edge.shape[0],:]
-            mid_edge = cv2.resize(mid_edge, (320, 240))
-            print(f'mid_edge shape: {mid_edge.shape}')
 
+            mid_edge = cv2.resize(mid_edge, (320, 240))
+            
+            cx2 = cx
+            cy2 = cy + b_mask.shape[0]//2
+            cv2.circle(mid_edge, (cx2, cy2), 5, (255, 255, 255), -1)
+            print(f'y mid: {y}')
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
