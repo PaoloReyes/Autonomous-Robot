@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from ultralytics import YOLO
 
 def main():
-    MODEL_PATH = r'D:\rokur\Documents\ITESM\6to\Autonomous-Robot\yolov8train\runs\segment\train25\weights\best.pt'
+    MODEL_PATH = r'..\yolov8train\runs\segment\train24\weights\best.pt'
     
     model = YOLO(MODEL_PATH)
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
