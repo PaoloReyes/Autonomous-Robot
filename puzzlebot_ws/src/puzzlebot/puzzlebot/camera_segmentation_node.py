@@ -117,8 +117,8 @@ class CameraNode(Node):
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
 
-    def map(self, x, in_min, in_max, out_min, out_max):
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+    def map(self, x: int, in_min: int, in_max: int, out_min: int, out_max: int) -> int:
+        return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
           
 def main(args=None):
     rclpy.init(args=args)
