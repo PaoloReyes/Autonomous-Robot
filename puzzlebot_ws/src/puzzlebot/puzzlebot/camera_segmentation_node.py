@@ -1,3 +1,14 @@
+"""
+This node is responsible for capturing the camera feed and performing segmentation on the image.
+The segmentation is done using the YOLOv8 model. The model is imported from the ultralytics library.
+The model is used to detect the street in the image. The detected street is then used to calculate the distance
+between the center of the street and the center of the image. This distance is then used to calculate the x and y
+coordinates of the center of the street with respect to the center of the image. The x and y coordinates are then
+used to calculate the distance between the robot and the street. The distance is then used to control the robot.
+The node also publishes the image with the detected street and the distance between the robot and the street.
+
+Authors: RikuNav & PaoloReyes
+"""
 import cv2
 import numpy as np
 import os
@@ -5,7 +16,7 @@ import os
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import String
+from std_msgs.msg import String, Int32MultiArray
 
 from cv_bridge import CvBridge
 
@@ -22,6 +33,7 @@ class CameraNode(Node):
         
         # Publisher
         self.pub = self.create_publisher(String, 'debug', 10)
+        self.coord_pub = self.create_publisher(Int32MultiArray, 'street_coords', 10)
 
         # Open the camera feed
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
@@ -71,6 +83,8 @@ class CameraNode(Node):
             cv2.line(edges, (0, edges.shape[0]//2), (edges.shape[1], edges.shape[0]//2), (255, 255, 255), 1)            
             contours, _ = cv2.findContours(b_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
+                msg = Int32MultiArray()
+                msg.data = [0, 0]
                 max_c = max(contours, key=cv2.contourArea)
                 M = cv2.moments(max_c)
                 if M['m00'] != 0:
@@ -89,6 +103,9 @@ class CameraNode(Node):
                     y = 0
 
                 print(f'x: {x}, y: {y}')
+                msg.data = [x, y]
+                self.coord_pub.publish(msg)
+
 
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
