@@ -80,7 +80,6 @@ class CameraNode(Node):
             img_masked = cv2.bitwise_and(blurred_mask, dst)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-            cv2.line(edges, (0, edges.shape[0]//2), (edges.shape[1], edges.shape[0]//2), (255, 255, 255), 1)            
             contours, _ = cv2.findContours(b_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
                 msg = Int32MultiArray()
