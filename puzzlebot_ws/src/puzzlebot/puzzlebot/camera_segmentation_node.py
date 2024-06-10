@@ -86,10 +86,10 @@ class CameraNode(Node):
             mid_edge = cv2.resize(mid_edge, (320, 240))
             
             cx2 = cx
-            cy2 = cy + b_mask.shape[0]//2
+            cy2 = cy - b_mask.shape[0]//2
             cv2.circle(mid_edge, (cx2, cy2), 5, (255, 255, 255), -1)
             print(f'y mid: {cy2}')
-            
+
             cv2.imshow('Original Image', img)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
