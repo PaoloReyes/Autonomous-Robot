@@ -82,9 +82,11 @@ class CameraNode(Node):
             indexes_to_pop = []
             for i, box_1 in enumerate(boxes):
                 for j , box_2 in enumerate(boxes):
+                    print(f'i: {i}, j: {j}')
                     if i != j:
                         x1, y1, x2, y2 = box_1[0]
                         x3, y3, x4, y4 = box_2[0]
+                        print(x1 > x3 and x1 < x4 and y1 > y3 and y1 < y4) or (x3 > x1 and x3 < x2 and y3 > y1 and y3 < y2)
                         if (x1 > x3 and x1 < x4 and y1 > y3 and y1 < y4) or (x3 > x1 and x3 < x2 and y3 > y1 and y3 < y2):
                             x5, y5, x6, y6 = (max(x1, x3), max(y1, y3), min(x2, x4), min(y2, y4))
                             intersection = (x6 - x5) * (y6 - y5)
