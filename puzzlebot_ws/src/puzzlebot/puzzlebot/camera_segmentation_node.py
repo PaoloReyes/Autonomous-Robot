@@ -70,44 +70,11 @@ class CameraNode(Node):
                 inference = result.plot()
 
             b_mask = np.zeros(img.shape[:2], np.uint8)
-            boxes = []
             for c in result:
                 label = c.names[c.boxes.cls.tolist().pop()]
                 if label == 'street':
                     contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
                     _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
-                else:
-                    boxes.append((c.boxes.xyxy[0].cpu().numpy().astype(np.int32), c.boxes.conf[0].cpu().numpy().astype(np.float32)))
-            
-            indexes_to_pop = []
-            for i, box_1 in enumerate(boxes):
-                for j , box_2 in enumerate(boxes):
-                    print(f'i: {i}, j: {j}')
-                    if i != j:
-                        x1, y1, x2, y2 = box_1[0]
-                        x3, y3, x4, y4 = box_2[0]
-                        print(x1 > x3 and x1 < x4 and y1 > y3 and y1 < y4) or (x3 > x1 and x3 < x2 and y3 > y1 and y3 < y2)
-                        if (x1 > x3 and x1 < x4 and y1 > y3 and y1 < y4) or (x3 > x1 and x3 < x2 and y3 > y1 and y3 < y2):
-                            x5, y5, x6, y6 = (max(x1, x3), max(y1, y3), min(x2, x4), min(y2, y4))
-                            intersection = (x6 - x5) * (y6 - y5)
-                            union = (x2 - x1) * (y2 - y1) + (x4 - x3) * (y4 - y3) - intersection
-                            IoU = intersection / union
-                            print(f'IoU: {IoU}')
-                            if IoU > 0.5:
-                                if box_1[1] > box_2[1]:
-                                    indexes_to_pop.append(j)
-                                else:
-                                    indexes_to_pop.append(i)
-            set_indexes = set(indexes_to_pop)
-            for index in set_indexes:
-                boxes.pop(index)
-            for i, box in enumerate(boxes):
-                boxes[i] = box[0]
-
-            boxes_img = raw.copy()
-            for box in boxes:
-                x1, y1, x2, y2 = box
-                cv2.rectangle(boxes_img, (x1, y1), (x2, y2), (np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)), 2)
 
             merged_mask = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
             blurred_mask = cv2.GaussianBlur(merged_mask, (15, 15), 0)
@@ -138,7 +105,6 @@ class CameraNode(Node):
 
 
             cv2.imshow('Original Image', raw)
-            cv2.imshow('boxes', boxes_img)
             cv2.imshow('street', img_masked)
             cv2.imshow('edges', edges)
             cv2.imshow('YOLOv8 Inference', inference)
