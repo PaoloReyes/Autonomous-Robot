@@ -42,7 +42,7 @@ class CameraNode(Node):
         from ultralytics import YOLO
 
         # Timers
-        timer_period = 0.08 
+        timer_period = 0.2
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
         # Import YOLO model
@@ -152,7 +152,7 @@ class CameraNode(Node):
         else:
             print('Unable to open camera')
     
-    def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240,framerate=5, flip_method=0):
+    def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240, framerate=5, flip_method=0):
         return (
             "nvarguscamerasrc sensor-id=%d ! "
             "video/x-raw(memory:NVMM), width=(int)%d, height=(int)%d, framerate=(fraction)%d/1 ! "
