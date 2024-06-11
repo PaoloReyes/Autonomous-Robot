@@ -101,7 +101,7 @@ class CameraNode(Node):
             for i, box in enumerate(boxes):
                 boxes[i] = box[0]
 
-            boxes_img = raw.compy().astype(np.int32)
+            boxes_img = raw.copy().astype(np.int32)
             for box in boxes:
                 x1, y1, x2, y2 = box
                 cv2.rectangle(boxes_img, (x1, y1), (x2, y2), (np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)), 2)
