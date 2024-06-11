@@ -1,7 +1,7 @@
 task: segment
 mode: train
 model: yolov8n-seg.pt
-data: semanticsegmentation-3_yolo\data.yaml
+data: semanticsegmentation-11_yolo\data.yaml
 epochs: 100
 time: null
 patience: 100
@@ -23,7 +23,7 @@ deterministic: true
 single_cls: false
 rect: false
 cos_lr: false
-close_mosaic: 10
+close_mosaic: 25
 resume: false
 amp: true
 fraction: 1.0
@@ -38,7 +38,7 @@ split: val
 save_json: false
 save_hybrid: false
 conf: null
-iou: 0.7
+iou: 0.4
 max_det: 300
 half: false
 dnn: false
@@ -89,11 +89,11 @@ hsv_s: 0.7
 hsv_v: 0.4
 degrees: 0.0
 translate: 0.1
-scale: 0.5
+scale: 0.0
 shear: 0.0
 perspective: 0.0
 flipud: 0.0
-fliplr: 0.5
+fliplr: 0.0
 bgr: 0.0
 mosaic: 1.0
 mixup: 0.0
