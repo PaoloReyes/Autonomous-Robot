@@ -42,7 +42,7 @@ class CameraNode(Node):
         from ultralytics import YOLO
 
         # Timers
-        timer_period = 0.2
+        timer_period = 0.08
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
         # Import YOLO model
