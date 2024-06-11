@@ -61,12 +61,12 @@ class CameraNode(Node):
             _, img = self.source.read()
             img = cv2.flip(img, 0)
             img = cv2.flip(img, 1)
-            #dst = camera_utils.undistort(img, (320, 240))
+            dst = camera_utils.undistort(img, (320, 240))
     
             import torch
     
             with torch.no_grad():
-                result = self.model(img)[0]
+                result = self.model(dst)[0]
                 image = result.plot()
 
             b_mask = np.zeros(img.shape[:2], np.uint8)
@@ -77,10 +77,9 @@ class CameraNode(Node):
                     _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
             merged_mask = cv2.cvtColor(b_mask, cv2.COLOR_GRAY2BGR)
             blurred_mask = cv2.GaussianBlur(merged_mask, (15, 15), 0)
-            img_masked = cv2.bitwise_and(blurred_mask, img)
+            img_masked = cv2.bitwise_and(blurred_mask, dst)
             edges = cv2.Canny(blurred_mask, 100, 200)
 
-            cv2.line(edges, (0, edges.shape[0]//2), (edges.shape[1], edges.shape[0]//2), (255, 255, 255), 1)            
             contours, _ = cv2.findContours(b_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours) > 0:
                 msg = Int32MultiArray()
@@ -94,20 +93,19 @@ class CameraNode(Node):
                     cv2.circle(edges, (cx, cy), 5, (255, 255, 255), -1)
 
                 # Mapping the x and y coordinates of the center of the street to the center of the image
-                x = img.shape[1]//2 - cx
+                x = dst.shape[1]//2 - cx
+                y = 0
                 if cy > 190 and cy < 240:
                     y = self.map(cy, 190, 240, 50, 0)
                 if cy < 190:
                     y = 50
-                if cy > 240:
-                    y = 0
 
                 print(f'x: {x}, y: {y}')
                 msg.data = [x, y]
                 self.coord_pub.publish(msg)
 
 
-            cv2.imshow('Original Image', img)
+            cv2.imshow('Original Image', dst)
             cv2.imshow('edges', edges)
             cv2.imshow('street', img_masked)
             cv2.imshow('YOLOv8 Inference', image)
