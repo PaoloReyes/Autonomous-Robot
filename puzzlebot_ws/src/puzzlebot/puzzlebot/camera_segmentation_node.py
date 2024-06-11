@@ -90,6 +90,7 @@ class CameraNode(Node):
                             intersection = (x6 - x5) * (y6 - y5)
                             union = (x2 - x1) * (y2 - y1) + (x4 - x3) * (y4 - y3) - intersection
                             IoU = intersection / union
+                            print(f'IoU: {IoU}')
                             if IoU > 0.5:
                                 if box_1[1] > box_2[1]:
                                     indexes_to_pop.append(j)
