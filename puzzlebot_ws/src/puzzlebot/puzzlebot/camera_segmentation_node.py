@@ -22,9 +22,9 @@ from cv_bridge import CvBridge
 
 from .submodules import camera_utils
 
-from ament_index_python import get_package_share_directory
+from .submodules import math_utils
 
-from copy import deepcopy
+from ament_index_python import get_package_share_directory
 
 class CameraNode(Node):
     def __init__(self):
@@ -125,7 +125,7 @@ class CameraNode(Node):
                 x = raw.shape[1]//2 - cx
                 y = 0
                 if cy > 190 and cy < 240:
-                    y = self.map(cy, 190, 240, 50, 0)
+                    y = math_utils.map(cy, 190, 240, 50, 0)
                 if cy < 190:
                     y = 50
 
@@ -161,9 +161,6 @@ class CameraNode(Node):
             "video/x-raw, format=(string)BGR ! appsink"
             % (sensor_id, capture_width, capture_height, framerate, flip_method, display_width, display_height)
         )
-
-    def map(self, x: int, in_min: int, in_max: int, out_min: int, out_max: int) -> int:
-        return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
           
 def main(args=None):
     rclpy.init(args=args)
