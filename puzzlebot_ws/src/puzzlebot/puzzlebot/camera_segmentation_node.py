@@ -77,7 +77,7 @@ class CameraNode(Node):
                     contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
                     _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
                 else:
-                    boxes.append((c.xyxy[0].cpu().numpy().astype(np.int32), c.conf[0].cpu().numpy().astype(np.float32)))
+                    boxes.append((c.boxes.xyxy[0].cpu().numpy().astype(np.int32), c.boxes.conf[0].cpu().numpy().astype(np.float32)))
             
             indexes_to_pop = []
             for i, box_1 in enumerate(boxes):
