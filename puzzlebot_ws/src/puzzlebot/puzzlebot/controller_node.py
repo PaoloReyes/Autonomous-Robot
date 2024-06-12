@@ -30,7 +30,7 @@ class ControllerNode(Node):
                 cmd_vel.angular.z = x * self.KPAngular * 8
             else:
                 cmd_vel.linear.x = y * self.KPLinear
-                cmd_vel.angular.z = x * self.KPAngulars
+                cmd_vel.angular.z = x * self.KPAngular
         else:
             cmd_vel.linear.x = 0
             cmd_vel.angular.z = x * self.KPAngular * 10
