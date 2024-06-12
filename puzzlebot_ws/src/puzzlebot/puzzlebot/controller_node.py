@@ -9,8 +9,8 @@ class ControllerNode(Node):
     def __init__(self):
         super().__init__('controller_node')
 
-        self.declare_parameter('KPLinear', 0.0035)
-        self.declare_parameter('KPAngular', 0.01)
+        self.declare_parameter('KPLinear', 0.015)
+        self.declare_parameter('KPAngular', 0.15)
 
         self.KPLinear = self.get_parameter('KPLinear').value
         self.KPAngular = self.get_parameter('KPAngular').value
@@ -26,7 +26,13 @@ class ControllerNode(Node):
         cmd_vel = Twist()
         cmd_vel.linear.x = y * self.KPLinear
         cmd_vel.angular.z = x * self.KPAngular
+
+        if x == 0 and y == 0:
+            cmd_vel.angular.z = 2.0 if cmd_vel.angular.z > 0 else -2.0
+            self.get_logger().info('Object Lost')
+
         self.cmd_vel_pub.publish(cmd_vel)
+
 
 def main(args=None):
     rclpy.init(args=args)
