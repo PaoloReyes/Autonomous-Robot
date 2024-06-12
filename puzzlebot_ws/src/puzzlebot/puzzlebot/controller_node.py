@@ -15,9 +15,9 @@ class ControllerNode(Node):
         self.KPLinear = self.get_parameter('KPLinear').value
         self.KPAngular = self.get_parameter('KPAngular').value
 
-        self.create_subscription(Int32MultiArray, '/CoM', self.com_callback, 10)
+        self.create_subscription(Int32MultiArray, '/CoM', self.com_callback, qos.qos_profile_sensor_data)
 
-        self.cmd_vel_pub = self.create_publisher(Twist, 'crt_vel', qos.qos_profile_sensor_data)
+        self.cmd_vel_pub = self.create_publisher(Twist, 'cmd_vel', qos.qos_profile_sensor_data)
 
         self.get_logger().info('Puzzlebot Controller Node Started')
 
