@@ -37,8 +37,8 @@ class SignalLogicNode(Node):
     def go (self):
         self.pub.publish(self.vel)
     def stop (self):
-        self.vel.linear.x = 0
-        self.vel.angular.z = 0
+        self.vel.linear.x = 0.0
+        self.vel.angular.z = 0.0
         self.pub.publish(self.vel) 
     def slow_down (self):
         self.vel.linear.x = self.vel.linear.x / 2
@@ -52,7 +52,7 @@ class SignalLogicNode(Node):
                 self.stop()
                 time.sleep(5)
                 self.go()
-            elif self.sign == "working":
+            elif self.sign == "workers":
                 self.slow_down()
                 time.sleep(5)
                 self.go()
