@@ -13,7 +13,7 @@ class SignalLogicNode(Node):
         
         # Subscribers
         self.sub = self.create_subscription(String, '/sign', self.sign_callback, 10)
-        self.sub = self.create_subscription(Twist, '/ctr_vel', self.cmd_vel_callback, qos.qos_profile_sensor_data)
+        self.sub = self.create_subscription(Twist, 'crt_vel', self.cmd_vel_callback, 10)
 
         #Publisher
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
