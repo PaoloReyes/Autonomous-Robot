@@ -87,11 +87,9 @@ class YOLONode(Node):
                 else:
                     y = 50
 
-                msg.data = [x, y]
-            else:
-                msg.data = [0, 0]
-            
-            self.CoM_pub.publish(msg)
+                msg.data = [x, y]   
+                self.CoM_pub.publish(msg)
+
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(inference, encoding='bgr8'))
 
 def main(args=None):

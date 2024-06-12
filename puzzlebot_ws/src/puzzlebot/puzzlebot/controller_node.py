@@ -27,10 +27,6 @@ class ControllerNode(Node):
         cmd_vel.linear.x = y * self.KPLinear
         cmd_vel.angular.z = x * self.KPAngular
 
-        if x == 0 and y == 0:
-            cmd_vel.angular.z = 0.707 if cmd_vel.angular.z > 0 else -0.707
-            self.get_logger().info('Object Lost')
-
         self.cmd_vel_pub.publish(cmd_vel)
 
 
