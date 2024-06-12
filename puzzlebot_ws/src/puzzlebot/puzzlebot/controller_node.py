@@ -17,7 +17,7 @@ class ControllerNode(Node):
 
         self.create_subscription(Int32MultiArray, '/CoM', self.com_callback, qos.qos_profile_sensor_data)
 
-        self.cmd_vel_pub = self.create_publisher(Twist, 'cmd_vel', qos.qos_profile_sensor_data)
+        self.cmd_vel_pub = self.create_publisher(Twist, 'crt_vel', qos.qos_profile_sensor_data)
 
         self.get_logger().info('Puzzlebot Controller Node Started')
 
