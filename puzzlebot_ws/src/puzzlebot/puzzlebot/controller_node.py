@@ -24,12 +24,8 @@ class ControllerNode(Node):
     def com_callback(self, msg):
         x, y = msg.data
         cmd_vel = Twist()
-        if abs(x) < 15:
-            cmd_vel.linear.x = y * self.KPLinear
-            cmd_vel.angular.z = x * self.KPAngular
-        else:
-            cmd_vel.linear.x = y * self.KPLinear
-            cmd_vel.angular.z = x * self.KPAngular * 2
+        cmd_vel.linear.x = y * self.KPLinear
+        cmd_vel.angular.z = x * self.KPAngular
         self.cmd_vel_pub.publish(cmd_vel)
 
 
