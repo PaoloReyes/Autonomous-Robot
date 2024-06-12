@@ -1,4 +1,6 @@
+import os
 import cv2
+import threading
 
 import rclpy
 from rclpy import qos
@@ -14,7 +16,6 @@ import torch
 
 from ultralytics import YOLO
 
-import os
 from ament_index_python.packages import get_package_share_directory
 
 from .submodules import math_utils
@@ -30,11 +31,8 @@ class YOLONode(Node):
 
         self.CoM_pub = self.create_publisher(Int32MultiArray, 'CoM', qos.qos_profile_sensor_data)
 
-        self.cv_image = None
-        self.flag = False
-
-        timer_period = 0.033333
-        self.timer = self.create_timer(timer_period, self.timer_callback)
+        inference_frequency = 30
+        self.timer = self.create_timer(1/inference_frequency, self.timer_callback)
 
         # Import YOLO model
         path = get_package_share_directory('puzzlebot')
@@ -43,52 +41,50 @@ class YOLONode(Node):
 
         self.model = YOLO(path)
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        print('\nUsing device:', self.device)
+        self.get_logger().info(f'\nUsing device: {self.device}')
         self.model.model.eval()
         self.model.to(self.device)
 
     def image_callback(self, msg):
-        self.cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-        self.flag = True
+        threading.Thread(target=self.model_inference, args=(msg,)).start()
 
-    def timer_callback(self):
-        if self.flag:
-            raw = self.cv_image
+    def model_inference(self, msg):
+        raw = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
-            with torch.no_grad():
-                result = self.model(raw, verbose=False)[0]
-                inference = result.plot()
+        with torch.no_grad():
+            result = self.model(raw, verbose=False)[0]
+            inference = result.plot()
 
-            b_mask = np.zeros(raw.shape[:2], np.uint8)
-            for c in result:
-                label = c.names[c.boxes.cls.tolist().pop()]
-                if label == 'street':
-                    contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
-                    _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
+        b_mask = np.zeros(raw.shape[:2], np.uint8)
+        for c in result:
+            label = c.names[c.boxes.cls.tolist().pop()]
+            if label == 'street':
+                contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
+                _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
 
-            blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
+        blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
-            contours, _ = cv2.findContours(blurred_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            if len(contours) > 0:
-                max_c = max(contours, key=cv2.contourArea)
-                M = cv2.moments(max_c)
-                if M['m00'] != 0:
-                    cx = int(M['m10']/M['m00'])
-                    cy = int(M['m01']/M['m00'])
-                    cv2.circle(inference, (cx, cy), 5, (255, 0, 0), -1)
+        contours, _ = cv2.findContours(blurred_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if len(contours) > 0:
+            max_c = max(contours, key=cv2.contourArea)
+            M = cv2.moments(max_c)
+            if M['m00'] != 0:
+                cx = int(M['m10']/M['m00'])
+                cy = int(M['m01']/M['m00'])
+                cv2.circle(inference, (cx, cy), 5, (255, 0, 0), -1)
 
-                # Mapping the x and y coordinates of the center of the street to the center of the image
-                x = raw.shape[1]//2 - cx
-                if cy > 190 and cy < 240:
-                    y = math_utils.map(cy, 190, 240, 50, 0)
-                elif cy > 240:
-                    y = 0
-                else:
-                    y = 50
+            # Mapping the x and y coordinates of the center of the street to the center of the image
+            x = raw.shape[1]//2 - cx
+            if cy > 190 and cy < 240:
+                y = math_utils.map(cy, 190, 240, 50, 0)
+            elif cy > 240:
+                y = 0
+            else:
+                y = 50
 
-                msg = Int32MultiArray()
-                msg.data = [x, y]
-                self.CoM_pub.publish(msg)
+            msg = Int32MultiArray()
+            msg.data = [x, y]
+            self.CoM_pub.publish(msg)
 
 def main(args=None):
     rclpy.init(args=args)
