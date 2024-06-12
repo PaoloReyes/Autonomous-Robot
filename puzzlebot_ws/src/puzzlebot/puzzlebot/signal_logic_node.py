@@ -45,9 +45,8 @@ class SignalLogicNode(Node):
         self.pub.publish(self.vel)
     
     def timer_callback(self):
-        
-        if self.has_sign:    
             # Behaviors
+            print(self.sign)
             if self.sign == "stop":
                 self.stop()
                 time.sleep(5)
@@ -83,9 +82,8 @@ class SignalLogicNode(Node):
             elif self.sign == "red":
                 self.stop()
             else:
-                self.has_sign = False
-        else: 
                 self.go()
+
                 
                 
 def main(args=None):
