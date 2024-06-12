@@ -7,7 +7,7 @@ from rclpy.node import Node
 
 from sensor_msgs.msg import Image
 
-from std_msgs.msg import Int32MultiArray
+from std_msgs.msg import Int32MultiArray, String
 
 from cv_bridge import CvBridge
 
@@ -29,6 +29,7 @@ class YOLONode(Node):
         self.image_sub = self.create_subscription(Image, '/video_source/raw', self.image_callback, qos.qos_profile_sensor_data)
         self.image_pub = self.create_publisher(Image, '/inference', qos.qos_profile_sensor_data)
         self.boxes_pub = self.create_publisher(Image, '/boxes', qos.qos_profile_sensor_data)
+        self.signal_pub = self.create_publisher(String, '/sign', 10)
 
         self.CoM_pub = self.create_publisher(Int32MultiArray, 'CoM', qos.qos_profile_sensor_data)
 
@@ -107,9 +108,10 @@ class YOLONode(Node):
                     box = unique_group[0]
                     x, y = (box[0] + box[2])//2, (box[1] + box[3])//2
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
-                    cv2.putText(inference, f'{z:.2f}', (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-                    if z < 50:
-                        print(f'{unique_group[1]} is {z:.2f} cm away')
+                    if z < 20:
+                        msg = String()
+                        msg.data = unique_group[1]
+                        self.signal_pub.publish(msg)
 
 
 
