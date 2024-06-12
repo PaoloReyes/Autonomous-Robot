@@ -1,4 +1,4 @@
 controller_node:
   ros__parameters:
     KPLinear: 0.006
-    KPAngular: 0.04
+    KPAngular: 0.01
