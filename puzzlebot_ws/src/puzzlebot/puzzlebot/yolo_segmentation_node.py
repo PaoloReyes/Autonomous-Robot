@@ -27,7 +27,7 @@ class YOLONode(Node):
         super().__init__('yolo_segmentation_node')
         self.bridge = CvBridge() 
 
-        self.image_sub = self.create_subscription(Image, 'raw_image', self.image_callback, qos.qos_profile_sensor_data)
+        self.image_sub = self.create_subscription(Image, '/video_source/raw_image', self.image_callback, qos.qos_profile_sensor_data)
 
         self.CoM_pub = self.create_publisher(Int32MultiArray, 'CoM', qos.qos_profile_sensor_data)
 

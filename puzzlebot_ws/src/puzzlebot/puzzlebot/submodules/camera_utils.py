@@ -10,7 +10,6 @@ path = os.path.join(path, 'src', 'puzzlebot','package_data', 'calibration_data.p
 
 with open(path, 'rb') as f:
     K, D, _, _ = pickle.load(f)
-print('Calibration data loaded from calibration_data.pkl')
 
 def undistort(img, DIM):
     global K, D
