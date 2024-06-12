@@ -48,6 +48,9 @@ class YOLONode(Node):
 
         self.image = None
 
+        self.focal_lenght = 176.16
+        self.traffic_distance = 6.0
+
     def image_callback(self, msg):
         self.image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
     
@@ -97,6 +100,18 @@ class YOLONode(Node):
                     cv2.putText(boxes_img, f'{unique_group[1]} {unique_group[2]:.2f}', (int(unique_group[0][0]), int(unique_group[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (r, g, b), 2)
                 except:
                     pass
+
+            # Find the distance to the camera of each of the unique boxes
+            for unique_group in unique_groups:
+                if len(unique_group) > 0:
+                    box = unique_group[0]
+                    x, y = (box[0] + box[2])//2, (box[1] + box[3])//2
+                    z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
+                    cv2.putText(inference, f'{z:.2f}', (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                    if z < 50:
+                        print(f'{unique_group[1]} is {z:.2f} cm away')
+
+
 
             blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
