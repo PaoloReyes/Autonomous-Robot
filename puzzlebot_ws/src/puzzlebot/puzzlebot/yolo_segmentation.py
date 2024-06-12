@@ -18,7 +18,7 @@ from ultralytics import YOLO
 
 from ament_index_python.packages import get_package_share_directory
 
-from .submodules import math_utils
+from .submodules import math_utils, camera_utils
 
 import numpy as np
 
@@ -50,12 +50,13 @@ class YOLONode(Node):
 
     def model_inference(self, msg):
         raw = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+        dst = camera_utils.undistort(raw, (320, 240)) 
 
         with torch.no_grad():
-            result = self.model(raw, verbose=False)[0]
+            result = self.model(dst, verbose=False)[0]
             inference = result.plot()
 
-        b_mask = np.zeros(raw.shape[:2], np.uint8)
+        b_mask = np.zeros(dst.shape[:2], np.uint8)
         for c in result:
             label = c.names[c.boxes.cls.tolist().pop()]
             if label == 'street':

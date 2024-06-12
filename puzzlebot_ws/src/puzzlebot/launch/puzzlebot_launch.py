@@ -9,16 +9,16 @@ def generate_launch_description() -> LaunchDescription:
 
     manchester_camera_launch_path = os.path.join(get_package_share_directory('ros_deep_learning'), 'launch', 'video_source.launch.py')
     
-    yolv8_segmentation = Node(
-        package='yolo_segmentation',
-        executable='yolo_segmentation',
-        name='yolo_segmentation_node',
+    micro_ros_Node = Node(
+        package='micro_ros_agent',
+        executable='mmicro_ros_agent',
         output='screen',
+        arguments=['serial', '--dev', '/dev/ttyUSB0'],
     )
 
     return LaunchDescription([
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(manchester_camera_launch_path),
         ),
-        yolv8_segmentation
+        micro_ros_Node
     ])
