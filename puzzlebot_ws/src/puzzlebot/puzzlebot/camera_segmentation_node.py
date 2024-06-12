@@ -26,13 +26,15 @@ from .submodules import camera_utils
 
 from ament_index_python import get_package_share_directory
 
+from rcl.interfaces import qos
+
 class CameraNode(Node):
     def __init__(self):
         super().__init__('camera_segmentation_node')
         self.bridge = CvBridge()
         
         # Publisher
-        self.pub = self.create_publisher(Image, 'raw_image', 10)
+        self.pub = self.create_publisher(Image, 'raw_image', qos.qos_profile_sensor_data)
 
         # Open the camera feed
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
