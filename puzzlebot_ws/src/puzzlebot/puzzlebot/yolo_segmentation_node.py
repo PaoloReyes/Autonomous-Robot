@@ -53,6 +53,7 @@ class YOLONode(Node):
     def timer_callback(self):
         if self.image is not None:
             raw = self.image.copy()
+            raw = cv2.resize(320, 240)
             raw = camera_utils.undistort(raw, (320, 240)) 
 
             with torch.no_grad():
@@ -79,9 +80,9 @@ class YOLONode(Node):
 
                 # Mapping the x and y coordinates of the center of the street to the center of the image
                 x = raw.shape[1]//2 - cx
-                if cy > 190 and cy < 240:
-                    y = math_utils.map(cy, 190, 240, 50, 0)
-                elif cy > 240:
+                if cy > 163 and cy < 180:
+                    y = math_utils.map(cy, 163, 180, 50, 0)
+                elif cy > 180:
                     y = 0
                 else:
                     y = 50
