@@ -95,6 +95,7 @@ class YOLONode(Node):
             boxes_img = raw.copy()
             for i in range(3):
                 for box, label, confidence in unique_groups[i]:
+                    print(box, label, confidence)
                     cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (255, 0, 0), 2)
                     cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
