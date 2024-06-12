@@ -28,6 +28,7 @@ class YOLONode(Node):
 
         self.image_sub = self.create_subscription(Image, '/video_source/raw', self.image_callback, qos.qos_profile_sensor_data)
         self.image_pub = self.create_publisher(Image, '/inference', qos.qos_profile_sensor_data)
+        self.boxes_pub = self.create_publisher(Image, '/boxes', qos.qos_profile_sensor_data)
 
         self.CoM_pub = self.create_publisher(Int32MultiArray, 'CoM', qos.qos_profile_sensor_data)
 
@@ -60,11 +61,55 @@ class YOLONode(Node):
                 inference = result.plot()
 
             b_mask = np.zeros(raw.shape[:2], np.uint8)
+            arrows = []
+            traffic_lights = []
+            signals = []
             for c in result:
                 label = c.names[c.boxes.cls.tolist().pop()]
                 if label == 'street':
                     contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
                     _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
+                elif label == 'forward' or label == 'left' or label == 'right':
+                    box = c.boxes.xyxy.pop().astype(np.int32)
+                    label = c.names[c.boxes.cls.tolist().pop()]
+                    confidence = c.boxes.conf.tolist().pop()
+                    arrows.append((box, label, confidence))
+                elif label == 'green' or label == 'red' or label == 'yellow':
+                    box = c.boxes.xyxy.pop().astype(np.int32)
+                    label = c.names[c.boxes.cls.tolist().pop()]
+                    confidence = c.boxes.conf.tolist().pop()
+                    traffic_lights.append((box, label, confidence))
+                elif label == 'stop' or label == 'workers' or label == 'give_way':
+                    box = c.boxes.xyxy.pop().astype(np.int32)
+                    label = c.names[c.boxes.cls.tolist().pop()]
+                    confidence = c.boxes.conf.tolist().pop()
+                    signals.append((box, label, confidence))
+            
+            unique_arrows = []
+            for box, label, confidence in arrows:
+                if label not in [a[1] for a in unique_arrows]:
+                    unique_arrows.append((box, label, confidence))
+            
+            unique_traffic_lights = []
+            for box, label, confidence in traffic_lights:
+                if label not in [a[1] for a in unique_traffic_lights]:
+                    unique_traffic_lights.append((box, label, confidence))
+            
+            unique_signals = []
+            for box, label, confidence in signals:
+                if label not in [a[1] for a in unique_signals]:
+                    unique_signals.append((box, label, confidence))
+                
+            boxes_img = raw.copy()
+            for box, label, confidence in unique_arrows:
+                cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (255, 0, 0), 2)
+                cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+            for box, label, confidence in unique_traffic_lights:
+                cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
+                cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            for box, label, confidence in unique_signals:
+                cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (0, 0, 255), 2)
+                cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
             blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
@@ -91,6 +136,7 @@ class YOLONode(Node):
                 self.CoM_pub.publish(msg)
         
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(inference, encoding='bgr8'))
+            self.boxes_pub.publish(self.bridge.cv2_to_imgmsg(boxes_img, encoding='bgr8'))
 
 def main(args=None):
     rclpy.init(args=args)
