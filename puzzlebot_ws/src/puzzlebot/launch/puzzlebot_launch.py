@@ -34,3 +34,14 @@ def generate_launch_description() -> LaunchDescription:
         micro_ros_Node,
         logic_node
     ])
+    
+# main
+def main(args=None):
+    rclpy.init(args=args)
+    node = ControllerNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
