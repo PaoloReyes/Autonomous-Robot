@@ -26,6 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
             'yolo_segmentation_node = puzzlebot.yolo_segmentation_node:main',
+            'controller_node = puzzlebot.controller_node:main',
         ],
     },
 )

@@ -1,0 +1,3 @@
+[console_scripts]
+yolo_segmentation_node = puzzlebot.yolo_segmentation_node:main
+
