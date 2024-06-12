@@ -26,7 +26,6 @@ from .submodules import camera_utils
 
 from ament_index_python import get_package_share_directory
 
-from rclpy.qos import qos_profile_sensor_data
 
 class CameraNode(Node):
     def __init__(self):
@@ -34,7 +33,7 @@ class CameraNode(Node):
         self.bridge = CvBridge()
         
         # Publisher
-        self.pub = self.create_publisher(Image, 'raw_image', qos_profile_sensor_data)
+        self.pub = self.create_publisher(Image, 'raw_image', 10)
 
         # Open the camera feed
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
@@ -56,7 +55,7 @@ class CameraNode(Node):
         else:
             print('Unable to open camera')
     
-    def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240, framerate=30, flip_method=0):
+    def gstreamer_pipeline(self, sensor_id=0, capture_width=320, capture_height=240, display_width=320, display_height=240, framerate=20, flip_method=0):
         return (
             "nvarguscamerasrc sensor-id=%d ! "
             "video/x-raw(memory:NVMM), width=(int)%d, height=(int)%d, framerate=(fraction)%d/1 ! "
