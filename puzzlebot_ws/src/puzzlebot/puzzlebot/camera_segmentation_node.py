@@ -38,7 +38,7 @@ class CameraNode(Node):
         self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
         # Timers
-        timer_period = 0.08
+        timer_period = 0.0666
         self.timer = self.create_timer(timer_period, self.timer_callback)
     
     def timer_callback(self):
