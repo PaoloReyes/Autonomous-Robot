@@ -107,7 +107,7 @@ class YOLONode(Node):
                     box = unique_group[0]
                     x, y = (box[0] + box[2])//2, (box[1] + box[3])//2
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
-                    cv2.putText(inference, f'{z:.2f}', (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                    cv2.putText(inference, f'{z:.2f}', (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                     if z < 50:
                         print(f'{unique_group[1]} is {z:.2f} cm away')
 
