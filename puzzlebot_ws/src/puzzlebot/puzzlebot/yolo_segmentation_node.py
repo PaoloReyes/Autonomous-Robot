@@ -70,35 +70,44 @@ class YOLONode(Node):
                     contour = c.masks.xy.pop().astype(np.int32).reshape(-1, 1, 2)
                     _ = cv2.drawContours(b_mask, [contour], -1, (255, 255, 255), cv2.FILLED)
                 elif label == 'forward' or label == 'left' or label == 'right':
-                    box = c.boxes.xyxy.pop().astype(np.int32)
+                    box = c.boxes.xyxy.tolist()[0]
                     label = c.names[c.boxes.cls.tolist().pop()]
                     confidence = c.boxes.conf.tolist().pop()
                     arrows.append((box, label, confidence))
                 elif label == 'green' or label == 'red' or label == 'yellow':
-                    box = c.boxes.xyxy.pop().astype(np.int32)
+                    box = c.boxes.xyxy.tolist()[0]
                     label = c.names[c.boxes.cls.tolist().pop()]
                     confidence = c.boxes.conf.tolist().pop()
                     traffic_lights.append((box, label, confidence))
                 elif label == 'stop' or label == 'workers' or label == 'give_way':
-                    box = c.boxes.xyxy.pop().astype(np.int32)
+                    box = c.boxes.xyxy.tolist()[0]
                     label = c.names[c.boxes.cls.tolist().pop()]
                     confidence = c.boxes.conf.tolist().pop()
                     signals.append((box, label, confidence))
             
             unique_arrows = []
-            for box, label, confidence in arrows:
+            for i, (box, label, confidence) in enumerate(arrows):
                 if label not in [a[1] for a in unique_arrows]:
                     unique_arrows.append((box, label, confidence))
+                else:
+                    if unique_arrows[i][2] < confidence:
+                        unique_arrows[i] = (box, label, confidence)
             
             unique_traffic_lights = []
-            for box, label, confidence in traffic_lights:
+            for i, (box, label, confidence) in enumerate(traffic_lights):
                 if label not in [a[1] for a in unique_traffic_lights]:
                     unique_traffic_lights.append((box, label, confidence))
+                else:
+                    if unique_traffic_lights[i][2] < confidence:
+                        unique_traffic_lights[i] = (box, label, confidence)
             
             unique_signals = []
-            for box, label, confidence in signals:
+            for i, (box, label, confidence) in enumerate(signals):
                 if label not in [a[1] for a in unique_signals]:
                     unique_signals.append((box, label, confidence))
+                else:
+                    if unique_signals[i][2] < confidence:
+                        unique_signals[i] = (box, label, confidence)
                 
             boxes_img = raw.copy()
             for box, label, confidence in unique_arrows:
