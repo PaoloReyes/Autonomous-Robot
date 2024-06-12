@@ -24,8 +24,8 @@ class ControllerNode(Node):
     def com_callback(self, msg):
         x, y = msg.data
         cmd_vel = Twist()
-        cmd_vel.linear.x = x * self.KPLinear
-        cmd_vel.angular.z = y * self.KPAngular
+        cmd_vel.linear.x = y * self.KPLinear
+        cmd_vel.angular.z = x * self.KPAngular
         self.cmd_vel_pub.publish(cmd_vel)
 
 def main(args=None):
