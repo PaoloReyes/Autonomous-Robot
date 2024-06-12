@@ -12,11 +12,11 @@ class SignalLogicNode(Node):
         super().__init__('signal_logic_node')
         
         # Subscribers
-        self.sub = self.create_subscription(String, 'sign', self.sign_callback, 10)
-        self.sub = self.create_subscription(Twist, 'ctr_vel', self.cmd_vel_callback, qos.qos_profile_sensor_data)
+        self.sub = self.create_subscription(String, '/sign', self.sign_callback, 10)
+        self.sub = self.create_subscription(Twist, '/ctr_vel', self.cmd_vel_callback, qos.qos_profile_sensor_data)
 
         #Publisher
-        self.pub = self.create_publisher(Twist, 'cmd_vel', 10)
+        self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
         
         # Timers
         timer_period = 0.08
