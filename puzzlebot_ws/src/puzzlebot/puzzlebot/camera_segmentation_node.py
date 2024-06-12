@@ -26,7 +26,7 @@ from .submodules import camera_utils
 
 from ament_index_python import get_package_share_directory
 
-from rcl.interfaces import qos
+from rclpy.interfaces import qos
 
 class CameraNode(Node):
     def __init__(self):
