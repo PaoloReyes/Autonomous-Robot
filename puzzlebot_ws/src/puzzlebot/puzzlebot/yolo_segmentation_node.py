@@ -69,7 +69,6 @@ class YOLONode(Node):
             blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
             contours, _ = cv2.findContours(blurred_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            msg = Int32MultiArray()
             if len(contours) > 0:
                 max_c = max(contours, key=cv2.contourArea)
                 M = cv2.moments(max_c)
@@ -87,9 +86,10 @@ class YOLONode(Node):
                 else:
                     y = 50
 
-                msg.data = [x, y]   
+                msg = Int32MultiArray()
+                msg.data = [x, y]
                 self.CoM_pub.publish(msg)
-
+        
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(inference, encoding='bgr8'))
 
 def main(args=None):

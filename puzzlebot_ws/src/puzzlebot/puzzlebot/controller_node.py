@@ -29,7 +29,7 @@ class ControllerNode(Node):
             if abs(x) > 35:
                 cmd_vel.angular.z = x * self.KPAngular * 8
             else:
-                cmd_vel.angular.z = x * self.KPAngulars
+                cmd_vel.angular.z = x * self.KPAngular
         else:
             cmd_vel.angular.z = x * self.KPAngular * 16
         self.cmd_vel_pub.publish(cmd_vel)
