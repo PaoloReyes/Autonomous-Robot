@@ -27,11 +27,11 @@ class ControllerNode(Node):
         cmd_vel.linear.x = y * self.KPLinear
         if y > 30:
             if abs(x) > 35:
-                cmd_vel.angular.z = x * self.KPAngular * 8
+                cmd_vel.angular.z = x * self.KPAngular * 4
             else:
                 cmd_vel.angular.z = x * self.KPAngular
         else:
-            cmd_vel.angular.z = x * self.KPAngular * 16
+            cmd_vel.angular.z = x * self.KPAngular * 8
         self.cmd_vel_pub.publish(cmd_vel)
 
 
