@@ -9,8 +9,8 @@ class ControllerNode(Node):
     def __init__(self):
         super().__init__('controller_node')
 
-        self.declare_parameter('KPLinear', 0.01)
-        self.declare_parameter('KPAngular', 0.08)
+        self.declare_parameter('KPLinear', 0.006)
+        self.declare_parameter('KPAngular', 0.04)
 
         self.KPLinear = self.get_parameter('KPLinear').value
         self.KPAngular = self.get_parameter('KPAngular').value
