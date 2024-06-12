@@ -4,18 +4,18 @@ import rclpy
 from rclpy.node import Node
 import time
 
-from std_msgs.msg import String, twist
-
+from std_msgs.msg import String
+from geometry_msgs.msg import Twist 
 class SignalLogicNode(Node):
     def __init__(self):
         super().__init__('signal_logic_node')
         
         # Subscribers
         self.sub = self.create_subscription(String, 'sign', self.sign_callback, 10)
-        self.sub = self.create_subscription(twist, 'ctr_vel', self.cmd_vel_callback, 10)
+        self.sub = self.create_subscription(Twist, 'ctr_vel', self.cmd_vel_callback, 10)
 
         #Publisher
-        self.pub = self.create_publisher(twist, 'cmd_vel', 10)
+        self.pub = self.create_publisher(Twist, 'cmd_vel', 10)
         
         # Timers
         timer_period = 0.08
@@ -23,7 +23,7 @@ class SignalLogicNode(Node):
         
         # Variables
         self.sign = String()
-        self.vel = twist()
+        self.vel = Twist()
         
         self.has_sign = False
         
@@ -65,9 +65,13 @@ class SignalLogicNode(Node):
             elif self.sign == "forward":
                 self.go()
             elif self.sign == "left":
+                self.go()
+                time.sleep(2)
                 self.vel.angular.z = 0.5
                 self.pub.publish(self.vel)
             elif self.sign == "right":
+                self.go()
+                time.sleep(2)
                 self.vel.angular.z = -0.5
                 self.pub.publish(self.vel)
                 
@@ -82,3 +86,14 @@ class SignalLogicNode(Node):
                 self.has_sign = False
         else: 
                 self.go()
+                
+                
+def main(args=None):
+    rclpy.init(args=args)
+    node = SignalLogicNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
