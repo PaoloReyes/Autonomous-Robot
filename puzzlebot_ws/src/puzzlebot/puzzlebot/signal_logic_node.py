@@ -13,7 +13,7 @@ class SignalLogicNode(Node):
         
         # Subscribers
         self.sub = self.create_subscription(String, '/sign', self.sign_callback, 10)
-        self.sub = self.create_subscription(Twist, 'crt_vel', self.cmd_vel_callback, 10)
+        self.sub = self.create_subscription(Twist, '/crt_vel', self.cmd_vel_callback, 10)
 
         #Publisher
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
@@ -46,45 +46,51 @@ class SignalLogicNode(Node):
         self.pub.publish(self.vel)
     
     def timer_callback(self):
-        print(self.sign)
-     
         # Behaviors
-        if self.sign== "stop":
-            self.stop()
-            time.sleep(5)
-            self.go()
-        elif self.sign == "workers":
-            self.slow_down()
-            time.sleep(5)
-            self.go()
-        elif self.sign == "give_way":
-            self.slow_down()
-            time.sleep(2)
-            self.go()
-        
-        # Directions
-        elif self.sign == "forward":
-            self.go()
-        elif self.sign == "left":
-            self.go()
-            time.sleep(2)
-            self.vel.angular.z = 0.5
-            self.pub.publish(self.vel)
-        elif self.sign == "right":
-            self.go()
-            time.sleep(2)
-            self.vel.angular.z = -0.5
-            self.pub.publish(self.vel)
-            
-        # Traffic lights
-        elif self.sign == "green":
-            self.go()
-        elif self.sign == "yellow":
-            self.slow_down()
-        elif self.sign == "red":
-            self.stop()
+        if not self.has_sign:
+            if self.last_sign == self.sign:
+                pass
+            else:
+                if self.sign== "stop":
+                    self.stop()
+                    time.sleep(5)
+                    self.go()
+                elif self.sign == "workers":
+                    self.slow_down()
+                    time.sleep(5)
+                    self.go()
+                elif self.sign == "give_way":
+                    self.slow_down()
+                    time.sleep(2)
+                    self.go()
+                
+                # Directions
+                elif self.sign == "forward":
+                    self.go()
+                elif self.sign == "left":
+                    self.go()
+                    time.sleep(2)
+                    self.vel.angular.z = 0.5
+                    self.pub.publish(self.vel)
+                elif self.sign == "right":
+                    self.go()
+                    time.sleep(2)
+                    self.vel.angular.z = -0.5
+                    self.pub.publish(self.vel)
+                    
+                # Traffic lights
+                elif self.sign == "green":
+                    self.go()
+                elif self.sign == "yellow":
+                    self.slow_down()
+                elif self.sign == "red":
+                    self.stop()
+                else:
+                    self.go()
+                self.last_sign = self.sign
         else:
             self.go()
+            
 
                 
                 
