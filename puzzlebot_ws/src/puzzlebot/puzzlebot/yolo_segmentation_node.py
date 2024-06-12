@@ -61,7 +61,7 @@ class YOLONode(Node):
                 inference = result.plot()
 
             b_mask = np.zeros(raw.shape[:2], np.uint8)
-            groups = []
+            groups = [[], [], []]
             for c in result:
                 label = c.names[c.boxes.cls.tolist().pop()]
                 if label == 'street':
@@ -76,28 +76,27 @@ class YOLONode(Node):
                     box = c.boxes.xyxy.tolist()[0]
                     label = c.names[c.boxes.cls.tolist().pop()]
                     confidence = c.boxes.conf.tolist().pop()
-                    groups[i].append((box, label, confidence))
+                    groups[1].append((box, label, confidence))
                 elif label == 'stop' or label == 'workers' or label == 'give_way':
                     box = c.boxes.xyxy.tolist()[0]
                     label = c.names[c.boxes.cls.tolist().pop()]
                     confidence = c.boxes.conf.tolist().pop()
                     groups[2].append((box, label, confidence))
             
-            unique_groups = []
-            for i in range(3):
-                for j, (box, label, confidence) in enumerate(groups[i]):
-                    if label not in [a[1] for a in unique_groups]:
-                        unique_groups[i].append((box, label, confidence))
-                    else:
-                        if unique_groups[i][j][2] < confidence:
-                            unique_groups[i][j] = (box, label, confidence)
+            unique_groups = [(), (), ()]
+            for i, group in enumerate(groups):
+                if len(group) > 0:
+                    unique_groups[i] = sorted(group, key=lambda x: x[2], reverse=True)[0]
+            
                 
             boxes_img = raw.copy()
-            for i in range(3):
-                for box, label, confidence in unique_groups[i]:
-                    print(box, label, confidence)
-                    cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (255, 0, 0), 2)
-                    cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+            for unique_group in unique_groups:
+                try:
+                    r, g, b = np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)
+                    cv2.rectangle(boxes_img, (int(unique_group[0][0]), int(unique_group[0][1])), (int(unique_group[0][2]), int(unique_group[0][3])), (r, g, b), 2)
+                    cv2.putText(boxes_img, f'{unique_group[1]} {unique_group[2]:.2f}', (int(unique_group[0][0]), int(unique_group[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (r, g, b), 2)
+                except:
+                    pass
 
             blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
