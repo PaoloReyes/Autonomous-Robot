@@ -9,7 +9,7 @@ class ControllerNode(Node):
     def __init__(self):
         super().__init__('controller_node')
 
-        self.declare_parameter('KPLinear', 0.006)
+        self.declare_parameter('KPLinear', 0.0035)
         self.declare_parameter('KPAngular', 0.01)
 
         self.KPLinear = self.get_parameter('KPLinear').value
@@ -25,8 +25,13 @@ class ControllerNode(Node):
         x, y = msg.data
         cmd_vel = Twist()
         cmd_vel.linear.x = y * self.KPLinear
-        cmd_vel.angular.z = x * self.KPAngular
-
+        if y > 30:
+            if abs(x) > 35:
+                cmd_vel.angular.z = x * self.KPAngular * 8
+            else:
+                cmd_vel.angular.z = x * self.KPAngulars
+        else:
+            cmd_vel.angular.z = x * self.KPAngular * 16
         self.cmd_vel_pub.publish(cmd_vel)
 
 
