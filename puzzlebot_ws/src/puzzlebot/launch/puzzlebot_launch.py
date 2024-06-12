@@ -12,7 +12,7 @@ def generate_launch_description() -> LaunchDescription:
         package='micro_ros_agent',
         executable='micro_ros_agent',
         output='screen',
-        arguments=['serial', '--dev', '/dev/ttyUSB0'],
+        arguments=['serial', '--dev', '/dev/ttyUSB1'],
     )
 
     controller_node = Node(
