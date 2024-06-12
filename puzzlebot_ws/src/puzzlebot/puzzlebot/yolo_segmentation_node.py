@@ -93,15 +93,10 @@ class YOLONode(Node):
                             unique_groups[i][j] = (box, label, confidence)
                 
             boxes_img = raw.copy()
-            for box, label, confidence in unique_arrows:
-                cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (255, 0, 0), 2)
-                cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-            for box, label, confidence in unique_traffic_lights:
-                cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
-                cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-            for box, label, confidence in unique_signals:
-                cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (0, 0, 255), 2)
-                cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            for i in range(3):
+                for box, label, confidence in unique_groups[i]:
+                    cv2.rectangle(boxes_img, (box[0], box[1]), (box[2], box[3]), (255, 0, 0), 2)
+                    cv2.putText(boxes_img, f'{label} {confidence:.2f}', (box[0], box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
             blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
