@@ -7,7 +7,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description() -> LaunchDescription:
 
-    manchester_camera_launch_path = os.path.join(get_package_share_directory('ros_deep_learning'), 'launch', 'video_source.launch.py')
+    manchester_camera_launch_path = os.path.join(get_package_share_directory('ros_deep_learning'), 'launch', 'video_source.ros2.launch')
     
     micro_ros_Node = Node(
         package='micro_ros_agent',

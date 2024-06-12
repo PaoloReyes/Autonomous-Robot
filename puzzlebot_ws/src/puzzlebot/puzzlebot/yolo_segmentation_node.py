@@ -1,6 +1,5 @@
 import os
 import cv2
-import threading
 
 import rclpy
 from rclpy import qos
@@ -27,7 +26,8 @@ class YOLONode(Node):
         super().__init__('yolo_segmentation_node')
         self.bridge = CvBridge() 
 
-        self.image_sub = self.create_subscription(Image, '/video_source/raw_image', self.image_callback, qos.qos_profile_sensor_data)
+        self.image_sub = self.create_subscription(Image, '/video_source/raw', self.image_callback, qos.qos_profile_sensor_data)
+        self.image_pub = self.create_publisher(Image, '/inference', qos.qos_profile_sensor_data)
 
         self.CoM_pub = self.create_publisher(Int32MultiArray, 'CoM', qos.qos_profile_sensor_data)
 
@@ -51,11 +51,8 @@ class YOLONode(Node):
         self.image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
     
     def timer_callback(self):
-        threading.Thread(target=self.model_inference, args=(self.image,)).start()
-
-    def model_inference(self, msg):
-        if msg is not None:
-            raw = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+        if self.image is not None:
+            raw = self.image.copy()
             raw = camera_utils.undistort(raw, (320, 240)) 
 
             with torch.no_grad():
@@ -92,6 +89,8 @@ class YOLONode(Node):
                 msg = Int32MultiArray()
                 msg.data = [x, y]
                 self.CoM_pub.publish(msg)
+        
+            self.image_pub.publish(self.bridge.cv2_to_imgmsg(inference, encoding='bgr8'))
 
 def main(args=None):
     rclpy.init(args=args)
