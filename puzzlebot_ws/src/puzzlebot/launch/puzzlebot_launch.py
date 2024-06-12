@@ -21,17 +21,10 @@ def generate_launch_description() -> LaunchDescription:
         output='screen',
         parameters=[os.path.join(get_package_share_directory('puzzlebot'), 'config', 'controller_node_params.yaml')]
     )
-    
-    logic_node = Node(
-        package='puzzlebot',
-        executable='signal_logic_node',
-        output='screen'
-    )   
 
     return LaunchDescription([
         manchester_camera_launch,
         controller_node,
-        micro_ros_Node,
-        logic_node
+        micro_ros_Node
     ])
     
