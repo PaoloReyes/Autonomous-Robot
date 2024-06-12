@@ -26,6 +26,7 @@ class SignalLogicNode(Node):
         self.sign = String()
         self.vel = Twist()
         
+        self.last_sign = ""
         self.has_sign = False
         
     def sign_callback(self, msg):
@@ -46,6 +47,7 @@ class SignalLogicNode(Node):
         self.pub.publish(self.vel)
     
     def timer_callback(self):
+        
         # Behaviors
         if not self.has_sign:
             if self.last_sign == self.sign:
@@ -87,6 +89,8 @@ class SignalLogicNode(Node):
                     self.stop()
                 else:
                     self.go()
+                    self.has_sign = False
+                self.has_sign = True
                 self.last_sign = self.sign
         else:
             self.go()
