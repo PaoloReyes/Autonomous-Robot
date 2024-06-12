@@ -47,46 +47,45 @@ class SignalLogicNode(Node):
     
     def timer_callback(self):
         print(self.sign)
-        if self.has_sign: 
-            # Behaviors
-            if self.sign == "stop":
-                self.stop()
-                time.sleep(5)
-                self.go()
-            elif self.sign == "workers":
-                self.slow_down()
-                time.sleep(5)
-                self.go()
-            elif self.sign == "give_way":
-                self.slow_down()
-                time.sleep(2)
-                self.go()
+     
+        # Behaviors
+        if self.sign== "stop":
+            self.stop()
+            time.sleep(5)
+            self.go()
+        elif self.sign == "workers":
+            self.slow_down()
+            time.sleep(5)
+            self.go()
+        elif self.sign == "give_way":
+            self.slow_down()
+            time.sleep(2)
+            self.go()
+        
+        # Directions
+        elif self.sign == "forward":
+            self.go()
+        elif self.sign == "left":
+            self.go()
+            time.sleep(2)
+            self.vel.angular.z = 0.5
+            self.pub.publish(self.vel)
+        elif self.sign == "right":
+            self.go()
+            time.sleep(2)
+            self.vel.angular.z = -0.5
+            self.pub.publish(self.vel)
             
-            # Directions
-            elif self.sign == "forward":
-                self.go()
-            elif self.sign == "left":
-                self.go()
-                time.sleep(2)
-                self.vel.angular.z = 0.5
-                self.pub.publish(self.vel)
-            elif self.sign == "right":
-                self.go()
-                time.sleep(2)
-                self.vel.angular.z = -0.5
-                self.pub.publish(self.vel)
-                
-            # Traffic lights
-            elif self.sign == "green":
-                self.go()
-            elif self.sign == "yellow":
-                self.slow_down()
-            elif self.sign == "red":
-                self.stop()
-            else:
-                self.has_sign = False
-        else: 
-                self.go()
+        # Traffic lights
+        elif self.sign == "green":
+            self.go()
+        elif self.sign == "yellow":
+            self.slow_down()
+        elif self.sign == "red":
+            self.stop()
+        else:
+            self.go()
+
                 
                 
 def main(args=None):
