@@ -8,12 +8,14 @@ PHOTO_NUM = 10
 
 def main():
     cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-    for i in range(PHOTO_NUM):
+    while True:
+        i = 0
         try:
             _, frame = cap.read()
             frame = cv2.flip(frame, -1)
             cv2.imwrite(f'images/image_{i}.png', frame)
             print(f'Captured image {i}')
+            i += 1
             sleep(0.5) # Delay for half second
         except:
             print('Failed to capture image')
