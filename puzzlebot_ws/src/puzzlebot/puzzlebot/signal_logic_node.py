@@ -56,6 +56,7 @@ class SignalLogicNode(Node):
         self.vel = msg
 
     def timer_callback(self):
+        pass
 
 def main(args=None):
     rclpy.init(args=args)

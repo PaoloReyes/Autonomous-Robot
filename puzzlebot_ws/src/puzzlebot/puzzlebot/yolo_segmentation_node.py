@@ -21,6 +21,8 @@ from .submodules import math_utils, camera_utils
 
 import numpy as np
 
+from custom_msgs.msg import Signal
+
 class YOLONode(Node):
     def __init__(self):
         super().__init__('yolo_segmentation_node')
@@ -30,9 +32,7 @@ class YOLONode(Node):
 
         self.image_pub = self.create_publisher(Image, '/inference', qos.qos_profile_sensor_data)
         self.boxes_pub = self.create_publisher(Image, '/boxes', qos.qos_profile_sensor_data)
-        self.direction_pub = self.create_publisher(String, '/direction', 10)
-        self.behaviour_pub = self.create_publisher(String, '/behaviour', 10)
-        self.light_pub = self.create_publisher(String, '/light', 10)
+        self.direction_pub = self.create_publisher(Signal, '/direction', qos.qos_profile_sensor_data)
         self.CoM_pub = self.create_publisher(Int32MultiArray, 'CoM', qos.qos_profile_sensor_data)
         
 
@@ -51,6 +51,8 @@ class YOLONode(Node):
         self.model.to(self.device)
 
         self.image = None
+
+        self.signal = Signal()
 
         self.focal_lenght = 176.16
         self.traffic_distance = 6.0
@@ -113,19 +115,24 @@ class YOLONode(Node):
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
                     if z < 20:
                         if i == 0:
-                            msg = String()
-                            msg.data = unique_group[1]
-                            self.direction_pub.publish(msg)
-                        elif i == 1:
-                            msg = String()
-                            msg.data = unique_group[1]
-                            self.light_pub.publish(msg)
-                        elif i == 2:
-                            msg = String()
-                            msg.data = unique_group[1]
-                            self.behaviour_pub.publish(msg)
+                            self.signal.direction = unique_group[1]
 
+                        if i == 1:
+                            self.signal.light = unique_group[1]
 
+                        if i == 2:
+                            self.signal.behavior = unique_group[1]
+                    else:
+                        if i == 0:
+                            self.signal.direction = 'none'
+
+                        if i == 1:
+                            self.signal.light = 'none'
+
+                        if i == 2:
+                            self.signal.behavior = 'none'
+
+                    self.direction_pub.publish(self.signal)
 
             blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
