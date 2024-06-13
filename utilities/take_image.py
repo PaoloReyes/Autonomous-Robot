@@ -19,7 +19,8 @@ def main():
             sleep(0.5) # Delay for half second
         except:
             print('Failed to capture image')
-
+            break
+        
     cap.release()
     print('Done capturing images')
 
