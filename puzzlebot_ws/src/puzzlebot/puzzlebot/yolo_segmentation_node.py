@@ -21,7 +21,7 @@ from .submodules import math_utils, camera_utils
 
 import numpy as np
 
-from custom_msgs.msg import Signal
+from directions_msgs.msg import Signal
 
 class YOLONode(Node):
     def __init__(self):
@@ -34,7 +34,6 @@ class YOLONode(Node):
         self.boxes_pub = self.create_publisher(Image, '/boxes', qos.qos_profile_sensor_data)
         self.direction_pub = self.create_publisher(Signal, '/direction', qos.qos_profile_sensor_data)
         self.CoM_pub = self.create_publisher(Int32MultiArray, 'CoM', qos.qos_profile_sensor_data)
-        
 
         inference_frequency = 30
         self.timer = self.create_timer(1/inference_frequency, self.timer_callback)
@@ -115,13 +114,34 @@ class YOLONode(Node):
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
                     if z < 20:
                         if i == 0:
-                            self.signal.direction = unique_group[1]
-
+                            if unique_group[1] == 'forward':
+                                self.signal.direction = 0
+                            elif unique_group[1] == 'left':
+                                self.signal.direction = 1
+                            elif unique_group[1] == 'right':
+                                self.signal.direction = 2
+                            else:
+                                self.signal.direction = 3
+                        
                         if i == 1:
-                            self.signal.light = unique_group[1]
-
+                            if unique_group[1] == 'green':
+                                self.signal.light = 0
+                            elif unique_group[1] == 'yellow':
+                                self.signal.light = 1
+                            elif unique_group[1] == 'red':
+                                self.signal.light = 2
+                            else:
+                                self.signal.light = 3
+                                
                         if i == 2:
-                            self.signal.behavior = unique_group[1]
+                            if unique_group[1] == 'give_way':
+                                self.signal.behavior = 0
+                            elif unique_group[1] == 'stop':
+                                self.signal.behavior = 1
+                            elif unique_group[1] == 'workers':
+                                self.signal.behavior = 2
+                            else:
+                                self.signal.behavior = 3
                     else:
                         if i == 0:
                             self.signal.direction = 'none'
