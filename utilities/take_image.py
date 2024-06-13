@@ -4,7 +4,7 @@ from time import sleep
 
 global PHOTO_NUM
 # Change the value to the desired photo number
-PHOTO_NUM = 0
+PHOTO_NUM = 10
 
 def main():
     cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
@@ -12,11 +12,13 @@ def main():
         try:
             _, frame = cap.read()
             cv2.imwrite(f'images/image_{i}.png', frame)
+            print(f'Captured image {i}')
             sleep(0.5) # Delay for half second
         except:
             print('Failed to capture image')
 
     cap.release()
+    print('Done capturing images')
 
 if __name__ == '__main__':
     main()
