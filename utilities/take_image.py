@@ -8,8 +8,8 @@ PHOTO_NUM = 10
 
 def main():
     cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+    i = 0
     while True:
-        i = 0
         try:
             _, frame = cap.read()
             frame = cv2.flip(frame, -1)
