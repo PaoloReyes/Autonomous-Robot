@@ -11,6 +11,7 @@ def main():
     for i in range(PHOTO_NUM):
         try:
             _, frame = cap.read()
+            frame = cv2.flip(frame, -1)
             cv2.imwrite(f'images/image_{i}.png', frame)
             print(f'Captured image {i}')
             sleep(0.5) # Delay for half second
