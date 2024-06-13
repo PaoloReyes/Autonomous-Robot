@@ -27,11 +27,14 @@ class YOLONode(Node):
         self.bridge = CvBridge() 
 
         self.image_sub = self.create_subscription(Image, '/video_source/raw', self.image_callback, qos.qos_profile_sensor_data)
+
         self.image_pub = self.create_publisher(Image, '/inference', qos.qos_profile_sensor_data)
         self.boxes_pub = self.create_publisher(Image, '/boxes', qos.qos_profile_sensor_data)
-        self.signal_pub = self.create_publisher(String, '/sign', 10)
-
+        self.direction_pub = self.create_publisher(String, '/direction', 10)
+        self.behaviour_pub = self.create_publisher(String, '/behaviour', 10)
+        self.light_pub = self.create_publisher(String, '/light', 10)
         self.CoM_pub = self.create_publisher(Int32MultiArray, 'CoM', qos.qos_profile_sensor_data)
+        
 
         inference_frequency = 30
         self.timer = self.create_timer(1/inference_frequency, self.timer_callback)
@@ -103,15 +106,24 @@ class YOLONode(Node):
                     pass
 
             # Find the distance to the camera of each of the unique boxes
-            for unique_group in unique_groups:
+            for i, unique_group in enumerate(unique_groups):
                 if len(unique_group) > 0:
                     box = unique_group[0]
                     x, y = (box[0] + box[2])//2, (box[1] + box[3])//2
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
                     if z < 20:
-                        msg = String()
-                        msg.data = unique_group[1]
-                        self.signal_pub.publish(msg)
+                        if i == 0:
+                            msg = String()
+                            msg.data = unique_group[1]
+                            self.direction_pub.publish(msg)
+                        elif i == 1:
+                            msg = String()
+                            msg.data = unique_group[1]
+                            self.light_pub.publish(msg)
+                        elif i == 2:
+                            msg = String()
+                            msg.data = unique_group[1]
+                            self.behaviour_pub.publish(msg)
 
 
 
