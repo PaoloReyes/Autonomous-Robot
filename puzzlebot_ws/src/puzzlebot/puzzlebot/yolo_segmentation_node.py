@@ -144,13 +144,11 @@ class YOLONode(Node):
                                 self.signal.behavior = 3
                     else:
                         if i == 0:
-                            self.signal.direction = 'none'
-
+                            self.signal.direction = 3
                         if i == 1:
-                            self.signal.light = 'none'
-
+                            self.signal.light = 3
                         if i == 2:
-                            self.signal.behavior = 'none'
+                            self.signal.behavior = 3
 
                     self.direction_pub.publish(self.signal)
 
