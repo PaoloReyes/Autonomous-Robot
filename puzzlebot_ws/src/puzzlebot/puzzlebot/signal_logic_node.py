@@ -78,18 +78,20 @@ class SignalLogicNode(Node):
                     output_vel.linear.x = 0.5 * self.vel_inc.linear.x
                     output_vel.angular.z = 0.5 * self.vel_inc.angular.z
                     sleep_time = 2
+                    print('Give way')
                 elif self.last_behavior == 1:
                     output_vel.linear.x = 0
                     output_vel.angular.z = 0
                     sleep_time = 10
+                    print('Stop')
                 elif self.last_behavior == 2:
                     output_vel.linear.x = 0.5 * self.vel_inc.linear.x
                     output_vel.angular.z = 0.5 * self.vel_inc.angular.z
                     sleep_time = 5
+                    print('Slow down')
         else:
             output_vel = self.vel_inc
 
-        print(output_vel)
         self.pub.publish(output_vel)
         if sleep_time != 0:
             sleep(sleep_time)
