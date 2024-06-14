@@ -108,45 +108,48 @@ class YOLONode(Node):
                     x, y = (box[0] + box[2])//2, (box[1] + box[3])//2
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
                     if z < 20:
+                        
+                        
                         try:
                             r, g, b = np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)
                             cv2.rectangle(boxes_img, (int(unique_group[0][0]), int(unique_group[0][1])), (int(unique_group[0][2]), int(unique_group[0][3])), (r, g, b), 2)
                             cv2.putText(boxes_img, f'{unique_group[1]} {unique_group[2]:.2f}', (int(unique_group[0][0]), int(unique_group[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (r, g, b), 2)
+                        
+
+                            if self.signal == self.last_signal:
+                                pass
+                            else:
+                                if i == 0:
+                                    if unique_group[1] == 'forward':
+                                        self.signal.direction = 0
+                                    elif unique_group[1] == 'left':
+                                        self.signal.direction = 1
+                                    elif unique_group[1] == 'right':
+                                        self.signal.direction = 2
+                                    else:
+                                        self.signal.direction = 3
+                                
+                                if i == 1:
+                                    if unique_group[1] == 'green':
+                                        self.signal.light = 0
+                                    elif unique_group[1] == 'yellow':
+                                        self.signal.light = 1
+                                    elif unique_group[1] == 'red':
+                                        self.signal.light = 2
+                                    else:
+                                        self.signal.light = 3
+                                        
+                                if i == 2:
+                                    if unique_group[1] == 'give_way':
+                                        self.signal.behavior = 0
+                                    elif unique_group[1] == 'stop':
+                                        self.signal.behavior = 1
+                                    elif unique_group[1] == 'workers':
+                                        self.signal.behavior = 2
+                                    else:
+                                        self.signal.behavior = 3
                         except:
                             pass
-                        
-                        if self.signal == self.last_signal:
-                            pass
-                        else:
-                            if i == 0:
-                                if unique_group[1] == 'forward':
-                                    self.signal.direction = 0
-                                elif unique_group[1] == 'left':
-                                    self.signal.direction = 1
-                                elif unique_group[1] == 'right':
-                                    self.signal.direction = 2
-                                else:
-                                    self.signal.direction = 3
-                            
-                            if i == 1:
-                                if unique_group[1] == 'green':
-                                    self.signal.light = 0
-                                elif unique_group[1] == 'yellow':
-                                    self.signal.light = 1
-                                elif unique_group[1] == 'red':
-                                    self.signal.light = 2
-                                else:
-                                    self.signal.light = 3
-                                    
-                            if i == 2:
-                                if unique_group[1] == 'give_way':
-                                    self.signal.behavior = 0
-                                elif unique_group[1] == 'stop':
-                                    self.signal.behavior = 1
-                                elif unique_group[1] == 'workers':
-                                    self.signal.behavior = 2
-                                else:
-                                    self.signal.behavior = 3
                 else:
                     if i == 0:
                         self.signal.direction = 3
