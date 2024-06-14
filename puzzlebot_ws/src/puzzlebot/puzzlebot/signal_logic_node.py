@@ -29,6 +29,7 @@ class SignalLogicNode(Node):
         self.initial_time = 0
         self.delay = 0
         self.red_light = False
+        self.yellow_light = False
     
         self.behaviour = False
 
