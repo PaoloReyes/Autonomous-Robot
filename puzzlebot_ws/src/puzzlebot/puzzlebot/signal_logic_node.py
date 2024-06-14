@@ -72,12 +72,12 @@ class SignalLogicNode(Node):
             sleep_time = 5
 
         if self.last_direction == 1:
-            output_vel.linear.x = 0.08
-            output_vel.angular.z = -0.08
+            output_vel.linear.x = 0.1
+            output_vel.angular.z = 0.8
             sleep_time = 2
         elif self.last_direction == 2:
-            output_vel.linear.x = 0.08
-            output_vel.angular.z = 0.08
+            output_vel.linear.x = 0.1
+            output_vel.angular.z = -0.8
             sleep_time = 2
 
         self.behaviour = True
