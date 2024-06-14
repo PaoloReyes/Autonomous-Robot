@@ -70,25 +70,29 @@ class SignalLogicNode(Node):
             output_vel.linear.x = 0.04
             output_vel.angular.z = -0.1
             sleep_time = 5
+        
+        if self.last_light != 2:
+            if self.last_direction == 1:
+                output_vel.linear.x = 0.2
+                output_vel.angular.z = 0.0
+                self.pub.publish(output_vel)
+                sleep(2.0)
+                output_vel.linear.x = 0.0
+                output_vel.angular.z = 0.5
+                self.pub.publish(output_vel)
+                sleep(2.0)
+            elif self.last_direction == 2:
+                output_vel.linear.x = 0.2
+                output_vel.angular.z = 0.0
+                self.pub.publish(output_vel)
+                sleep(2.0)
+                output_vel.linear.x = 0.0
+                output_vel.angular.z = -0.5
+                self.pub.publish(output_vel)
+                sleep(2.0)
+            if self.last_light == 1 and self.last_direction == 0:
+                self.speed_factor = 0.5
 
-        if self.last_direction == 1:
-            output_vel.linear.x = 0.2
-            output_vel.angular.z = 0.0
-            self.pub.publish(output_vel)
-            sleep(2.0)
-            output_vel.linear.x = 0.0
-            output_vel.angular.z = 0.5
-            self.pub.publish(output_vel)
-            sleep(2.0)
-        elif self.last_direction == 2:
-            output_vel.linear.x = 0.2
-            output_vel.angular.z = 0.0
-            self.pub.publish(output_vel)
-            sleep(2.0)
-            output_vel.linear.x = 0.0
-            output_vel.angular.z = -0.5
-            self.pub.publish(output_vel)
-            sleep(2.0)
 
         self.behaviour = True
         self.pub.publish(output_vel)
@@ -97,7 +101,11 @@ class SignalLogicNode(Node):
 
     def timer_callback(self):   
         if not self.behaviour:
-            self.pub.publish(self.vel_inc)  
+            output_vel = Twist()
+            output_vel.linear.x = self.vel_inc.linear.x * self.speed_factor
+            output_vel.angular.z = self.vel_inc.angular.z
+            self.pub.publish(output_vel)  
+            self.speed_factor = 1.0
     
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
