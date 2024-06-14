@@ -165,7 +165,8 @@ class YOLONode(Node):
                         self.signal.behavior = 3
 
             if self.signal != self.last_signal:
-                self.direction_pub.publish(self.signal)
+                if self.signal.direction != 3 and self.signal.light != 3 and self.signal.behavior != 3:
+                    self.direction_pub.publish(self.signal)
             
             self.last_signal = deepcopy(self.signal)
 
