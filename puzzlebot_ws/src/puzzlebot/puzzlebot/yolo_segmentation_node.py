@@ -98,14 +98,7 @@ class YOLONode(Node):
                     unique_groups[i] = sorted(group, key=lambda x: x[2], reverse=True)[0]
             
                 
-            boxes_img = raw.copy()
-            for unique_group in unique_groups:
-                try:
-                    r, g, b = np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)
-                    cv2.rectangle(boxes_img, (int(unique_group[0][0]), int(unique_group[0][1])), (int(unique_group[0][2]), int(unique_group[0][3])), (r, g, b), 2)
-                    cv2.putText(boxes_img, f'{unique_group[1]} {unique_group[2]:.2f}', (int(unique_group[0][0]), int(unique_group[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (r, g, b), 2)
-                except:
-                    pass
+            boxes_img = raw.copy()                
 
             # Find the distance to the camera of each of the unique boxes
             for i, unique_group in enumerate(unique_groups):
@@ -113,7 +106,13 @@ class YOLONode(Node):
                     box = unique_group[0]
                     x, y = (box[0] + box[2])//2, (box[1] + box[3])//2
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
-                    if z < 20:
+                    if z < 10:
+                        try:
+                            r, g, b = np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)
+                            cv2.rectangle(boxes_img, (int(unique_group[0][0]), int(unique_group[0][1])), (int(unique_group[0][2]), int(unique_group[0][3])), (r, g, b), 2)
+                            cv2.putText(boxes_img, f'{unique_group[1]} {unique_group[2]:.2f}', (int(unique_group[0][0]), int(unique_group[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (r, g, b), 2)
+                        except:
+                            pass
                         if i == 0:
                             if unique_group[1] == 'forward':
                                 self.signal.direction = 0
