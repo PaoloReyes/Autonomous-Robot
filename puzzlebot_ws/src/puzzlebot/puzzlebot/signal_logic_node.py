@@ -58,18 +58,17 @@ class SignalLogicNode(Node):
 
         output_vel = Twist()
         sleep_time = 0
-        if self.last_behavior == 0:
-            output_vel.linear.x = 0.08
-            output_vel.angular.z = 0.0
-            sleep_time = 2
-        elif self.last_behavior == 1:
-            output_vel.linear.x = 0.0
-            output_vel.angular.z = 0.0
-            sleep_time = 10
-        elif self.last_behavior == 2:
-            output_vel.linear.x = 0.08
-            output_vel.angular.z = 0.0
-            sleep_time = 5
+        if self.last_direction != 3:
+            output_vel.angular.z = self.vel_inc.angular.z
+            if self.last_behavior == 0:
+                output_vel.linear.x = 0.08
+                sleep_time = 2
+            elif self.last_behavior == 1:
+                output_vel.linear.x = 0.0
+                sleep_time = 10
+            elif self.last_behavior == 2:
+                output_vel.linear.x = 0.08
+                sleep_time = 5
         self.behaviour = True
         self.pub.publish(output_vel)
         sleep(sleep_time)
