@@ -30,7 +30,7 @@ class FuzzyController:
         ]
 
         self.engine.output_values = [
-            fl.OutputVariable(name="v",
+            fl.OutputVariable(name="lVel",
                               description="Linear velocity",
                               minimum=0.0,
                               maximum=0.25,
@@ -47,7 +47,7 @@ class FuzzyController:
                                   fl.Gaussian('stop', 0.0, 0.2)
                               ]),
 
-            fl.OutputVariable(name="w",
+            fl.OutputVariable(name="aVel",
                                 description="Angular velocity",
                                 minimum=-1.5,
                                 maximum=1.5,
@@ -77,13 +77,13 @@ class FuzzyController:
                 activation=fl.General(),
                 implication=None,
                 rules=[
-                    fl.Rule.create("if x is left and y is back then v is low_speed and w is lefter", self.engine),
-                    fl.Rule.create("if x is left and y is up then v is mid_speed and w is left", self.engine),
-                    fl.Rule.create("if x is center and y is back then v is mid_speed and w is mid", self.engine),
-                    fl.Rule.create("if x is center and y is up then v is full_speed and w is mid", self.engine),
-                    fl.Rule.create("if x is right and y is back then v is mid_speed and w is right", self.engine),
-                    fl.Rule.create("if x is right and y is up then v is low_speed and w is righter", self.engine)
-                ]
+                    fl.Rule.create("if x is left and y is back then lVel is low_speed and aVel is lefter", self.engine),
+                    fl.Rule.create("if x is left and y is up then lVel is mid_speed and aVel is left", self.engine),
+                    fl.Rule.create("if x is center and y is back then lVel is mid_speed and aVel is mid", self.engine),
+                    fl.Rule.create("if x is center and y is up then lVel is full_speed and aVel is mid", self.engine),
+                    fl.Rule.create("if x is right and y is back then lVel is mid_speed and aVel is right", self.engine),
+                    fl.Rule.create("if x is right and y is up then lVel is low_speed and aVel is righter", self.engine)
+                ],
             )
         ]
 
@@ -91,4 +91,5 @@ class FuzzyController:
         self.engine.input_variable('x').value = x
         self.engine.input_variable('y').value = y
         self.engine.process()
+        print('I work!!!')
         return self.engine.output_variable('v').value, self.engine.output_variable('w').value
