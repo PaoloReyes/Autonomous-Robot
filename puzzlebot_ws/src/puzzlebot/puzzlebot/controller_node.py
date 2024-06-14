@@ -33,7 +33,10 @@ class ControllerNode(Node):
 
     def com_callback(self, msg):
         x, y = msg.data
-        v, w = self.controller.compute(x, y)
+        if y != 0:
+            v, w = self.controller.compute(x, y)
+        else:
+            v, w = 0, 0
         cmd_vel = Twist()
         cmd_vel.linear.x = v
         cmd_vel.angular.z = w
