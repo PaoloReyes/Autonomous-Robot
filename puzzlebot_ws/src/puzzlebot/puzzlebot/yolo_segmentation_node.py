@@ -140,7 +140,6 @@ class YOLONode(Node):
                 
                     elif i == 1:
                         z = math_utils.distance_to_camera(self.focal_lenght, self.light_distance, box[2] - box[0]) #in centimeters
-                        print(z)
                         if z < 35:
                             try:
                                 r, g, b = np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)
