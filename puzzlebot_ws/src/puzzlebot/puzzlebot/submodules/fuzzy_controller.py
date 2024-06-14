@@ -29,7 +29,7 @@ class FuzzyController:
                              ])
         ]
 
-        self.engine.output_values = [
+        self.engine.output_variables = [
             fl.OutputVariable(name="lVel",
                               description="Linear velocity",
                               minimum=0.0,
@@ -67,7 +67,7 @@ class FuzzyController:
 
         ]
 
-        self.engine.rules = [
+        self.engine.rule_blocks = [
             fl.RuleBlock(
                 name='',
                 description='',
