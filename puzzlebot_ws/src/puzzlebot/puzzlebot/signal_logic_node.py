@@ -59,7 +59,7 @@ class SignalLogicNode(Node):
         output_vel = Twist()
         sleep_time = 0
         if self.last_behavior == 0:
-            output_vel.linear.x = 0.08
+            output_vel.linear.x = 0.04
             output_vel.angular.z = self.vel_inc.angular.z
             sleep_time = 2
         elif self.last_behavior == 1:
@@ -67,7 +67,7 @@ class SignalLogicNode(Node):
             output_vel.angular.z = 0.0
             sleep_time = 10
         elif self.last_behavior == 2:
-            output_vel.linear.x = 0.08
+            output_vel.linear.x = 0.04
             output_vel.angular.z = self.vel_inc.angular.z
             sleep_time = 5
 
@@ -88,12 +88,7 @@ class SignalLogicNode(Node):
     def timer_callback(self):   
         if not self.behaviour:
             self.pub.publish(self.vel_inc)  
-        else:
-            output_vel = Twist()
-            output_vel.linear.x = 0.08
-            output_vel.angular.z = self.vel_inc.angular.z
-            self.pub.publish(output_vel)
-
+    
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
         
