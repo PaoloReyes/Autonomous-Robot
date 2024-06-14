@@ -29,6 +29,8 @@ class SignalLogicNode(Node):
         self.speed_factor = 1.0
         self.initial_time = 0
         self.delay = 0
+    
+        self.behaviour = False
 
         self.get_logger().info('Signal Logic Node Started')
 
