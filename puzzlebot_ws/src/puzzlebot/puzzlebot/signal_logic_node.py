@@ -90,7 +90,7 @@ class SignalLogicNode(Node):
                 output_vel.angular.z = -0.5
                 self.pub.publish(output_vel)
                 sleep(2.0)
-            if self.last_light == 1 and self.last_direction == 0:
+            if self.last_light == 1:
                 self.speed_factor = 0.5
 
 
