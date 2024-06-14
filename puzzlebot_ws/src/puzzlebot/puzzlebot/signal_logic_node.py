@@ -7,6 +7,8 @@ from directions_msgs.msg import Signal
 
 from rclpy import qos
 
+from time import sleep
+
 class SignalLogicNode(Node):
     def __init__(self):
         super().__init__('signal_logic_node')
@@ -52,15 +54,8 @@ class SignalLogicNode(Node):
         self.last_behavior = msg.behavior
         self.last_light = msg.light
 
-    def timer_callback(self):     
         output_vel = Twist()
-        if self.get_clock().now().nanoseconds - self.initial_time < self.delay * 1e9:
-            output_vel.linear.x = self.vel_inc.linear.x * self.speed_factor
-            output_vel.angular.z = self.vel_inc.angular.z * self.speed_factor
-            self.pub.publish(output_vel)
-            return
-        
-        self.speed_factor = 1.0
+        sleep_time = 0
         if self.last_direction != 3: # If direction
             if self.last_light != 3: # If light
                 pass
@@ -83,25 +78,23 @@ class SignalLogicNode(Node):
                 if self.last_behavior == 0:
                     output_vel.linear.x = 0.5 * self.vel_inc.linear.x
                     output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    self.speed_factor = 0.5
-                    self.delay = 2
-                    self.initial_time = self.get_clock().now().nanoseconds
+                    sleep_time = 2
                 elif self.last_behavior == 1:
                     output_vel.linear.x = 0
                     output_vel.angular.z = 0
-                    self.speed_factor = 0.0
-                    self.delay = 10
-                    self.initial_time = self.get_clock().now().nanoseconds
+                    sleep_time = 10
                 elif self.last_behavior == 2:
                     output_vel.linear.x = 0.5 * self.vel_inc.linear.x
                     output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    self.speed_factor = 0.5
-                    self.delay = 5
-                    self.initial_time = self.get_clock().now().nanoseconds
-        else:
-            output_vel = self.vel_inc
-
+                    sleep_time = 5
+        self.behaviour = True
         self.pub.publish(output_vel)
+        sleep(sleep_time)
+        self.behaviour = False
+
+    def timer_callback(self):   
+        if not self.behaviour:
+            self.pub.publish(self.vel_inc)  
 
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
