@@ -13,8 +13,8 @@ class FuzzyController:
                              lock_range=False,
                              terms=[
                                  fl.Sigmoid('lefter', 30, 0.2),
-                                 fl.Gaussian('left', 4.0, 10.0),
-                                 fl.Gaussian('right', -4.0, 10.0),
+                                 fl.Gaussian('left', 5.0, 10.0),
+                                 fl.Gaussian('right', -5.0, 10.0),
                                  fl.Sigmoid('righter', -30, -0.2),
                              ]),
 
