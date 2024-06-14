@@ -1,8 +1,6 @@
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import String
-
 from geometry_msgs.msg import Twist
 
 from directions_msgs.msg import Signal
@@ -10,6 +8,7 @@ from directions_msgs.msg import Signal
 from rclpy import qos
 
 from time import sleep
+
 class SignalLogicNode(Node):
     def __init__(self):
         super().__init__('signal_logic_node')
@@ -27,6 +26,11 @@ class SignalLogicNode(Node):
         self.last_behavior = 3
         self.last_light = 3
         self.vel_inc = Twist()
+        self.speed_factor = 1.0
+        self.initial_time = 0
+        self.delay = 0
+    
+        self.behaviour = False
 
         self.get_logger().info('Signal Logic Node Started')
 
@@ -52,53 +56,27 @@ class SignalLogicNode(Node):
         self.last_behavior = msg.behavior
         self.last_light = msg.light
 
-    def timer_callback(self):
         output_vel = Twist()
         sleep_time = 0
-        if self.last_direction != 3: # If direction
-            if self.last_light != 3: # If light
-                pass
-                # if self.last_direction == 0:
-                #     if self.last_light == 0:
-                #         self.pub.publish(self.vel)
-                #     elif self.last_light == 1:
-                #         self.pub.publish(self.vel_inc)
-                #     elif self.last_light == 2:
-                #         self.vel.linear.x = 0
-                #         self.vel.angular.z = 0
-                #         self.pub.publish(self.vel)
-                #     else:
-                #         self.pub.publish(self.vel)
-                # elif self.last_direction == 1:
-                #     self.right_turn()
-                # elif self.last_direction == 2:
-                #     self.left_turn()
-            else: # If not light
-                if self.last_behavior == 0:
-                    #obtain the time of the node
-                    if self.get_clock().now().nanoseconds - self.init_time < 2:
-                        output_vel.linear.x = 0.5 * self.vel_inc.linear.x
-                        output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    else:
-                        output_vel.linear.x = self.vel_inc.linear.x
-                        output_vel.angular.z = self.vel_inc.angular.z
-                    self.get_logger().info('Give way')
-                elif self.last_behavior == 1:
-                    output_vel.linear.x = 0
-                    output_vel.angular.z = 0
-                    sleep_time = 10
-                    self.get_logger().info('Stop')
-                elif self.last_behavior == 2:
-                    output_vel.linear.x = 0.5 * self.vel_inc.linear.x
-                    output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    sleep_time = 5
-                    self.get_logger().info('Slow down')
-        else:
-            output_vel = self.vel_inc
-
+        if self.last_direction != 3:
+            output_vel.angular.z = self.vel_inc.angular.z
+            if self.last_behavior == 0:
+                output_vel.linear.x = 0.08
+                sleep_time = 2
+            elif self.last_behavior == 1:
+                output_vel.linear.x = 0.0
+                sleep_time = 10
+            elif self.last_behavior == 2:
+                output_vel.linear.x = 0.08
+                sleep_time = 5
+        self.behaviour = True
         self.pub.publish(output_vel)
-        if sleep_time != 0:
-            sleep(sleep_time)
+        sleep(sleep_time)
+        self.behaviour = False
+
+    def timer_callback(self):   
+        if not self.behaviour:
+            self.pub.publish(self.vel_inc)  
 
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
