@@ -58,7 +58,7 @@ class SignalLogicNode(Node):
 
         output_vel = Twist()
         sleep_time = 0
-        if self.last_direction != 3:
+        if self.last_behavior != 3:
             output_vel.angular.z = self.vel_inc.angular.z
             if self.last_behavior == 0:
                 output_vel.linear.x = 0.08
