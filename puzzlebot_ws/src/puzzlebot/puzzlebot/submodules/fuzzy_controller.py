@@ -34,7 +34,7 @@ class FuzzyController:
             fl.OutputVariable(name="lVel",
                               description="Linear velocity",
                               minimum=0.0,
-                              maximum=0.30,
+                              maximum=0.20,
                               enabled=True,
                               lock_range=False,
                               aggregation=None,
@@ -43,8 +43,8 @@ class FuzzyController:
                               lock_previous=False,
                               terms=[
                                 fl.Constant('low_speed', 0.05),
-                                fl.Constant('mid_speed', 0.20),
-                                fl.Constant('speed', 0.35)
+                                fl.Constant('mid_speed', 0.10),
+                                fl.Constant('speed', 0.20)
                               ]),
 
             fl.OutputVariable(name="aVel",
