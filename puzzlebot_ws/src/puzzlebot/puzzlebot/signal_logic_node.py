@@ -69,6 +69,10 @@ class SignalLogicNode(Node):
             self.yellow_light = True
             self.red_light = False
             return
+        elif self.last_light == 3:
+            self.red_light = False
+            self.yellow_light = False
+            return
 
         sleep_time = 0
         if self.last_behavior == 0:
