@@ -73,8 +73,7 @@ class SignalLogicNode(Node):
         elif self.last_light == 3:
             self.red_light = False
             self.yellow_light = False
-            return
-
+    
         sleep_time = 0
         if self.last_behavior == 0:
             output_vel.linear.x = 0.04
