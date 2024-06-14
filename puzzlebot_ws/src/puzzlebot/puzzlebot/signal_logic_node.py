@@ -20,110 +20,113 @@ class SignalLogicNode(Node):
 
         # Publisher
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
-        
-        # Timers
-        self.timer_period = 0.08
-        self.timer = self.create_timer(self.timer_period, self.timer_callback)
-        
-        self.beh = 0
-        self.light = 0
-        self.dir = 0
-
-        self.signal = Signal()
-        self.vel = Twist()
-        self.vel_inc = Twist()
-
-        self.last = []
-
-        self.has_sign = False
 
     def direction_callback(self, msg):
-        self.signal = msg
-        self.has_sign = True
+        self.get_logger().info(f"Direction: {msg.direction}, Behavior: {msg.behavior}, Light: {msg.light}")
+        
+    #     # Timers
+    #     self.timer_period = 0.08
+    #     self.timer = self.create_timer(self.timer_period, self.timer_callback)
+        
+    #     self.beh = 0
+    #     self.light = 0
+    #     self.dir = 0
 
-    def cmd_vel_callback(self, msg):
-        self.vel_inc = msg
+    #     self.signal = Signal()
+    #     self.vel = Twist()
+    #     self.vel_inc = Twist()
 
-    def timer_callback(self):
-        if self.has_sign:
-            self.dir = self.signal.direction
-            self.beh = self.signal.behavior
-            self.light = self.signal.light
+    #     self.last = []
 
-            """
-            self.dir = 0 -> Go straight
-            self.dir = 1 -> Turn Left
-            self.dir = 2 -> Turn Right
-            self.dir = 3 -> Not signal
+    #     self.has_sign = False
+
+    # def direction_callback(self, msg):
+    #     self.signal = msg
+    #     self.has_sign = True
+
+    # def cmd_vel_callback(self, msg):
+    #     self.vel_inc = msg
+
+    # def timer_callback(self):
+    #     if self.has_sign:
+    #         self.dir = self.signal.direction
+    #         self.beh = self.signal.behavior
+    #         self.light = self.signal.light
+
+    #         """
+    #         self.dir = 0 -> Go straight
+    #         self.dir = 1 -> Turn Left
+    #         self.dir = 2 -> Turn Right
+    #         self.dir = 3 -> Not signal
             
-            self.beh = 0 -> Give way
-            self.beh = 1 -> Stop
-            self.beh = 2 -> Slow down
-            self.beh = 3 -> Not signal
+    #         self.beh = 0 -> Give way
+    #         self.beh = 1 -> Stop
+    #         self.beh = 2 -> Slow down
+    #         self.beh = 3 -> Not signal
             
-            self.light = 0 -> Green
-            self.light = 1 -> Yellow
-            self.light = 2 -> Red
-            self.light = 3 -> Not signal
-            """
-            if self.dir != self.dir_last:
-                if self.light != 3:
-                    if self.dir == 0:
-                        if self.light == 0:
-                            self.vel.linear.x = self.vel_inc.linear.x
-                            self.vel.angular.z = self.vel_inc.angular.z
-                        elif self.light == 1:
-                            self.vel.linear.x = 0.5 * self.vel_inc.linear.x
-                            self.vel.angular.z = 0.5 * self.vel_inc.angular.z
-                        elif self.light == 2:
-                            self.vel.linear.x = 0
-                            self.vel.angular.z = 0
-                        else:
-                            self.vel.linear.x = self.vel_inc.linear.x
-                            self.vel.angular.z = self.vel_inc.angular.z
-                        self.pub.publish(self.vel)
+    #         self.light = 0 -> Green
+    #         self.light = 1 -> Yellow
+    #         self.light = 2 -> Red
+    #         self.light = 3 -> Not signal
+    #         """
+    #         if self.dir != self.dir_last:
+    #             if self.light != 3:
+    #                 if self.dir == 0:
+    #                     if self.light == 0:
+    #                         self.vel.linear.x = self.vel_inc.linear.x
+    #                         self.vel.angular.z = self.vel_inc.angular.z
+    #                     elif self.light == 1:
+    #                         self.vel.linear.x = 0.5 * self.vel_inc.linear.x
+    #                         self.vel.angular.z = 0.5 * self.vel_inc.angular.z
+    #                     elif self.light == 2:
+    #                         self.vel.linear.x = 0
+    #                         self.vel.angular.z = 0
+    #                     else:
+    #                         self.vel.linear.x = self.vel_inc.linear.x
+    #                         self.vel.angular.z = self.vel_inc.angular.z
+    #                     self.pub.publish(self.vel)
 
-                    elif self.dir == 1:
-                        self.right_turn()
-                    elif self.dir == 2:
-                        self.left_turn()
-                else:
-                    if self.beh == 0:
-                        self.vel.linear.x = 0.5 * self.vel_inc.linear.x
-                        self.vel.angular.z = 0.5 * self.vel_inc.angular.z
-                        self.pub.publish(self.vel)
-                        sleep(2)
-                    elif self.beh == 1:
-                        self.vel.linear.x = 0
-                        self.vel.angular.z = 0
-                        self.pub.publish(self.vel)
-                        sleep(5)
-                    elif self.beh == 2:
-                        self.vel.linear.x = 0.5 * self.vel_inc.linear.x
-                        self.vel.angular.z = 0.5 * self.vel_inc.angular.z
-                        self.pub.publish(self.vel)
-                        sleep(5)
-            else:
-                self.vel.linear.x = self.vel_inc.linear.x
-                self.vel.angular.z = self.vel_inc.angular.z
-                self.pub.publish(self.vel)
+    #                 elif self.dir == 1:
+    #                     self.right_turn()
+    #                 elif self.dir == 2:
+    #                     self.left_turn()
+    #             else:
+    #                 if self.beh == 0:
+    #                     self.vel.linear.x = 0.5 * self.vel_inc.linear.x
+    #                     self.vel.angular.z = 0.5 * self.vel_inc.angular.z
+    #                     self.pub.publish(self.vel)
+    #                     sleep(2)
+    #                 elif self.beh == 1:
+    #                     self.vel.linear.x = 0
+    #                     self.vel.angular.z = 0
+    #                     self.pub.publish(self.vel)
+    #                     sleep(5)
+    #                 elif self.beh == 2:
+    #                     self.vel.linear.x = 0.5 * self.vel_inc.linear.x
+    #                     self.vel.angular.z = 0.5 * self.vel_inc.angular.z
+    #                     self.pub.publish(self.vel)
+    #                     sleep(5)
+    #         else:
+    #             self.vel.linear.x = self.vel_inc.linear.x
+    #             self.vel.angular.z = self.vel_inc.angular.z
+    #             self.pub.publish(self.vel)
 
-            self.dir_last = self.dir
-            self.beh_last = self.beh
-            self.light_last = self.light
-            self.has_dir = False
+    #         self.dir_last = self.dir
+    #         self.beh_last = self.beh
+    #         self.light_last = self.light
+    #         self.has_dir = False
 
-    def right_turn(self):
-        self.vel.linear.x = 0.5 * self.vel_inc.linear.x
-        self.vel.angular.z = -0.5 * self.vel_inc.angular.z
-        self.pub.publish(self.vel)
-        sleep(2)
+    # def right_turn(self):
+    #     self.vel.linear.x = 0.5 * self.vel_inc.linear.x
+    #     self.vel.angular.z = -0.5 * self.vel_inc.angular.z
+    #     self.pub.publish(self.vel)
+    #     sleep(2)
 
-    def left_turn(self):
-        self.vel.linear.x = 0.5 * self.vel_inc.linear.x
-        self.vel.angular.z = 0.5 * self.vel_inc.angular.z
-        self.pub.publish(self.vel)
-        sleep(2)
+    # def left_turn(self):
+    #     self.vel.linear.x = 0.5 * self.vel_inc.linear.x
+    #     self.vel.angular.z = 0.5 * self.vel_inc.angular.z
+    #     self.pub.publish(self.vel)
+    #     sleep(2)
 
 def main(args=None):
     rclpy.init(args=args)
