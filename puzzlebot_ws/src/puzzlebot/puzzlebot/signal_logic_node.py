@@ -30,6 +30,7 @@ class SignalLogicNode(Node):
         self.delay = 0
         self.red_light = False
         self.yellow_light = False
+        self.remember_direction = 3
     
         self.behaviour = False
 
@@ -88,7 +89,8 @@ class SignalLogicNode(Node):
             output_vel.angular.z = -0.1
             sleep_time = 5
         
-        if self.last_direction == 1:
+        if self.last_direction == 1 or self.remember_direction == 1:
+            self.remember_direction = 1
             output_vel.linear.x = 0.2
             output_vel.angular.z = 0.0
             self.pub.publish(output_vel)
@@ -97,7 +99,9 @@ class SignalLogicNode(Node):
             output_vel.angular.z = 0.5
             self.pub.publish(output_vel)
             sleep(2.0)
-        elif self.last_direction == 2:
+            self.remember_direction = 3
+        elif self.last_direction == 2 or self.remember_direction == 2:
+            self.remember_direction = 2
             output_vel.linear.x = 0.2
             output_vel.angular.z = 0.0
             self.pub.publish(output_vel)
@@ -106,6 +110,7 @@ class SignalLogicNode(Node):
             output_vel.angular.z = -0.5
             self.pub.publish(output_vel)
             sleep(2.0)
+            self.remember_direction = 3
 
         self.behaviour = True
         self.pub.publish(output_vel)
@@ -123,7 +128,7 @@ class SignalLogicNode(Node):
                 if self.yellow_light:
                     output_vel.linear.x = self.vel_inc.linear.x * 0.5
                     output_vel.angular.z = self.vel_inc.angular.z * 0.5
-                self.pub.publish(output_vel)  
+                self.pub.publish(output_vel)
     
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
