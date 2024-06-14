@@ -47,7 +47,7 @@ class SignalLogicNode(Node):
             self.light = 2 -> Red
             self.light = 3 -> Not signal
         """
-
+        print(f'Direction: {msg.direction}, Behavior: {msg.behavior}, Light: {msg.light}')
         self.last_direction = msg.direction
         self.last_behavior = msg.behavior
         self.last_light = msg.light
