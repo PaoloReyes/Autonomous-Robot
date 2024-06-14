@@ -41,9 +41,9 @@ class FuzzyController:
                               default_value=0.0,
                               lock_previous=False,
                               terms=[
-                                fl.Gaussian('low_speed', 0.05, 0.05),
-                                fl.Gaussian('mid_speed', 0.15, 0.05),
-                                fl.Gaussian('speed', 0.30, 0.05)
+                                fl.Constant('low_speed', 0.05),
+                                fl.Constant('mid_speed', 0.15),
+                                fl.Constant('speed', 0.30)
                               ]),
 
             fl.OutputVariable(name="aVel",
@@ -57,8 +57,8 @@ class FuzzyController:
                                 default_value=0.0,
                                 lock_previous=False,
                                 terms=[
-                                    fl.Gaussian('left', 1.5, 0.5),
-                                    fl.Gaussian('right', -1.5, 0.5),
+                                    fl.Constant('left', 1.5),
+                                    fl.Constant('right', -1.5),
                                 ])
 
         ]
