@@ -23,6 +23,8 @@ import numpy as np
 
 from directions_msgs.msg import Signal
 
+from copy import deepcopy
+
 class YOLONode(Node):
     def __init__(self):
         super().__init__('yolo_segmentation_node')
@@ -52,7 +54,7 @@ class YOLONode(Node):
         self.image = None
 
         self.signal = Signal()
-        self.last_signal = self.signal.copy()
+        self.last_signal =  deepcopy(self.signal)
 
         self.focal_lenght = 176.16
         self.traffic_distance = 6.0
@@ -163,11 +165,10 @@ class YOLONode(Node):
                     if i == 2:
                         self.signal.behavior = 3
 
-            print(f'Signal {str(self.signal)} Last Signal {str(self.last_signal)}')
             if self.signal != self.last_signal:
                 self.direction_pub.publish(self.signal)
             
-            self.last_signal = self.signal.copy()
+            self.last_signal = deepcopy(self.signal)
 
             blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
