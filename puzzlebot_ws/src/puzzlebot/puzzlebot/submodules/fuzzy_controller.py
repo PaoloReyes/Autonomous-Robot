@@ -42,7 +42,7 @@ class FuzzyController:
                               lock_previous=False,
                               terms=[
                                 fl.Constant('low_speed', 0.05),
-                                fl.Constant('mid_speed', 0.15),
+                                fl.Constant('mid_speed', 0.8),
                                 fl.Constant('speed', 0.30)
                               ]),
 
