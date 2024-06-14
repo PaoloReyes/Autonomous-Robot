@@ -1,15 +1,12 @@
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import String
-
 from geometry_msgs.msg import Twist
 
 from directions_msgs.msg import Signal
 
 from rclpy import qos
 
-from time import sleep
 class SignalLogicNode(Node):
     def __init__(self):
         super().__init__('signal_logic_node')
@@ -28,6 +25,8 @@ class SignalLogicNode(Node):
         self.last_light = 3
         self.vel_inc = Twist()
         self.speed_factor = 1.0
+        self.initial_time = 0
+        self.delay = 0
 
         self.get_logger().info('Signal Logic Node Started')
 
@@ -53,9 +52,6 @@ class SignalLogicNode(Node):
         self.last_behavior = msg.behavior
         self.last_light = msg.light
 
-        self.initial_time = 0
-        self.delay = 0
-
     def timer_callback(self):     
         output_vel = Twist()
         if self.get_clock().now().nanoseconds - self.initial_time < self.delay * 1e9:
@@ -65,7 +61,6 @@ class SignalLogicNode(Node):
             return
         
         self.speed_factor = 1.0
-        sleep_time = 0
         if self.last_direction != 3: # If direction
             if self.last_light != 3: # If light
                 pass
