@@ -39,13 +39,13 @@ class SignalLogicNode(Node):
 
     def direction_callback(self, msg):
         self.signal = msg
-        self.has_dir = True
+        self.has_sign = True
 
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
 
     def timer_callback(self):
-        if self.has_dir:
+        if self.has_sign:
             self.dir = self.signal.direction
             self.beh = self.signal.behavior
             self.light = self.signal.light
