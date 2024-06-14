@@ -61,9 +61,9 @@ class FuzzyController:
                                 lock_previous=False,
                                 terms=[
                                     fl.Constant('left', 0.6),
-                                    fl.Constant('mid_left', 0.6),
+                                    fl.Constant('mid_left', 0.06),
                                     fl.Constant('mid', 0.0),
-                                    fl.Constant('mid_right', -0.6),
+                                    fl.Constant('mid_right', -0.06),
                                     fl.Constant('right', -0.6),
                                 ])
         ]
