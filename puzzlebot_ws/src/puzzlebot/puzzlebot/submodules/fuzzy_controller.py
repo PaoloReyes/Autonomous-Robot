@@ -26,8 +26,8 @@ class FuzzyController:
                              lock_range=False,
                              terms=[
                                 fl.Sigmoid('down', 25, -10.0),
-                                fl.Gaussian('mid', 40.0, 10.0),
-                                fl.Sigmoid('up', 50.0, 10.0)
+                                fl.Gaussian('mid', 30.0, 10.0),
+                                fl.Sigmoid('up', 40.0, 10.0)
                              ])
         ]
 
@@ -44,7 +44,7 @@ class FuzzyController:
                               lock_previous=False,
                               terms=[
                                 fl.Constant('low_speed', 0.05),
-                                fl.Constant('mid_speed', 0.),
+                                fl.Constant('mid_speed', 0.20),
                                 fl.Constant('speed', 0.35)
                               ]),
 
@@ -80,7 +80,6 @@ class FuzzyController:
                     fl.Rule.create("if x is lefter and y is down then lVel is low_speed and aVel is left", self.engine),
                     fl.Rule.create("if x is lefter and y is mid then lVel is mid_speed and aVel is left", self.engine),
                     fl.Rule.create("if x is lefter and y is up then lVel is speed and aVel is left", self.engine),
-                    fl.Rule.create("if x is lefter and y is down then lVel is low_speed and aVel is left", self.engine),
 
                     fl.Rule.create("if x is left and y is down then lVel is low_speed and aVel is mid_left", self.engine),
                     fl.Rule.create("if x is left and y is mid then lVel is mid_speed and aVel is mid_left", self.engine),
@@ -95,7 +94,7 @@ class FuzzyController:
                 ],
             )
         ]
-
+        
     def compute(self, x, y):
         self.engine.input_variable('x').value = x
         self.engine.input_variable('y').value = y
