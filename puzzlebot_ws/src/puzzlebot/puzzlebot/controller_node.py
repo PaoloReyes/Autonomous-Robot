@@ -36,7 +36,7 @@ class ControllerNode(Node):
         if y != 0:
             v, w = self.controller.compute(x, y)
         else:
-            v = 0
+            v = 0.0
             if x > 0:
                 w = 0.7
             else:
