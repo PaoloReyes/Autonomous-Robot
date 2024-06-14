@@ -23,6 +23,9 @@ class SignalLogicNode(Node):
 
     def direction_callback(self, msg):
         self.get_logger().info(f"Direction: {msg.direction}, Behavior: {msg.behavior}, Light: {msg.light}")
+
+    def cmd_vel_callback(self, msg):
+        self.pub.publish(msg)
         
     #     # Timers
     #     self.timer_period = 0.08
