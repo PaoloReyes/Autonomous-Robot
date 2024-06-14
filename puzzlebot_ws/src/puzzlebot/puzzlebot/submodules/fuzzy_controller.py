@@ -12,10 +12,10 @@ class FuzzyController:
                              enabled=True,
                              lock_range=False,
                              terms=[
-                                 fl.Sigmoid('lefter', 40, 0.2),
-                                 fl.Gaussian('left', 20.0, 10.0),
-                                 fl.Gaussian('right', -20.0, 10.0),
-                                 fl.Sigmoid('righter', -40, -0.2),
+                                 fl.Sigmoid('lefter', 30, 0.2),
+                                 fl.Gaussian('left', 15.0, 5.0),
+                                 fl.Gaussian('right', -15.0, 5.0),
+                                 fl.Sigmoid('righter', -30, -0.2),
                              ]),
             fl.InputVariable(name="y",
                              description="Position in the y axis",
@@ -24,9 +24,9 @@ class FuzzyController:
                              enabled=True,
                              lock_range=False,
                              terms=[
-                                fl.Sigmoid('down', 20, -0.1),
-                                fl.Gaussian('mid', 27, 10.0),
-                                fl.Sigmoid('up', 35.0, 0.1)
+                                fl.Sigmoid('down', 15, -0.6),
+                                fl.Gaussian('mid', 22, 10.0),
+                                fl.Sigmoid('up', 30.0, 0.6)
                              ])
         ]
 
@@ -63,7 +63,6 @@ class FuzzyController:
                                     fl.Constant('mid_right', -0.5),
                                     fl.Constant('right', -1.0),
                                 ])
-
         ]
 
         self.engine.rule_blocks = [
