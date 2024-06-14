@@ -107,7 +107,7 @@ class YOLONode(Node):
                     box = unique_group[0]
                     x, y = (box[0] + box[2])//2, (box[1] + box[3])//2
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
-                    if z < 20:
+                    if z < 25:
                         
                         
                         try:
