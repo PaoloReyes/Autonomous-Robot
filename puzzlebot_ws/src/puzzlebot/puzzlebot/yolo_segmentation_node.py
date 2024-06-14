@@ -172,7 +172,6 @@ class YOLONode(Node):
                 else:
                     y = 50
 
-                self.get_logger().info(f'cy: ({cy})')
                 msg = Int32MultiArray()
                 msg.data = [x, y]
                 self.CoM_pub.publish(msg)
