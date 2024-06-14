@@ -13,8 +13,8 @@ class FuzzyController:
                              lock_range=False,
                              terms=[
                                  fl.Sigmoid('lefter', 30, 0.2),
-                                 fl.Gaussian('left', 5.0, 10.0),
-                                 fl.Gaussian('right', -5.0, 10.0),
+                                 fl.Gaussian('left', 13.0, 10.0),
+                                 fl.Gaussian('right', -13.0, 10.0),
                                  fl.Sigmoid('righter', -30, -0.2),
                              ]),
 
@@ -35,7 +35,7 @@ class FuzzyController:
             fl.OutputVariable(name="lVel",
                               description="Linear velocity",
                               minimum=0.0,
-                              maximum=0.30,
+                              maximum=0.10,
                               enabled=True,
                               lock_range=False,
                               aggregation=None,
@@ -44,8 +44,8 @@ class FuzzyController:
                               lock_previous=False,
                               terms=[
                                 fl.Constant('low_speed', 0.0),
-                                fl.Constant('mid_speed', 0.15),
-                                fl.Constant('speed', 0.30)
+                                fl.Constant('mid_speed', 0.10),
+                                fl.Constant('speed', 0.25)
                               ]),
 
             fl.OutputVariable(name="aVel",
@@ -60,8 +60,8 @@ class FuzzyController:
                                 lock_previous=False,
                                 terms=[
                                     fl.Constant('left', 0.7),
-                                    fl.Constant('mid_left', 0.08),
-                                    fl.Constant('mid_right', -0.08),
+                                    fl.Constant('mid_left', 0.1),
+                                    fl.Constant('mid_right', -0.1),
                                     fl.Constant('right', -0.7),
                                 ])
         ]
