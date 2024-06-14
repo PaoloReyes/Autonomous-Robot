@@ -58,37 +58,18 @@ class SignalLogicNode(Node):
 
         output_vel = Twist()
         sleep_time = 0
-        if self.last_direction != 3: # If direction
-            if self.last_light != 3: # If light
-                pass
-                # if self.last_direction == 0:
-                #     if self.last_light == 0:
-                #         self.pub.publish(self.vel)
-                #     elif self.last_light == 1:
-                #         self.pub.publish(self.vel_inc)
-                #     elif self.last_light == 2:
-                #         self.vel.linear.x = 0
-                #         self.vel.angular.z = 0
-                #         self.pub.publish(self.vel)
-                #     else:
-                #         self.pub.publish(self.vel)
-                # elif self.last_direction == 1:
-                #     self.right_turn()
-                # elif self.last_direction == 2:
-                #     self.left_turn()
-            else: # If not light
-                if self.last_behavior == 0:
-                    output_vel.linear.x = 0.5 * self.vel_inc.linear.x
-                    output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    sleep_time = 2
-                elif self.last_behavior == 1:
-                    output_vel.linear.x = 0
-                    output_vel.angular.z = 0
-                    sleep_time = 10
-                elif self.last_behavior == 2:
-                    output_vel.linear.x = 0.5 * self.vel_inc.linear.x
-                    output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    sleep_time = 5
+        if self.last_behavior == 0:
+            output_vel.linear.x = 0.5 * self.vel_inc.linear.x
+            output_vel.angular.z = 0.5 * self.vel_inc.angular.z
+            sleep_time = 2
+        elif self.last_behavior == 1:
+            output_vel.linear.x = 0
+            output_vel.angular.z = 0
+            sleep_time = 10
+        elif self.last_behavior == 2:
+            output_vel.linear.x = 0.5 * self.vel_inc.linear.x
+            output_vel.angular.z = 0.5 * self.vel_inc.angular.z
+            sleep_time = 5
         self.behaviour = True
         self.pub.publish(output_vel)
         sleep(sleep_time)
