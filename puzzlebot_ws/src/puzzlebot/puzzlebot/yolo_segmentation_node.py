@@ -140,15 +140,23 @@ class YOLONode(Node):
                 
                     elif i == 1:
                         z = math_utils.distance_to_camera(self.focal_lenght, self.light_distance, box[2] - box[0]) #in centimeters
-                        if z > 25:
-                            if unique_group[1] == 'green':
-                                    self.signal.light = 0
-                            elif unique_group[1] == 'yellow':
-                                self.signal.light = 1
-                            elif unique_group[1] == 'red':
-                                self.signal.light = 2
-                            else:
-                                self.signal.light = 3
+                        print(z)
+                        if z < 25:
+                            try:
+                                r, g, b = np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)
+                                cv2.rectangle(boxes_img, (int(unique_group[0][0]), int(unique_group[0][1])), (int(unique_group[0][2]), int(unique_group[0][3])), (r, g, b), 2)
+                                cv2.putText(boxes_img, f'{unique_group[1]} {unique_group[2]:.2f}', (int(unique_group[0][0]), int(unique_group[0][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (r, g, b), 2)
+                            
+                                if unique_group[1] == 'green':
+                                        self.signal.light = 0
+                                elif unique_group[1] == 'yellow':
+                                    self.signal.light = 1
+                                elif unique_group[1] == 'red':
+                                    self.signal.light = 2
+                                else:
+                                    self.signal.light = 3
+                            except:
+                                pass
                 else:
                     if i == 0:
                         self.signal.direction = 3
