@@ -36,7 +36,11 @@ class ControllerNode(Node):
         if y != 0:
             v, w = self.controller.compute(x, y)
         else:
-            v, w = 0, 0
+            v = 0
+            if x > 0:
+                w = 0.7
+            else:
+                w = -0.7
         cmd_vel = Twist()
         cmd_vel.linear.x = v
         cmd_vel.angular.z = w
