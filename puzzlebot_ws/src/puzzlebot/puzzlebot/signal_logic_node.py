@@ -77,18 +77,18 @@ class SignalLogicNode(Node):
             self.pub.publish(output_vel)
             sleep(1.5)
             output_vel.linear.x = 0.0
-            output_vel.angular.z = 0.4
+            output_vel.angular.z = 0.6
             self.pub.publish(output_vel)
-            sleep(1.5)
+            sleep(2.0)
         elif self.last_direction == 2:
             output_vel.linear.x = 0.2
             output_vel.angular.z = 0.0
             self.pub.publish(output_vel)
             sleep(1.5)
             output_vel.linear.x = 0.0
-            output_vel.angular.z = -0.4
+            output_vel.angular.z = -0.6
             self.pub.publish(output_vel)
-            sleep(1.5)
+            sleep(2.0)
 
         self.behaviour = True
         self.pub.publish(output_vel)
