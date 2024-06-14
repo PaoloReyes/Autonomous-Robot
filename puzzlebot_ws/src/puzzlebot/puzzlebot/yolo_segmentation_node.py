@@ -24,8 +24,8 @@ import numpy as np
 from directions_msgs.msg import Signal
 
 class YOLONode(Node):
-    def __init__(self):
-        super().__init__('yolo_segmentation_node')
+    def _init_(self):
+        super()._init_('yolo_segmentation_node')
         self.bridge = CvBridge() 
 
         self.image_sub = self.create_subscription(Image, '/video_source/raw', self.image_callback, qos.qos_profile_sensor_data)
@@ -174,11 +174,11 @@ class YOLONode(Node):
                     y = 50
                 self.last_x = x
             else:
-                x, y = self.last_x > 0, 0
+                x, y = int(self.last_x), 0
 
-                msg = Int32MultiArray()
-                msg.data = [x, y]
-                self.CoM_pub.publish(msg)
+            msg = Int32MultiArray()
+            msg.data = [x, y]
+            self.CoM_pub.publish(msg)
         
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(inference, encoding='bgr8'))
             self.boxes_pub.publish(self.bridge.cv2_to_imgmsg(boxes_img, encoding='bgr8'))
@@ -190,5 +190,5 @@ def main(args=None):
     yolo_node.destroy_node()
     rclpy.shutdown()
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     main()
