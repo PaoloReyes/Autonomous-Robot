@@ -26,9 +26,9 @@ class SignalLogicNode(Node):
         self.last_behavior = 3
         self.last_light = 3
         self.vel_inc = Twist()
-        self.speed_factor = 1.0
         self.initial_time = 0
         self.delay = 0
+        self.red_light = False
     
         self.behaviour = False
 
@@ -58,8 +58,9 @@ class SignalLogicNode(Node):
 
         output_vel = Twist()
         if self.last_light == 2:
-            self.pub.publish(output_vel)
-            return
+            self.red_light = True
+        elif self.last_light == 0:
+            self.red_light = False
 
         sleep_time = 0
         if self.last_behavior == 0:
@@ -101,7 +102,10 @@ class SignalLogicNode(Node):
 
     def timer_callback(self):   
         if not self.behaviour:
-            self.pub.publish(self.vel_inc)  
+            if self.red_light:
+                self.pub.publish(Twist())
+            else:
+                self.pub.publish(self.vel_inc)  
     
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
