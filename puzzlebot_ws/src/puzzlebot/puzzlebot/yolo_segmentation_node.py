@@ -52,7 +52,7 @@ class YOLONode(Node):
         self.image = None
 
         self.signal = Signal()
-        self.last_signal = Signal()
+        self.last_signal = self.signal.copy()
 
         self.focal_lenght = 176.16
         self.traffic_distance = 6.0
@@ -167,7 +167,7 @@ class YOLONode(Node):
             if self.signal != self.last_signal:
                 self.direction_pub.publish(self.signal)
             
-            self.last_signal = self.signal
+            self.last_signal = self.signal.copy()
 
             blurred_mask = cv2.GaussianBlur(b_mask, (15, 15), 0)
 
