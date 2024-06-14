@@ -55,6 +55,7 @@ class YOLONode(Node):
 
         self.focal_lenght = 176.16
         self.traffic_distance = 6.0
+        self.last_x = 0
 
     def image_callback(self, msg):
         self.image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
@@ -171,6 +172,9 @@ class YOLONode(Node):
                     y = 0
                 else:
                     y = 50
+                self.last_x = x
+            else:
+                x, y = self.last_x > 0, 0
 
                 msg = Int32MultiArray()
                 msg.data = [x, y]
