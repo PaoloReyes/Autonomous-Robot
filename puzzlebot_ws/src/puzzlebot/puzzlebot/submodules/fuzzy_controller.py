@@ -55,7 +55,7 @@ class FuzzyController:
                                 lock_range=False,
                                 aggregation=None,
                                 defuzzifier=fl.WeightedAverage("TakagiSugeno"),
-                                default=0.0,
+                                default_value=0.0,
                                 lock_previous=False,
                                 terms=[
                                     fl.Gaussian('lefter', 1.5, 0.2),
