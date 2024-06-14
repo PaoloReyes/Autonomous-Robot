@@ -165,9 +165,9 @@ class YOLONode(Node):
 
                 # Mapping the x and y coordinates of the center of the street to the center of the image
                 x = raw.shape[1]//2 - cx
-                if cy > 163 and cy < 180:
-                    y = math_utils.map(cy, 163, 180, 50, 0)
-                elif cy > 180:
+                if cy > 175 and cy < 210:
+                    y = math_utils.map(cy, 175, 210, 50, 0)
+                elif cy > 210:
                     y = 0
                 else:
                     y = 50
