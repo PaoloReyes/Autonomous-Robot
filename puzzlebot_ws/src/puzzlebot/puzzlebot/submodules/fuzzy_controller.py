@@ -58,10 +58,10 @@ class FuzzyController:
                                 default_value=0.0,
                                 lock_previous=False,
                                 terms=[
-                                    fl.Constant('left', 1.0),
+                                    fl.Constant('left', 0.7),
                                     fl.Constant('mid_left', 0.3),
                                     fl.Constant('mid_right', -0.3),
-                                    fl.Constant('right', -1.0),
+                                    fl.Constant('right', -0.7),
                                 ])
         ]
 
