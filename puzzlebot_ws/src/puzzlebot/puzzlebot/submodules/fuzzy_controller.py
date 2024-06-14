@@ -42,9 +42,8 @@ class FuzzyController:
                               lock_previous=False,
                               terms=[
                                   fl.Gaussian('full_speed', 0.25, 0.2),
-                                  fl.Gaussian('speed', 0.20, 0.2),
-                                  fl.Gaussian('mid_speed', 0.15, 0.2),
-                                  fl.Gaussian('low_speed', 0.8, 0.2, height=0.8),
+                                  fl.Gaussian('mid_speed', 0.10, 0.2),
+                                  fl.Gaussian('low_speed', 0.8, 0.4, height=0.8),
                                   fl.Gaussian('stop', 0.0, 0.2)
                               ]),
 
@@ -79,10 +78,10 @@ class FuzzyController:
                 implication=None,
                 rules=[
                     fl.Rule.create("if x is left and y is back then lVel is low_speed and aVel is lefter", self.engine),
-                    fl.Rule.create("if x is left and y is up then lVel is mid_speed and aVel is left", self.engine),
+                    fl.Rule.create("if x is left and y is up then lVel is low_speed and aVel is left", self.engine),
                     fl.Rule.create("if x is center and y is back then lVel is mid_speed and aVel is mid", self.engine),
                     fl.Rule.create("if x is center and y is up then lVel is full_speed and aVel is mid", self.engine),
-                    fl.Rule.create("if x is right and y is back then lVel is mid_speed and aVel is right", self.engine),
+                    fl.Rule.create("if x is right and y is back then lVel is low_speed and aVel is right", self.engine),
                     fl.Rule.create("if x is right and y is up then lVel is low_speed and aVel is righter", self.engine)
                 ],
             )
