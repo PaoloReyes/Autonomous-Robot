@@ -13,8 +13,8 @@ class FuzzyController:
                              lock_range=False,
                              terms=[
                                  fl.Sigmoid('lefter', 30, 0.2),
-                                 fl.Gaussian('left', 10.0, 5.0),
-                                 fl.Gaussian('right', -10.0, 5.0),
+                                 fl.Gaussian('left', 5.0, 10.0),
+                                 fl.Gaussian('right', -5.0, 10.0),
                                  fl.Sigmoid('righter', -30, -0.2),
                              ]),
 
@@ -43,8 +43,8 @@ class FuzzyController:
                               default_value=0.0,
                               lock_previous=False,
                               terms=[
-                                fl.Constant('low_speed', 0.02),
-                                fl.Constant('mid_speed', 0.125),
+                                fl.Constant('low_speed', 0.0),
+                                fl.Constant('mid_speed', 0.10),
                                 fl.Constant('speed', 0.20)
                               ]),
 
@@ -60,8 +60,8 @@ class FuzzyController:
                                 lock_previous=False,
                                 terms=[
                                     fl.Constant('left', 0.7),
-                                    fl.Constant('mid_left', 0.05),
-                                    fl.Constant('mid_right', -0.05),
+                                    fl.Constant('mid_left', 0.1),
+                                    fl.Constant('mid_right', -0.1),
                                     fl.Constant('right', -0.7),
                                 ])
         ]
