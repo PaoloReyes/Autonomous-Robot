@@ -13,8 +13,8 @@ class FuzzyController:
                              enabled=True,
                              lock_range=False,
                              terms=[
-                                 fl.Sigmoid('left', 30, -10.0),
-                                 fl.Sigmoid('right', -30, 10.0),
+                                 fl.Sigmoid('left', 30, -5.0),
+                                 fl.Sigmoid('right', -30, 5.0),
                              ]),
             fl.InputVariable(name="y",
                              description="Position in the y axis",
