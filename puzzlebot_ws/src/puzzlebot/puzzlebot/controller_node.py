@@ -10,12 +10,6 @@ class ControllerNode(Node):
     def __init__(self):
         super().__init__('controller_node')
 
-        self.declare_parameter('KPLinear', 0.0035)
-        self.declare_parameter('KPAngular', 0.01)
-
-        self.KPLinear = self.get_parameter('KPLinear').value
-        self.KPAngular = self.get_parameter('KPAngular').value
-
         self.controller = FuzzyController()
 
         self.create_subscription(Int32MultiArray, '/CoM', self.com_callback, qos.qos_profile_sensor_data)

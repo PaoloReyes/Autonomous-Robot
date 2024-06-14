@@ -44,7 +44,7 @@ class FuzzyController:
                               default_value=0.0,
                               lock_previous=False,
                               terms=[
-                                fl.Constant('low_speed', 0.0),
+                                fl.Constant('low_speed', 0.02),
                                 fl.Constant('mid_speed', 0.10),
                                 fl.Constant('speed', 0.20)
                               ]),
@@ -60,11 +60,11 @@ class FuzzyController:
                                 default_value=0.0,
                                 lock_previous=False,
                                 terms=[
-                                    fl.Constant('left', 0.7),
+                                    fl.Constant('left', 0.6),
                                     fl.Constant('mid_left', 0.1),
                                     fl.Constant('mid', 0.0),
                                     fl.Constant('mid_right', -0.1),
-                                    fl.Constant('right', -0.7),
+                                    fl.Constant('right', -0.6),
                                 ])
         ]
 

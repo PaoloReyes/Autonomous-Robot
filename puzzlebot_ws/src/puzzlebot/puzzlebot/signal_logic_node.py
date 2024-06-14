@@ -75,9 +75,13 @@ class SignalLogicNode(Node):
                 #     self.left_turn()
             else: # If not light
                 if self.last_behavior == 0:
-                    output_vel.linear.x = 0.5 * self.vel_inc.linear.x
-                    output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    sleep_time = 2
+                    #obtain the time of the node
+                    if self.get_clock().now().nanoseconds - self.init_time < 2:
+                        output_vel.linear.x = 0.5 * self.vel_inc.linear.x
+                        output_vel.angular.z = 0.5 * self.vel_inc.angular.z
+                    else:
+                        output_vel.linear.x = self.vel_inc.linear.x
+                        output_vel.angular.z = self.vel_inc.angular.z
                     self.get_logger().info('Give way')
                 elif self.last_behavior == 1:
                     output_vel.linear.x = 0
