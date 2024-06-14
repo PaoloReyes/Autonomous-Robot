@@ -42,8 +42,9 @@ class FuzzyController:
                               lock_previous=False,
                               terms=[
                                   fl.Gaussian('full_speed', 0.25, 0.2),
-                                  fl.Gaussian('mid_speed', 0.20, 0.2),
-                                  fl.Gaussian('low_speed', 0.12, 0.4),
+                                  fl.Gaussian('speed', 0.20, 0.2),
+                                  fl.Gaussian('mid_speed', 0.15, 0.2),
+                                  fl.Gaussian('low_speed', 0.8, 0.4),
                                   fl.Gaussian('stop', 0.0, 0.2)
                               ]),
 
