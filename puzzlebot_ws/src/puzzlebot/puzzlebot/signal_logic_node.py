@@ -21,12 +21,14 @@ class SignalLogicNode(Node):
         # Publisher
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
 
-        self.timer = self.create_timer(0.1, self.timer_callback)
+        self.timer = self.create_timer(0.01, self.timer_callback)
 
         self.last_direction = 3
         self.last_behavior = 3
         self.last_light = 3
         self.vel_inc = Twist()
+
+        self.get_logger().info('Signal Logic Node Started')
 
     def direction_callback(self, msg):
         """
@@ -87,6 +89,7 @@ class SignalLogicNode(Node):
         else:
             output_vel = self.vel_inc
 
+        print(output_vel)
         self.pub.publish(output_vel)
         if sleep_time != 0:
             sleep(sleep_time)
