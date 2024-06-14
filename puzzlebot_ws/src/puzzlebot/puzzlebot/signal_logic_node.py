@@ -21,11 +21,78 @@ class SignalLogicNode(Node):
         # Publisher
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
 
+        self.timer = self.create_timer(0.1, self.timer_callback)
+
+        self.last_direction = 3
+        self.last_behavior = 3
+        self.last_light = 3
+        self.vel_inc = Twist()
+
     def direction_callback(self, msg):
-        self.get_logger().info(f"Direction: {msg.direction}, Behavior: {msg.behavior}, Light: {msg.light}")
+        """
+            self.dir = 0 -> Go straight
+            self.dir = 1 -> Turn Left
+            self.dir = 2 -> Turn Right
+            self.dir = 3 -> Not signal
+            
+            self.beh = 0 -> Give way
+            self.beh = 1 -> Stop
+            self.beh = 2 -> Slow down
+            self.beh = 3 -> Not signal
+            
+            self.light = 0 -> Green
+            self.light = 1 -> Yellow
+            self.light = 2 -> Red
+            self.light = 3 -> Not signal
+        """
+
+        self.last_direction = msg.direction
+        self.last_behavior = msg.behavior
+        self.last_light = msg.light
+
+    def timer_callback(self):
+        output_vel = Twist()
+        sleep_time = 0
+        if self.last_direction != 3: # If direction
+            if self.last_light != 3: # If light
+                pass
+                # if self.last_direction == 0:
+                #     if self.last_light == 0:
+                #         self.pub.publish(self.vel)
+                #     elif self.last_light == 1:
+                #         self.pub.publish(self.vel_inc)
+                #     elif self.last_light == 2:
+                #         self.vel.linear.x = 0
+                #         self.vel.angular.z = 0
+                #         self.pub.publish(self.vel)
+                #     else:
+                #         self.pub.publish(self.vel)
+                # elif self.last_direction == 1:
+                #     self.right_turn()
+                # elif self.last_direction == 2:
+                #     self.left_turn()
+            else: # If not light
+                if self.last_behavior == 0:
+                    output_vel.linear.x = 0.5 * self.vel_inc.linear.x
+                    output_vel.angular.z = 0.5 * self.vel_inc.angular.z
+                    sleep_time = 2
+                elif self.last_behavior == 1:
+                    output_vel.linear.x = 0
+                    output_vel.angular.z = 0
+                    sleep_time = 10
+                elif self.last_behavior == 2:
+                    output_vel.linear.x = 0.5 * self.vel_inc.linear.x
+                    output_vel.angular.z = 0.5 * self.vel_inc.angular.z
+                    sleep_time = 5
+        else:
+            output_vel = self.vel_inc
+
+        self.pub.publish(output_vel)
+        if sleep_time != 0:
+            sleep(sleep_time)
 
     def cmd_vel_callback(self, msg):
-        self.pub.publish(msg)
+        self.vel_inc = msg
         
     #     # Timers
     #     self.timer_period = 0.08
