@@ -92,4 +92,4 @@ class FuzzyController:
         self.engine.input_variable('y').value = y
         self.engine.process()
         print('I work!!!')
-        return self.engine.output_variable('v').value, self.engine.output_variable('w').value
+        return self.engine.output_variable('lVel').value, self.engine.output_variable('aVel').value
