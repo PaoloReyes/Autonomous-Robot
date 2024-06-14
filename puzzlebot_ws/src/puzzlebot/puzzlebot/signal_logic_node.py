@@ -27,6 +27,7 @@ class SignalLogicNode(Node):
         self.last_behavior = 3
         self.last_light = 3
         self.vel_inc = Twist()
+        self.speed_factor = 1.0
 
         self.get_logger().info('Signal Logic Node Started')
 
@@ -52,8 +53,18 @@ class SignalLogicNode(Node):
         self.last_behavior = msg.behavior
         self.last_light = msg.light
 
-    def timer_callback(self):
+        self.initial_time = 0
+        self.delay = 0
+
+    def timer_callback(self):     
         output_vel = Twist()
+        if self.get_clock().now().nanoseconds - self.initial_time < self.delay * 1e9:
+            output_vel.linear.x = self.vel_inc.linear.x * self.speed_factor
+            output_vel.angular.z = self.vel_inc.angular.z * self.speed_factor
+            self.pub.publish(output_vel)
+            return
+        
+        self.speed_factor = 1.0
         sleep_time = 0
         if self.last_direction != 3: # If direction
             if self.last_light != 3: # If light
@@ -77,24 +88,25 @@ class SignalLogicNode(Node):
                 if self.last_behavior == 0:
                     output_vel.linear.x = 0.5 * self.vel_inc.linear.x
                     output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    sleep_time = 2
-                    self.get_logger().info('Give way')
+                    self.speed_factor = 0.5
+                    self.delay = 2
+                    self.initial_time = self.get_clock().now().nanoseconds
                 elif self.last_behavior == 1:
                     output_vel.linear.x = 0
                     output_vel.angular.z = 0
-                    sleep_time = 10
-                    self.get_logger().info('Stop')
+                    self.speed_factor = 0.0
+                    self.delay = 10
+                    self.initial_time = self.get_clock().now().nanoseconds
                 elif self.last_behavior == 2:
                     output_vel.linear.x = 0.5 * self.vel_inc.linear.x
                     output_vel.angular.z = 0.5 * self.vel_inc.angular.z
-                    sleep_time = 5
-                    self.get_logger().info('Slow down')
+                    self.speed_factor = 0.5
+                    self.delay = 5
+                    self.initial_time = self.get_clock().now().nanoseconds
         else:
             output_vel = self.vel_inc
 
         self.pub.publish(output_vel)
-        if sleep_time != 0:
-            sleep(sleep_time)
 
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
