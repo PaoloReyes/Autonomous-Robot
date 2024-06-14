@@ -33,6 +33,7 @@ class ControllerNode(Node):
 
     def com_callback(self, msg):
         x, y = msg.data
+        self.get_logger().info(f'CoM: ({x}, {y})')
         v, w = self.controller.compute(x, y)
         cmd_vel = Twist()
         cmd_vel.linear.x = v
