@@ -66,6 +66,7 @@ class SignalLogicNode(Node):
         elif self.last_light == 0:
             self.red_light = False
             self.yellow_light = False
+            self.end_direction()
         elif self.last_light == 1:
             self.yellow_light = True
             self.red_light = False
@@ -89,7 +90,7 @@ class SignalLogicNode(Node):
             output_vel.angular.z = -0.1
             sleep_time = 5
         
-        if self.last_direction == 1 or self.remember_direction == 1:
+        if self.last_direction == 1:
             self.remember_direction = 1
             output_vel.linear.x = 0.2
             output_vel.angular.z = 0.0
@@ -100,7 +101,7 @@ class SignalLogicNode(Node):
             self.pub.publish(output_vel)
             sleep(2.0)
             self.remember_direction = 3
-        elif self.last_direction == 2 or self.remember_direction == 2:
+        elif self.last_direction == 2:
             self.remember_direction = 2
             output_vel.linear.x = 0.2
             output_vel.angular.z = 0.0
@@ -116,6 +117,31 @@ class SignalLogicNode(Node):
         self.pub.publish(output_vel)
         sleep(sleep_time)
         self.behaviour = False
+
+    def end_direction(self):
+        output_vel = Twist()
+        if self.remember_direction == 1:
+            self.remember_direction = 1
+            output_vel.linear.x = 0.2
+            output_vel.angular.z = 0.0
+            self.pub.publish(output_vel)
+            sleep(2.0)
+            output_vel.linear.x = 0.0
+            output_vel.angular.z = 0.5
+            self.pub.publish(output_vel)
+            sleep(2.0)
+            self.remember_direction = 3
+        elif self.remember_direction == 2:
+            self.remember_direction = 2
+            output_vel.linear.x = 0.2
+            output_vel.angular.z = 0.0
+            self.pub.publish(output_vel)
+            sleep(2.0)
+            output_vel.linear.x = 0.0
+            output_vel.angular.z = -0.5
+            self.pub.publish(output_vel)
+            sleep(2.0)
+            self.remember_direction = 3
 
     def timer_callback(self):   
         if not self.behaviour:
