@@ -13,8 +13,10 @@ class FuzzyController:
                              enabled=True,
                              lock_range=False,
                              terms=[
-                                 fl.Sigmoid('left', 40, -1.0),
-                                 fl.Sigmoid('right', -40, 1.0),
+                                 fl.Sigmoid('lefter', 40, -1.0),
+                                 fl.Gaussian('left', 20.0, 10.0),
+                                 fl.Gaussian('right', -20.0, 10.0),
+                                 fl.Sigmoid('righter', -40, 1.0),
                              ]),
             fl.InputVariable(name="y",
                              description="Position in the y axis",
@@ -42,8 +44,8 @@ class FuzzyController:
                               lock_previous=False,
                               terms=[
                                 fl.Constant('low_speed', 0.05),
-                                fl.Constant('mid_speed', 0.15),
-                                fl.Constant('speed', 0.30)
+                                fl.Constant('mid_speed', 0.),
+                                fl.Constant('speed', 0.35)
                               ]),
 
             fl.OutputVariable(name="aVel",
