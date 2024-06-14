@@ -77,12 +77,12 @@ class FuzzyController:
                 activation=fl.General(),
                 implication=None,
                 rules=[
-                    fl.Rule.parse("if x is left and y is back then v is low_speed and w is lefter", self.engine),
-                    fl.Rule.parse("if x is left and y is up then v is mid_speed and w is left", self.engine),
-                    fl.Rule.parse("if x is center and y is back then v is mid_speed and w is mid", self.engine),
-                    fl.Rule.parse("if x is center and y is up then v is full_speed and w is mid", self.engine),
-                    fl.Rule.parse("if x is right and y is back then v is mid_speed and w is right", self.engine),
-                    fl.Rule.parse("if x is right and y is up then v is low_speed and w is righter", self.engine)
+                    fl.Rule.create("if x is left and y is back then v is low_speed and w is lefter", self.engine),
+                    fl.Rule.create("if x is left and y is up then v is mid_speed and w is left", self.engine),
+                    fl.Rule.create("if x is center and y is back then v is mid_speed and w is mid", self.engine),
+                    fl.Rule.create("if x is center and y is up then v is full_speed and w is mid", self.engine),
+                    fl.Rule.create("if x is right and y is back then v is mid_speed and w is right", self.engine),
+                    fl.Rule.create("if x is right and y is up then v is low_speed and w is righter", self.engine)
                 ]
             )
         ]
