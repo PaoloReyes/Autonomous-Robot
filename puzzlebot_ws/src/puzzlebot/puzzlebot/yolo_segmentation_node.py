@@ -109,7 +109,6 @@ class YOLONode(Node):
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
                     if z < 25:
                         
-                        
                         try:
                             r, g, b = np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)
                             cv2.rectangle(boxes_img, (int(unique_group[0][0]), int(unique_group[0][1])), (int(unique_group[0][2]), int(unique_group[0][3])), (r, g, b), 2)
@@ -148,6 +147,8 @@ class YOLONode(Node):
                                         self.signal.behavior = 2
                                     else:
                                         self.signal.behavior = 3
+
+                            self.last_signal = self.signal
                         except:
                             pass
                 else:
@@ -158,6 +159,7 @@ class YOLONode(Node):
                     if i == 2:
                         self.signal.behavior = 3
 
+                    self.last_signal = self.signal
 
             self.direction_pub.publish(self.signal)
 
