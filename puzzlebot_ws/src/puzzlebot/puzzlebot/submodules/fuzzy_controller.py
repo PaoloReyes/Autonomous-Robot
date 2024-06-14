@@ -85,7 +85,7 @@ class FuzzyController:
                     fl.Rule.create("if x is left and y is down then lVel is low_speed and aVel is mid_left", self.engine),
                     fl.Rule.create("if x is left and y is mid then lVel is mid_speed and aVel is mid_left", self.engine),
                     fl.Rule.create("if x is left and y is up then lVel is speed and aVel is mid_left", self.engine),
-
+                    
                     fl.Rule.create("if x is mid and y is down then lVel is low_speed and aVel is mid", self.engine),
                     fl.Rule.create("if x is mid and y is mid then lVel is mid_speed and aVel is mid", self.engine),
                     fl.Rule.create("if x is mid and y is up then lVel is speed and aVel is mid", self.engine),
