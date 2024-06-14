@@ -20,7 +20,7 @@ class SignalLogicNode(Node):
         # Publisher
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
 
-        self.timer = self.create_timer(0.01, self.timer_callback)
+        self.timer = self.create_timer(0.08, self.timer_callback)
 
         self.last_direction = 3
         self.last_behavior = 3
