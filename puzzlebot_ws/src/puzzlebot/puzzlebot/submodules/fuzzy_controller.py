@@ -76,7 +76,7 @@ class FuzzyController:
                 implication=None,
                 rules=[
 
-                    fl.Rule.create("if y is down then lVel is low:speed", self.engine),
+                    fl.Rule.create("if y is down then lVel is low_speed", self.engine),
                     fl.Rule.create("if y is mid then lVel is mid_speed", self.engine),
                     fl.Rule.create("if y is up then lVel is speed", self.engine),
 
