@@ -47,7 +47,7 @@ class SignalLogicNode(Node):
             self.light = 2 -> Red
             self.light = 3 -> Not signal
         """
-        print(f'Direction: {msg.direction}, Behavior: {msg.behavior}, Light: {msg.light}')
+        self.get_logger().warning(f'Direction: {msg.direction}, Behavior: {msg.behavior}, Light: {msg.light}')
         self.last_direction = msg.direction
         self.last_behavior = msg.behavior
         self.last_light = msg.light
@@ -78,17 +78,17 @@ class SignalLogicNode(Node):
                     output_vel.linear.x = 0.5 * self.vel_inc.linear.x
                     output_vel.angular.z = 0.5 * self.vel_inc.angular.z
                     sleep_time = 2
-                    print('Give way')
+                    self.get_logger().info('Give way')
                 elif self.last_behavior == 1:
                     output_vel.linear.x = 0
                     output_vel.angular.z = 0
                     sleep_time = 10
-                    print('Stop')
+                    self.get_logger().info('Stop')
                 elif self.last_behavior == 2:
                     output_vel.linear.x = 0.5 * self.vel_inc.linear.x
                     output_vel.angular.z = 0.5 * self.vel_inc.angular.z
                     sleep_time = 5
-                    print('Slow down')
+                    self.get_logger().info('Slow down')
         else:
             output_vel = self.vel_inc
 
