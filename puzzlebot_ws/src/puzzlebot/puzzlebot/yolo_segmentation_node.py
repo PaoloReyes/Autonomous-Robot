@@ -110,7 +110,7 @@ class YOLONode(Node):
                     box = unique_group[0]
                     x, y = (box[0] + box[2])//2, (box[1] + box[3])//2
                     z = math_utils.distance_to_camera(self.focal_lenght, self.traffic_distance, box[2] - box[0]) #in centimeters
-                    if z < 20 and i != 1:
+                    if z < 25 and i != 1:
                         try:
                             r, g, b = np.random.randint(0, 255), np.random.randint(0, 255), np.random.randint(0, 255)
                             cv2.rectangle(boxes_img, (int(unique_group[0][0]), int(unique_group[0][1])), (int(unique_group[0][2]), int(unique_group[0][3])), (r, g, b), 2)
