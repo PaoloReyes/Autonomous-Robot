@@ -58,9 +58,16 @@ class SignalLogicNode(Node):
 
         output_vel = Twist()
         if self.last_light == 2:
+            self.yellow_light = False
             self.red_light = True
+            return
         elif self.last_light == 0:
             self.red_light = False
+            self.yellow_light = False
+        elif self.last_light == 1:
+            self.yellow_light = True
+            self.red_light = False
+            return
 
         sleep_time = 0
         if self.last_behavior == 0:
@@ -105,7 +112,13 @@ class SignalLogicNode(Node):
             if self.red_light:
                 self.pub.publish(Twist())
             else:
-                self.pub.publish(self.vel_inc)  
+                output_vel = Twist()
+                output_vel.linear.x = self.vel_inc.linear.x
+                output_vel.angular.z = self.vel_inc.angular.z
+                if self.yellow_light:
+                    output_vel.linear.x = self.vel_inc.linear.x * 0.5
+                    output_vel.angular.z = self.vel_inc.angular.z * 0.5
+                self.pub.publish(output_vel)  
     
     def cmd_vel_callback(self, msg):
         self.vel_inc = msg
