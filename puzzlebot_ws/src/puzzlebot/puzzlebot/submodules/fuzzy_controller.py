@@ -13,8 +13,9 @@ class FuzzyController:
                              lock_range=False,
                              terms=[
                                  fl.Sigmoid('lefter', 30, 0.2),
-                                 fl.Gaussian('left', 5.0, 10.0),
-                                 fl.Gaussian('right', -5.0, 10.0),
+                                 fl.Gaussian('left', 15.0, 10.0),
+                                 fl.Gaussian('mid', 0.0, 10.0),
+                                 fl.Gaussian('right', -15.0, 10.0),
                                  fl.Sigmoid('righter', -30, -0.2),
                              ]),
 
@@ -61,6 +62,7 @@ class FuzzyController:
                                 terms=[
                                     fl.Constant('left', 0.7),
                                     fl.Constant('mid_left', 0.1),
+                                    fl.Constant('mid', 0.0),
                                     fl.Constant('mid_right', -0.1),
                                     fl.Constant('right', -0.7),
                                 ])
@@ -83,6 +85,11 @@ class FuzzyController:
                     fl.Rule.create("if x is left and y is down then lVel is low_speed and aVel is mid_left", self.engine),
                     fl.Rule.create("if x is left and y is mid then lVel is mid_speed and aVel is mid_left", self.engine),
                     fl.Rule.create("if x is left and y is up then lVel is speed and aVel is mid_left", self.engine),
+
+                    fl.Rule.create("if x is mid and y is down then lVel is low_speed and aVel is mid", self.engine),
+                    fl.Rule.create("if x is mid and y is mid then lVel is mid_speed and aVel is mid", self.engine),
+                    fl.Rule.create("if x is mid and y is up then lVel is speed and aVel is mid", self.engine),
+
                     fl.Rule.create("if x is right and y is down then lVel is low_speed and aVel is mid_right", self.engine),
                     fl.Rule.create("if x is right and y is mid then lVel is mid_speed and aVel is mid_right", self.engine),
                     fl.Rule.create("if x is right and y is up then lVel is speed and aVel is mid_right", self.engine),
