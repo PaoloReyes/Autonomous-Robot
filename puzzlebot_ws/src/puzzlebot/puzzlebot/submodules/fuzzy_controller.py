@@ -45,7 +45,7 @@ class FuzzyController:
                               terms=[
                                 fl.Constant('low_speed', 0.0),
                                 fl.Constant('mid_speed', 0.10),
-                                fl.Constant('speed', 0.25)
+                                fl.Constant('speed', 0.20)
                               ]),
 
             fl.OutputVariable(name="aVel",
