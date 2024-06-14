@@ -37,6 +37,7 @@ class ControllerNode(Node):
         cmd_vel = Twist()
         cmd_vel.linear.x = v
         cmd_vel.angular.z = w
+        self.get_logger().info('I work!!!')
         self.cmd_vel_pub.publish(cmd_vel)
 
 def main(args=None):
