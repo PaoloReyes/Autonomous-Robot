@@ -41,25 +41,41 @@ Autonomous-Robot/
 ├── assets/
 │   └── puzzlebot.jpeg
 ├── utilities/
-│   ├── semantic_segmentation/
+│   ├── calibration_data.pkl
+│   ├── calibration.py
+│   ├── camera_demo.py
+│   ├── camera_segmentation_node.py
 │   ├── coco2yolo.py
+│   ├── realtime_visualizer.py
+│   ├── take_images.py
+│   ├── try_calibration.py
 │   └── yolov8n-seg_train.py
 ├── yolov8train/
-│   ├── semanticsegmentation-3/
-│   └──download_dataset.bat
-├── config/
-│   ├── 
-│   └── 
-├── launch/
-│   ├── 
-│   └── 
-├── src/
-│   ├── /
-│   │   └──
-│   ├── /
-│   │   ├──
-│   │   └──
-└── README.md
+│   ├── runs/
+│   ├── download_dataset.bat
+│   ├── test_yolo.bat
+│   └── train_yolo.bat
+├── puzzlebot_ws/
+│   ├── src/
+│   │   ├── directions_msgs/
+│   │   |   ├── msg/
+│   │   |   |   └── Signal.msg
+│   │   |   ├── CMakeLists.txt
+│   │   |   ├── package.xml
+│   │   └── puzzlebot/
+│   │       ├── config/
+│   │       ├── launch/
+│   │       ├── package_data/
+│   │       ├── puzzlebot/
+│   │       ├── resource/
+│   │       ├── test/
+│   │       ├── LICENSE
+│   │       ├── package.xml
+│   │       ├── setup.cfg
+│   |       └── setup.py
+├── .gitignore
+├── pullandrun.sh
+├── README.md
 └── requirements.txt
 ```
 

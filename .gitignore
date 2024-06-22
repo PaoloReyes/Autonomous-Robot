@@ -2,3 +2,5 @@ puzzlebot_ws/build/
 puzzlebot_ws/log/
 puzzlebot_ws/install/
 yolov8train/semanticsegmentation-*/
+**/yolov8train/yolov8n*.pt
+**/.vscode/

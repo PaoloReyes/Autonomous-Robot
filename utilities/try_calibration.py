@@ -16,17 +16,17 @@ def main():
     print("K:", K)
     print("D:", D)
 
-    # cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-    # while True:
-    #     _, frame = cap.read()
-    #     udst = undistort(frame, K, D, frame.shape[:2])
-    #     cv2.imshow("undistorted", udst)
-    #     cv2.imshow("original", frame)
-    #     if cv2.waitKey(1) & 0xFF == ord('q'):
-    #         break
+    cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+    while True:
+        _, frame = cap.read()
+        udst = undistort(frame, K, D, frame.shape[:2])
+        cv2.imshow("undistorted", udst)
+        cv2.imshow("original", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-    # cv2.destroyAllWindows()
-    # cap.release()
+    cv2.destroyAllWindows()
+    cap.release()
 
 if __name__ == "__main__":
     main()
